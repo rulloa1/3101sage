@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* UI/UX Pro Max Executive Design Tokens */
+:root {
+    --color-bg-deep: #0b1120;
+    --color-primary-navy: #0f172a;
+    --color-brand-red: #e11d48;
+    --color-accent-gold: #ca8a04;
+    --color-status-clean: #10b981;
+    --color-status-cleaning: #f59e0b;
+    --color-status-dirty: #ef4444;
+    --color-status-occupied: #8b5cf6;
+    --glass-surface-light: rgba(255, 255, 255, 0.95);
+    --glass-surface-dark: rgba(10, 15, 29, 0.88);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --blur-glass: 16px;
+    --radius-xl: 1.5rem;
+    --radius-lg: 1rem;
+    --transition-smooth: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* Modern Executive Dashboard Ambient Canvas with Real Hotel Architecture */
 body {
     background-color: #0b1120;
