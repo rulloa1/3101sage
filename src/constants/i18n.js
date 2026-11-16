@@ -47,16 +47,16 @@ export function getStatusConfig(status, lang = 'en') {
     const dict = i18n[lang] || i18n.en;
     switch (status) {
         case 'clean':
-            return { bg: 'bg-emerald-600', border: 'border-emerald-300', light: 'bg-emerald-50/70', label: dict.clean, icon: 'fa-circle-check', text: 'text-emerald-600' };
+            return { bg: 'bg-emerald-600', border: 'border-emerald-500/25', light: 'bg-emerald-500/[0.08]', label: dict.clean, icon: 'fa-circle-check', text: 'text-emerald-400' };
         case 'cleaning':
-            return { bg: 'bg-amber-500', border: 'border-amber-300', light: 'bg-amber-50/70', label: dict.cleaning, icon: 'fa-arrows-rotate fa-spin', text: 'text-amber-600' };
+            return { bg: 'bg-amber-500', border: 'border-amber-500/25', light: 'bg-amber-500/[0.08]', label: dict.cleaning, icon: 'fa-arrows-rotate fa-spin', text: 'text-amber-400' };
         case 'dirty':
-            return { bg: 'bg-rose-500', border: 'border-rose-300', light: 'bg-rose-50/70', label: dict.dirty, icon: 'fa-broom', text: 'text-rose-600' };
+            return { bg: 'bg-rose-500', border: 'border-rose-500/25', light: 'bg-rose-500/[0.08]', label: dict.dirty, icon: 'fa-broom', text: 'text-rose-400' };
         case 'occupied':
-            return { bg: 'bg-blue-600', border: 'border-blue-300', light: 'bg-blue-50/70', label: dict.occupied, icon: 'fa-user-check', text: 'text-blue-600' };
+            return { bg: 'bg-blue-600', border: 'border-blue-500/25', light: 'bg-blue-500/[0.08]', label: dict.occupied, icon: 'fa-user-check', text: 'text-blue-400' };
         case 'dnd':
-            return { bg: 'bg-purple-600', border: 'border-purple-300', light: 'bg-purple-50/70', label: dict.dnd, icon: 'fa-ban', text: 'text-purple-600' };
+            return { bg: 'bg-purple-600', border: 'border-purple-500/25', light: 'bg-purple-500/[0.08]', label: dict.dnd, icon: 'fa-ban', text: 'text-purple-400' };
         default:
-            return { bg: 'bg-slate-600', border: 'border-slate-300', light: 'bg-slate-100/70', label: dict.maintenance, icon: 'fa-wrench', text: 'text-slate-600' };
+            return { bg: 'bg-slate-600', border: 'border-slate-500/25', light: 'bg-slate-500/[0.08]', label: dict.maintenance, icon: 'fa-wrench', text: 'text-slate-400' };
     }
 }

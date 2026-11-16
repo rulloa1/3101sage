@@ -11,19 +11,19 @@ export default function FilterControls({
     onResetDemo
 }) {
     return (
-        <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-2.5">
-            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+        <section className="border-b border-white/[0.07] bg-ink-900/30 px-4 py-2.5 backdrop-blur-xl sm:px-6">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 text-xs">
                 {/* Floor Filter Buttons */}
                 <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-                    <span className="text-slate-400 font-bold mr-1 uppercase tracking-wider text-[11px]">Floor:</span>
+                    <span className="eyebrow mr-1">Floor</span>
                     {['ALL', '1', '2', '3'].map((floor) => (
                         <button
                             key={floor}
                             onClick={() => setFloor(floor)}
-                            className={`cursor-pointer px-3.5 py-1.5 text-xs font-bold rounded-xl transition ${
+                            className={`cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
                                 currentFloor === floor
-                                    ? 'bg-slate-900 text-white shadow-sm'
-                                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                                    ? 'bg-brand-600 text-white shadow-brand-glow'
+                                    : 'bg-white/[0.05] text-slate-300 ring-1 ring-inset ring-white/10 hover:bg-white/[0.09] hover:text-white'
                             }`}
                         >
                             {floor === 'ALL' ? 'All Floors' : `Floor ${floor}`}
@@ -31,23 +31,23 @@ export default function FilterControls({
                     ))}
 
                     {/* Quick Walk-in Matcher Button */}
-                    <button 
-                        onClick={onWalkInMatch} 
-                        className="cursor-pointer ml-1.5 px-3 py-1.5 text-xs font-extrabold rounded-xl bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition flex items-center gap-1.5 shadow-xs active:scale-95"
+                    <button
+                        onClick={onWalkInMatch}
+                        className="ml-1.5 flex cursor-pointer items-center gap-1.5 rounded-xl border border-gold-500/30 bg-gold-500/[0.10] px-3 py-1.5 text-xs font-extrabold text-gold-400 transition hover:bg-gold-500/[0.16] hover:text-gold-400 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/40"
                     >
-                        <i className="fa-solid fa-key text-amber-600 text-xs"></i>
+                        <i className="fa-solid fa-key text-xs"></i>
                         <span>Quick Match: Ready for Walk-in</span>
                     </button>
                 </div>
 
                 {/* Search & Reset */}
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex w-full items-center gap-2 sm:w-auto">
                     {/* Active Filter Pill */}
                     {currentStatusFilter !== 'ALL' && (
-                        <div className="bg-indigo-50 border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1.5 animate-fadeIn">
-                            <span>Filter:</span>
+                        <div className="animate-fadeIn flex items-center gap-1.5 rounded-xl border border-brand-500/30 bg-brand-500/[0.10] px-2.5 py-1 text-[11px] font-bold text-brand-400">
+                            <span className="text-slate-400">Filter:</span>
                             <span className="capitalize">{currentStatusFilter}</span>
-                            <button onClick={resetFilters} className="cursor-pointer text-indigo-500 hover:text-indigo-800 ml-0.5">
+                            <button onClick={resetFilters} className="ml-0.5 cursor-pointer text-brand-400 transition hover:text-white">
                                 <i className="fa-solid fa-xmark text-xs"></i>
                             </button>
                         </div>
@@ -55,18 +55,18 @@ export default function FilterControls({
 
                     {/* Search Bar */}
                     <div className="relative flex-1 sm:w-56">
-                        <i className="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                        <i className="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-500"></i>
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Room #, King, note..."
-                            className="w-full pl-8 pr-7 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition"
+                            className="field py-1.5 pl-8 pr-7"
                         />
                         {searchQuery && (
                             <button
                                 onClick={() => setSearchQuery('')}
-                                className="cursor-pointer absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600"
+                                className="absolute right-2.5 top-2.5 cursor-pointer text-slate-500 transition hover:text-slate-200"
                             >
                                 <i className="fa-solid fa-xmark text-xs"></i>
                             </button>
@@ -76,7 +76,7 @@ export default function FilterControls({
                     {/* Reset Demo State Button */}
                     <button
                         onClick={onResetDemo}
-                        className="cursor-pointer text-slate-400 hover:text-indigo-600 text-xs font-medium px-2 py-1.5 rounded-lg hover:bg-slate-100 transition"
+                        className="cursor-pointer rounded-lg px-2 py-1.5 text-xs font-medium text-slate-500 transition hover:bg-white/[0.06] hover:text-brand-400"
                         title="Reset rooms to demo layout"
                     >
                         <i className="fa-solid fa-rotate-left"></i>

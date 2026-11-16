@@ -1,5 +1,23 @@
 import React, { useState } from 'react';
 
+const CHECKS = [
+    {
+        key: 'bed',
+        title: 'Fresh Bedding & Linens:',
+        detail: 'Sheets crisp, taut, 100% hair & stain-free; pillow shams aligned.'
+    },
+    {
+        key: 'bath',
+        title: 'Bathroom Sanitized & Restocked:',
+        detail: 'Mirror streak-free, toilet sanitized, fresh bath/hand towels hung.'
+    },
+    {
+        key: 'ac',
+        title: 'Thermostat & Amenities:',
+        detail: 'AC tested & set to 70°F, TV remote sanitized on nightstand.'
+    }
+];
+
 export default function HousekeepingQcModal({
     isOpen,
     roomId,
@@ -7,14 +25,14 @@ export default function HousekeepingQcModal({
     onClose,
     onConfirm
 }) {
-    const [checkBed, setCheckBed] = useState(true);
-    const [checkBath, setCheckBath] = useState(true);
-    const [checkAc, setCheckAc] = useState(true);
+    const [checks, setChecks] = useState({ bed: true, bath: true, ac: true });
 
     if (!isOpen || !roomId) return null;
 
+    const allChecked = CHECKS.every(c => checks[c.key]);
+
     const handleCertify = () => {
-        if (!checkBed || !checkBath || !checkAc) {
+        if (!allChecked) {
             alert("All 3 standards must be verified to certify this room!");
             return;
         }
@@ -26,87 +44,67 @@ export default function HousekeepingQcModal({
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/85 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+            <div className="modal-shell animate-slideUp max-w-md p-6 space-y-4">
+                <div className="modal-head">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-black shadow-xs">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-gold-400/30 bg-gold-500/[0.12] text-lg text-gold-400">
                             <i className="fa-solid fa-clipboard-check"></i>
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-slate-800">
+                            <h3 className="text-base font-bold text-white">
                                 QC Check: Room {roomId} {room ? `(${room.type})` : ''}
                             </h3>
-                            <p className="text-[11px] text-indigo-600 font-semibold">3.7★ Review Defense Checklist</p>
+                            <p className="text-[11px] font-semibold text-gold-400">3.7★ Review Defense Checklist</p>
                         </div>
                     </div>
                     <button 
                         onClick={onClose} 
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
+                        className="icon-close"
+                        aria-label="Close QC checklist"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <div className="space-y-3 text-xs">
-                    <p className="text-slate-500 text-[11px] leading-relaxed">
+                <div className="space-y-2.5 text-xs">
+                    <p className="text-[11px] leading-relaxed text-slate-400">
                         Verify all 3 quality standards before certifying this room as ready for incoming guests:
                     </p>
 
-                    <label className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-indigo-50/50 transition">
-                        <input 
-                            type="checkbox" 
-                            checked={checkBed} 
-                            onChange={(e) => setCheckBed(e.target.checked)} 
-                            className="mt-0.5 w-4 h-4 text-indigo-600 rounded accent-indigo-600 cursor-pointer" 
-                        />
-                        <div>
-                            <strong className="text-slate-800">1. Fresh Bedding & Linens:</strong>
-                            <p className="text-[11px] text-slate-500">Sheets crisp, taut, 100% hair & stain-free; pillow shams aligned.</p>
-                        </div>
-                    </label>
-
-                    <label className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-indigo-50/50 transition">
-                        <input 
-                            type="checkbox" 
-                            checked={checkBath} 
-                            onChange={(e) => setCheckBath(e.target.checked)} 
-                            className="mt-0.5 w-4 h-4 text-indigo-600 rounded accent-indigo-600 cursor-pointer" 
-                        />
-                        <div>
-                            <strong className="text-slate-800">2. Bathroom Sanitized & Restocked:</strong>
-                            <p className="text-[11px] text-slate-500">Mirror streak-free, toilet sanitized, fresh bath/hand towels hung.</p>
-                        </div>
-                    </label>
-
-                    <label className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-indigo-50/50 transition">
-                        <input 
-                            type="checkbox" 
-                            checked={checkAc} 
-                            onChange={(e) => setCheckAc(e.target.checked)} 
-                            className="mt-0.5 w-4 h-4 text-indigo-600 rounded accent-indigo-600 cursor-pointer" 
-                        />
-                        <div>
-                            <strong className="text-slate-800">3. Thermostat & Amenities:</strong>
-                            <p className="text-[11px] text-slate-500">AC tested & set to 70°F, TV remote sanitized on nightstand.</p>
-                        </div>
-                    </label>
+                    {CHECKS.map((check, index) => (
+                        <label
+                            key={check.key}
+                            className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.035] p-3 transition hover:border-gold-500/30 hover:bg-white/[0.06]"
+                        >
+                            <input 
+                                type="checkbox" 
+                                checked={checks[check.key]} 
+                                onChange={(e) => setChecks(prev => ({ ...prev, [check.key]: e.target.checked }))}
+                                className="mt-0.5 h-4 w-4 cursor-pointer rounded accent-emerald-500" 
+                            />
+                            <div>
+                                <strong className="text-slate-100">{index + 1}. {check.title}</strong>
+                                <p className="text-[11px] text-slate-400">{check.detail}</p>
+                            </div>
+                        </label>
+                    ))}
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <div className="modal-foot">
                     <button 
                         type="button" 
                         onClick={onClose} 
-                        className="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                        className="btn-quiet"
                     >
                         Cancel
                     </button>
                     <button 
                         type="button" 
                         onClick={handleCertify} 
-                        className="cursor-pointer px-4.5 py-2 text-xs font-bold bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 shadow-sm transition active:scale-95 flex items-center gap-1.5"
+                        className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-emerald-950/40 transition hover:bg-emerald-500 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
                     >
                         <i className="fa-solid fa-circle-check"></i> <span>Certify Clean & Ready</span>
                     </button>

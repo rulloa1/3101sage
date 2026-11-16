@@ -8,16 +8,16 @@ export default function ReadinessBar({ rooms, currentLang }) {
     const dict = i18n[currentLang];
 
     return (
-        <section className="bg-slate-900 text-white px-4 sm:px-6 py-2 border-b border-slate-800">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+        <section className="border-b border-white/[0.07] bg-ink-950/50 px-4 py-2 backdrop-blur-xl sm:px-6">
+            <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 text-xs sm:flex-row">
                 <div className="flex items-center gap-2">
-                    <span className="text-slate-400 font-semibold">{dict.readinessLabel}</span>
-                    <span className="font-bold text-amber-300">{pct}%</span>
-                    <span className="text-slate-500 font-medium">({cleanCount} of {totalCount} rooms clean)</span>
+                    <span className="font-semibold text-slate-400">{dict.readinessLabel}</span>
+                    <span className="font-black text-gold-400">{pct}%</span>
+                    <span className="font-medium text-slate-500">({cleanCount} of {totalCount} rooms clean)</span>
                 </div>
-                <div className="w-full sm:w-64 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700/80">
-                    <div 
-                        className="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full transition-all duration-500" 
+                <div className="h-2 w-full overflow-hidden rounded-full border border-white/10 bg-slate-900/80 sm:w-64">
+                    <div
+                        className="h-full rounded-full bg-gradient-to-r from-gold-600 via-gold-400 to-emerald-400 transition-all duration-500"
                         style={{ width: `${pct}%` }}
                     ></div>
                 </div>

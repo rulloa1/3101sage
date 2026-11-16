@@ -21,23 +21,24 @@ export default function KeycardSleeveModal({
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/85 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+            <div className="modal-shell animate-slideUp max-w-lg p-6 space-y-4">
+                <div className="modal-head">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-black shadow-xs">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-gold-400/30 bg-gold-500/[0.12] text-lg text-gold-400">
                             <i className="fa-solid fa-qrcode"></i>
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-slate-800">Keycard Sleeve & Wi-Fi Slip</h3>
-                            <p className="text-[11px] text-slate-400 font-semibold">Direct Booking Recapture & Chargeback Defense</p>
+                            <h3 className="text-base font-bold text-white">Keycard Sleeve & Wi-Fi Slip</h3>
+                            <p className="text-[11px] font-semibold text-slate-400">Direct Booking Recapture & Chargeback Defense</p>
                         </div>
                     </div>
                     <button 
                         onClick={onClose} 
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
+                        className="icon-close"
+                        aria-label="Close keycard sleeve"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
@@ -45,23 +46,23 @@ export default function KeycardSleeveModal({
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
                     <div>
-                        <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label className="eyebrow mb-1 block">
                             Room Number
                         </label>
                         <select 
                             value={selectedRoomId} 
                             onChange={(e) => setSelectedRoomId(parseInt(e.target.value, 10))}
-                            className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2 bg-slate-50"
+                            className="field cursor-pointer font-bold"
                         >
                             {rooms.map(r => (
-                                <option key={r.id} value={r.id}>
+                                <option key={r.id} value={r.id} className="bg-ink-800 text-slate-100">
                                     Room {r.id} ({r.type} • Floor {r.floor})
                                 </option>
                             ))}
                         </select>
                     </div>
                     <div>
-                        <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label className="eyebrow mb-1 block">
                             Guest Name (Optional)
                         </label>
                         <input 
@@ -69,79 +70,79 @@ export default function KeycardSleeveModal({
                             value={guestName} 
                             onChange={(e) => setGuestName(e.target.value)}
                             placeholder="Valued Guest" 
-                            className="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50" 
+                            className="field" 
                         />
                     </div>
                 </div>
 
                 {/* PRINTABLE CARD SLEEVE PREVIEW */}
-                <div id="printableSleeveArea" className="relative overflow-hidden bg-slate-900 text-white p-5 rounded-2xl border-2 border-amber-500/50 shadow-inner space-y-3 font-sans">
+                <div id="printableSleeveArea" className="relative space-y-3 overflow-hidden rounded-2xl border-2 border-gold-500/40 bg-ink-900 p-5 font-sans text-white shadow-inner">
                     <div 
-                        className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
+                        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-10"
                         style={{ backgroundImage: `url(${hotelHeroBg})` }}
                     ></div>
-                    <div className="flex justify-between items-start border-b border-slate-800 pb-2.5">
+                    <div className="flex items-start justify-between border-b border-white/10 pb-2.5">
                         <div>
-                            <div className="flex items-center gap-2 mb-1.5">
-                                <span className="bg-white px-2 py-0.5 rounded shadow-xs inline-flex items-center">
+                            <div className="mb-1.5 flex items-center gap-2">
+                                <span className="inline-flex items-center rounded bg-white px-2 py-0.5 shadow-xs">
                                     <img src={oyoLogo} alt="OYO" className="h-3.5 w-auto object-contain" />
                                 </span>
-                                <span className="text-[10px] font-mono text-amber-400 font-extrabold uppercase tracking-wide">
+                                <span className="font-mono text-[10px] font-extrabold uppercase tracking-wide text-gold-400">
                                     Houston Galleria
                                 </span>
                             </div>
-                            <h4 className="text-base font-black text-white leading-tight">PARC HOTEL &bull; OYO GALLERIA &bull; STELLAR STAY</h4>
+                            <h4 className="text-base font-black leading-tight text-white">PARC HOTEL &bull; OYO GALLERIA &bull; STELLAR STAY</h4>
                             <div className="text-[10px] text-slate-400">3101 Sage Rd, Houston, TX 77056</div>
                         </div>
                         <div className="text-right">
-                            <div className="text-[10px] text-slate-400 font-bold uppercase">Room #</div>
-                            <div className="text-2xl font-black text-amber-300 font-mono">{selectedRoomId}</div>
+                            <div className="text-[10px] font-bold uppercase text-slate-400">Room #</div>
+                            <div className="font-mono text-2xl font-black text-gold-300">{selectedRoomId}</div>
                         </div>
                     </div>
 
                     {/* Wi-Fi & Checkout */}
-                    <div className="grid grid-cols-2 gap-2 text-[11px] bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                    <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/10 bg-ink-950 p-2.5 text-[11px]">
                         <div>
-                            <span className="text-slate-400 block text-[9px] uppercase font-bold">High-Speed Wi-Fi</span>
+                            <span className="block text-[9px] font-bold uppercase text-slate-400">High-Speed Wi-Fi</span>
                             <strong className="text-white">Sage_Guest_Free</strong>
-                            <div className="text-slate-400 text-[10px]">Pass: <code className="text-amber-300 font-mono">galleria3101</code></div>
+                            <div className="text-[10px] text-slate-400">Pass: <code className="font-mono text-gold-300">galleria3101</code></div>
                         </div>
                         <div>
-                            <span className="text-slate-400 block text-[9px] uppercase font-bold">Standard Checkout</span>
+                            <span className="block text-[9px] font-bold uppercase text-slate-400">Standard Checkout</span>
                             <strong className="text-white">11:00 AM</strong>
-                            <div className="text-slate-400 text-[10px]">Desk Dial: <span className="text-amber-300">"0"</span></div>
+                            <div className="text-[10px] text-slate-400">Desk Dial: <span className="text-gold-300">"0"</span></div>
                         </div>
                     </div>
 
                     {/* Direct Booking Incentive */}
-                    <div className="bg-gradient-to-r from-amber-500/20 to-indigo-500/20 p-2.5 rounded-xl border border-amber-400/40 flex items-center justify-between text-xs">
+                    <div className="flex items-center justify-between rounded-xl border border-gold-500/30 bg-gradient-to-r from-gold-500/[0.18] to-brand-600/[0.12] p-2.5 text-xs">
                         <div>
-                            <div className="font-extrabold text-amber-300 text-[11px]">BOOK DIRECT &bull; SAVE 10% ON NEXT STAY</div>
+                            <div className="text-[11px] font-extrabold text-gold-300">BOOK DIRECT &bull; SAVE 10% ON NEXT STAY</div>
                             <div className="text-[10px] text-slate-300">Call Front Desk Directly: <strong>+1 (844) 266-5696</strong></div>
                         </div>
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1 text-slate-900 font-bold text-base">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white p-1 text-base font-bold text-slate-900">
                             <i className="fa-solid fa-qrcode text-xl"></i>
                         </div>
                     </div>
 
                     {/* Chargeback Shield Disclaimer */}
-                    <div className="text-[9px] text-slate-400 leading-tight border-t border-slate-800/80 pt-2 font-mono">
-                        *BILLING NOTICE: Credit card charges for your stay at 3101 Sage Rd will appear as <strong>"PARC HOTEL / STELLAR STAY / OYO 90631"</strong>. Verified by guest signature at check-in.
+                    <div className="border-t border-white/10 pt-2 font-mono text-[9px] leading-tight text-slate-400">
+                        *BILLING NOTICE: Credit card charges for your stay at 3101 Sage Rd will appear as <strong className="text-slate-200">"PARC HOTEL / STELLAR STAY / OYO 90631"</strong>. Verified by guest signature at check-in.
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <div className="modal-foot">
                     <button 
                         type="button" 
                         onClick={onClose} 
-                        className="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                        className="btn-quiet"
                     >
                         Close
                     </button>
                     <button 
                         type="button" 
                         onClick={handlePrint} 
-                        className="cursor-pointer px-4.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm transition active:scale-95 flex items-center gap-1.5"
+                        className="btn-primary"
                     >
                         <i className="fa-solid fa-print"></i> <span>Print Keycard Sleeve Slip</span>
                     </button>

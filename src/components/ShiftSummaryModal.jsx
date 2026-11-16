@@ -34,7 +34,7 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
 
     const handleCopy = () => {
         navigator.clipboard.writeText(report).then(() => {
-            onCopy("Shift report copied to clipboard!", "fa-copy text-amber-400");
+            onCopy("Shift report copied to clipboard!", "fa-copy text-gold-400");
             onClose();
         }).catch(() => {
             onCopy("Unable to copy automatically", "fa-triangle-exclamation text-rose-400");
@@ -45,36 +45,40 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/85 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                    <h3 className="text-base font-bold text-slate-800">Operational Shift Summary (3101 Sage)</h3>
+            <div className="modal-shell animate-slideUp max-w-lg p-6 space-y-4">
+                <div className="modal-head">
+                    <div>
+                        <span className="eyebrow text-gold-500">Shift Handover</span>
+                        <h3 className="mt-1 text-base font-bold text-white">Operational Shift Summary (3101 Sage)</h3>
+                    </div>
                     <button 
                         onClick={onClose} 
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
+                        className="icon-close"
+                        aria-label="Close shift summary"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs text-slate-800 space-y-2 select-all overflow-y-auto max-h-72 whitespace-pre">
+                <div className="panel-inset max-h-72 select-all overflow-y-auto whitespace-pre p-4 font-mono text-[11px] leading-relaxed text-slate-300">
                     {report}
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <div className="modal-foot">
                     <button 
                         type="button" 
                         onClick={onClose} 
-                        className="cursor-pointer px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                        className="btn-quiet"
                     >
                         Close
                     </button>
                     <button 
                         type="button" 
                         onClick={handleCopy} 
-                        className="cursor-pointer px-4 py-2 text-xs font-bold bg-amber-600 text-white rounded-xl hover:bg-amber-700 flex items-center gap-1.5 transition active:scale-95 shadow-sm"
+                        className="btn-primary"
                     >
                         <i className="fa-regular fa-copy"></i> Copy
                     </button>

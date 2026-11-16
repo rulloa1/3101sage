@@ -28,7 +28,7 @@ export default function Header({
     const dict = i18n[currentLang];
 
     return (
-        <header className="glass-header text-white shadow-xl sticky top-0 z-50 border-b border-slate-800/80">
+        <header className="glass-header sticky top-0 z-50 border-b border-white/10 text-white shadow-2xl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
                 {/* Brand & Property Details */}
                 <div className="flex items-center space-x-3.5">
@@ -71,9 +71,9 @@ export default function Header({
                             <i className="fa-solid fa-location-dot text-rose-400 text-[11px]"></i>
                             <span>3101 Sage Rd</span>
                             <span className="text-slate-500">•</span>
-                            <span className="text-slate-400 font-medium">Galleria</span>
+                            <span className="font-medium text-slate-400">Galleria</span>
                             <span className="text-slate-500">•</span>
-                            <span className="text-indigo-200 font-semibold">{liveTime}</span>
+                            <span className="font-semibold text-gold-300">{liveTime}</span>
                         </p>
                     </div>
                 </div>
@@ -93,10 +93,10 @@ export default function Header({
                     {/* Keycard Sleeve & Direct Booking Generator */}
                     <button 
                         onClick={onOpenKeycardSleeve}
-                        className="cursor-pointer text-xs bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 font-bold px-2.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95"
+                        className="cursor-pointer text-xs bg-gold-500/[0.10] hover:bg-gold-500/[0.18] text-gold-300 border border-gold-500/30 font-bold px-2.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95"
                         title="Print Wi-Fi & Keycard Sleeve (Save OTA Commission)"
                     >
-                        <i className="fa-solid fa-qrcode text-indigo-400"></i>
+                        <i className="fa-solid fa-qrcode text-gold-400"></i>
                         <span className="hidden xl:inline">Keycard Sleeve</span>
                     </button>
 
@@ -116,7 +116,7 @@ export default function Header({
                     {/* Shift Report Button */}
                     <button 
                         onClick={onOpenShiftReport}
-                        className="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
+                        className="cursor-pointer text-xs bg-white/[0.06] hover:bg-white/[0.11] text-gold-300 border border-white/10 font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:outline-none"
                     >
                         <i className="fa-solid fa-clipboard-list text-amber-400"></i>
                         <span className="hidden md:inline">{dict.shiftReportBtn}</span>
@@ -125,20 +125,20 @@ export default function Header({
                     {/* English / Spanish Switcher */}
                     <button 
                         onClick={toggleLanguage}
-                        className="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl border border-slate-700 font-bold transition flex items-center gap-1.5 shadow-sm text-slate-100 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                        className="cursor-pointer text-xs bg-white/[0.06] hover:bg-white/[0.11] px-3 py-2 rounded-xl border border-white/10 font-bold transition flex items-center gap-1.5 shadow-sm text-slate-100 active:scale-95 focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:outline-none"
                     >
-                        <i className="fa-solid fa-language text-indigo-400 text-sm"></i>
+                        <i className="fa-solid fa-language text-brand-400 text-sm"></i>
                         <span>{currentLang === 'en' ? 'ES' : 'EN'}</span>
                     </button>
 
                     {/* Navigation Tabs */}
-                    <div className="bg-slate-900/90 p-1 rounded-xl border border-slate-800 flex text-xs font-bold shadow-inner">
+                    <div className="bg-ink-950/70 p-1 rounded-xl border border-white/10 flex text-xs font-bold shadow-inner backdrop-blur">
                         <button 
                             onClick={() => setActiveView('desk')}
-                            className={`cursor-pointer px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
+                            className={`cursor-pointer px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:outline-none ${
                                 activeView === 'desk' 
-                                    ? 'bg-indigo-600 text-white shadow-sm' 
-                                    : 'text-slate-300 hover:text-white'
+                                    ? 'bg-brand-600 text-white shadow-brand-glow' 
+                                    : 'text-slate-300 hover:bg-white/[0.06] hover:text-white'
                             }`}
                         >
                             <i className="fa-solid fa-desktop text-xs"></i>
@@ -146,10 +146,10 @@ export default function Header({
                         </button>
                         <button 
                             onClick={() => setActiveView('housekeeping')}
-                            className={`cursor-pointer px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
+                            className={`cursor-pointer px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:outline-none ${
                                 activeView === 'housekeeping' 
-                                    ? 'bg-indigo-600 text-white shadow-sm' 
-                                    : 'text-slate-300 hover:text-white'
+                                    ? 'bg-brand-600 text-white shadow-brand-glow' 
+                                    : 'text-slate-300 hover:bg-white/[0.06] hover:text-white'
                             }`}
                         >
                             <i className="fa-solid fa-broom text-xs"></i>

@@ -184,7 +184,7 @@ export default function App() {
 
     // 5. ACTIONS
     const handleForceResync = () => {
-        showToast("Syncing with cloud network...", "fa-rotate text-indigo-400");
+        showToast("Syncing with cloud network...", "fa-rotate text-brand-400");
         syncService.connectCloud();
         syncService.publish({ type: 'FULL_SYNC', rooms, senderId: myClientId });
     };
@@ -220,7 +220,7 @@ export default function App() {
     const handleResetDemo = () => {
         if (window.confirm("Reset rooms to demo layout across all screens?")) {
             persistRooms(JSON.parse(JSON.stringify(initialRooms)), true);
-            showToast("Demo layout reset and synced to cloud", "fa-rotate-left text-indigo-400");
+            showToast("Demo layout reset and synced to cloud", "fa-rotate-left text-brand-400");
         }
     };
 
@@ -282,7 +282,7 @@ export default function App() {
             cleaningStartedAt
         });
 
-        showToast(`Room ${roomId} updated!`, 'fa-floppy-disk text-indigo-400');
+        showToast(`Room ${roomId} updated!`, 'fa-floppy-disk text-brand-400');
     };
 
     const handleConfirmEarlyCheckin = (roomId, fee, guestName) => {
@@ -370,7 +370,7 @@ export default function App() {
     const activeEditRoom = useMemo(() => rooms.find(r => r.id === editModalRoomId), [rooms, editModalRoomId]);
 
     return (
-        <div className="text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+        <div className="text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-600 selection:text-white">
             {/* Header */}
             <Header 
                 activeView={activeView}
@@ -423,11 +423,11 @@ export default function App() {
                             onOpenEdit={(id) => setEditModalRoomId(id)}
                         />
                     ) : (
-                        <div className="text-center py-16 px-4 bg-white rounded-2xl border border-dashed border-slate-300 my-4">
-                            <h3 className="text-base font-bold text-slate-700">No rooms match this criteria</h3>
+                        <div className="panel my-4 rounded-2xl border-dashed border-white/15 px-4 py-16 text-center">
+                            <h3 className="text-base font-bold text-slate-200">No rooms match this criteria</h3>
                             <button 
                                 onClick={handleResetFilters}
-                                className="cursor-pointer mt-4 px-4 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition"
+                                className="btn-primary mt-4"
                             >
                                 Show All Rooms
                             </button>
@@ -451,10 +451,10 @@ export default function App() {
             </main>
 
             {/* FOOTER */}
-            <footer className="bg-white/80 backdrop-blur-md border-t border-slate-200/80 py-3.5 text-center text-xs text-slate-500 font-medium mt-auto">
+            <footer className="mt-auto border-t border-white/[0.07] bg-ink-950/60 py-3.5 text-center text-xs font-medium text-slate-500 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-                    <span>RoomSync Pro Operational Suite &bull; 3101 Sage Rd</span>
-                    <span className="text-slate-400">Multi-tab & Cloud Real-time Synced</span>
+                    <span>RoomSync Pro Operational Suite <span className="text-slate-600">&bull;</span> 3101 Sage Rd</span>
+                    <span className="text-slate-500">Multi-tab &amp; Cloud Real-time Synced</span>
                 </div>
             </footer>
 

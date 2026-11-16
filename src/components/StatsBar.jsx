@@ -1,107 +1,86 @@
 import React from 'react';
 import { i18n } from '../constants/i18n';
 
+const TILES = [
+    { key: 'clean', accent: 'emerald', icon: 'fa-circle-check', iconSpin: false },
+    { key: 'cleaning', accent: 'amber', icon: 'fa-arrows-rotate', iconSpin: true },
+    { key: 'dirty', accent: 'rose', icon: 'fa-broom', iconSpin: false },
+    { key: 'occupied', accent: 'blue', icon: 'fa-user-check', iconSpin: false },
+    { key: 'maintenance', accent: 'purple', icon: 'fa-wrench', iconSpin: false }
+];
+
+const ACCENTS = {
+    emerald: {
+        value: 'text-emerald-300',
+        well: 'bg-emerald-500/12 text-emerald-400 ring-1 ring-emerald-400/25',
+        active: 'border-emerald-400/60 bg-emerald-500/[0.12] ring-2 ring-emerald-400/25'
+    },
+    amber: {
+        value: 'text-amber-300',
+        well: 'bg-amber-500/12 text-amber-400 ring-1 ring-amber-400/25',
+        active: 'border-amber-400/60 bg-amber-500/[0.12] ring-2 ring-amber-400/25'
+    },
+    rose: {
+        value: 'text-rose-300',
+        well: 'bg-rose-500/12 text-rose-400 ring-1 ring-rose-400/25',
+        active: 'border-rose-400/60 bg-rose-500/[0.12] ring-2 ring-rose-400/25'
+    },
+    blue: {
+        value: 'text-blue-300',
+        well: 'bg-blue-500/12 text-blue-400 ring-1 ring-blue-400/25',
+        active: 'border-blue-400/60 bg-blue-500/[0.12] ring-2 ring-blue-400/25'
+    },
+    purple: {
+        value: 'text-purple-300',
+        well: 'bg-purple-500/12 text-purple-400 ring-1 ring-purple-400/25',
+        active: 'border-purple-400/60 bg-purple-500/[0.12] ring-2 ring-purple-400/25'
+    }
+};
+
 export default function StatsBar({ rooms, currentStatusFilter, onStatusFilter, currentLang }) {
-    const clean = rooms.filter(r => r.status === 'clean').length;
-    const cleaning = rooms.filter(r => r.status === 'cleaning').length;
-    const dirty = rooms.filter(r => r.status === 'dirty').length;
-    const occupied = rooms.filter(r => r.status === 'occupied').length;
-    const maint = rooms.filter(r => r.status === 'maintenance' || r.status === 'dnd').length;
+    const counts = {
+        clean: rooms.filter(r => r.status === 'clean').length,
+        cleaning: rooms.filter(r => r.status === 'cleaning').length,
+        dirty: rooms.filter(r => r.status === 'dirty').length,
+        occupied: rooms.filter(r => r.status === 'occupied').length,
+        maintenance: rooms.filter(r => r.status === 'maintenance' || r.status === 'dnd').length
+    };
 
     const dict = i18n[currentLang];
 
     return (
-        <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/90 px-4 sm:px-6 py-3.5 shadow-soft">
-            <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-5 gap-3">
-                {/* Clean / Ready */}
-                <div 
-                    onClick={() => onStatusFilter('clean')} 
-                    className={`cursor-pointer group p-3 rounded-2xl border transition flex items-center justify-between ${
-                        currentStatusFilter === 'clean' 
-                            ? 'bg-emerald-100/80 border-emerald-500 shadow-md ring-2 ring-emerald-500/30' 
-                            : 'bg-emerald-50/60 border-emerald-200/90 hover:border-emerald-400 hover:shadow-md'
-                    }`}
-                >
-                    <div>
-                        <div className="text-2xl font-black text-emerald-800 tracking-tight">{clean}</div>
-                        <div className="text-[11px] uppercase tracking-wider text-emerald-700 font-bold">{dict.clean}</div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                        <i className="fa-solid fa-circle-check text-base"></i>
-                    </div>
-                </div>
+        <section className="border-b border-white/[0.07] bg-ink-900/40 px-4 py-3.5 backdrop-blur-xl sm:px-6">
+            <div className="mx-auto grid max-w-7xl grid-cols-2 gap-3 sm:grid-cols-5">
+                {TILES.map(({ key, accent, icon, iconSpin }) => {
+                    const isActive = currentStatusFilter === key;
+                    const tone = ACCENTS[accent];
 
-                {/* In Progress (Cleaning) */}
-                <div 
-                    onClick={() => onStatusFilter('cleaning')} 
-                    className={`cursor-pointer group p-3 rounded-2xl border transition flex items-center justify-between ${
-                        currentStatusFilter === 'cleaning' 
-                            ? 'bg-amber-100/80 border-amber-500 shadow-md ring-2 ring-amber-500/30' 
-                            : 'bg-amber-50/60 border-amber-200/90 hover:border-amber-400 hover:shadow-md'
-                    }`}
-                >
-                    <div>
-                        <div className="text-2xl font-black text-amber-800 tracking-tight">{cleaning}</div>
-                        <div className="text-[11px] uppercase tracking-wider text-amber-700 font-bold">{dict.cleaning}</div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
-                        <i className="fa-solid fa-arrows-rotate text-base fa-spin"></i>
-                    </div>
-                </div>
-
-                {/* Dirty / Vacant */}
-                <div 
-                    onClick={() => onStatusFilter('dirty')} 
-                    className={`cursor-pointer group p-3 rounded-2xl border transition flex items-center justify-between ${
-                        currentStatusFilter === 'dirty' 
-                            ? 'bg-rose-100/80 border-rose-500 shadow-md ring-2 ring-rose-500/30' 
-                            : 'bg-rose-50/60 border-rose-200/90 hover:border-rose-400 hover:shadow-md'
-                    }`}
-                >
-                    <div>
-                        <div className="text-2xl font-black text-rose-800 tracking-tight">{dirty}</div>
-                        <div className="text-[11px] uppercase tracking-wider text-rose-700 font-bold">{dict.dirty}</div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center">
-                        <i className="fa-solid fa-broom text-base"></i>
-                    </div>
-                </div>
-
-                {/* Occupied */}
-                <div 
-                    onClick={() => onStatusFilter('occupied')} 
-                    className={`cursor-pointer group p-3 rounded-2xl border transition flex items-center justify-between ${
-                        currentStatusFilter === 'occupied' 
-                            ? 'bg-blue-100/80 border-blue-500 shadow-md ring-2 ring-blue-500/30' 
-                            : 'bg-blue-50/60 border-blue-200/90 hover:border-blue-400 hover:shadow-md'
-                    }`}
-                >
-                    <div>
-                        <div className="text-2xl font-black text-blue-800 tracking-tight">{occupied}</div>
-                        <div className="text-[11px] uppercase tracking-wider text-blue-700 font-bold">{dict.occupied}</div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
-                        <i className="fa-solid fa-user-check text-base"></i>
-                    </div>
-                </div>
-
-                {/* Maintenance / DND */}
-                <div 
-                    onClick={() => onStatusFilter('maintenance')} 
-                    className={`cursor-pointer group p-3 rounded-2xl border transition flex items-center justify-between col-span-2 sm:col-span-1 ${
-                        currentStatusFilter === 'maintenance' 
-                            ? 'bg-purple-100/80 border-purple-500 shadow-md ring-2 ring-purple-500/30' 
-                            : 'bg-purple-50/60 border-purple-200/90 hover:border-purple-400 hover:shadow-md'
-                    }`}
-                >
-                    <div>
-                        <div className="text-2xl font-black text-purple-800 tracking-tight">{maint}</div>
-                        <div className="text-[11px] uppercase tracking-wider text-purple-700 font-bold">{dict.maintenance}</div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
-                        <i className="fa-solid fa-wrench text-base"></i>
-                    </div>
-                </div>
+                    return (
+                        <button
+                            key={key}
+                            type="button"
+                            onClick={() => onStatusFilter(key)}
+                            aria-pressed={isActive}
+                            className={`group flex cursor-pointer items-center justify-between rounded-2xl border p-3 text-left transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
+                                key === 'maintenance' ? 'col-span-2 sm:col-span-1' : ''
+                            } ${
+                                isActive
+                                    ? tone.active
+                                    : 'border-white/[0.08] bg-white/[0.035] hover:border-white/20 hover:bg-white/[0.06]'
+                            }`}
+                        >
+                            <div>
+                                <div className={`text-2xl font-black tracking-tight ${tone.value}`}>{counts[key]}</div>
+                                <div className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                                    {dict[key]}
+                                </div>
+                            </div>
+                            <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${tone.well}`}>
+                                <i className={`fa-solid ${icon} text-base ${iconSpin ? 'fa-spin' : ''}`}></i>
+                            </span>
+                        </button>
+                    );
+                })}
             </div>
         </section>
     );

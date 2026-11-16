@@ -23,27 +23,34 @@ export default function EarlyCheckinModal({
         onClose();
     };
 
+    const tierClass = (isActive) => `cursor-pointer p-3 rounded-xl border-2 font-black text-xs flex flex-col items-center transition ${
+        isActive
+            ? 'border-emerald-400/70 bg-emerald-500/[0.12] text-emerald-300 shadow-[0_0_20px_-8px_rgba(16,185,129,0.6)]'
+            : 'border-white/10 bg-white/[0.04] text-slate-300 hover:border-white/25 hover:bg-white/[0.07]'
+    }`;
+
     return (
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/85 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+            <div className="modal-shell animate-slideUp max-w-md p-6 space-y-4">
+                <div className="modal-head">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-black shadow-xs">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-emerald-400/30 bg-emerald-500/[0.12] text-lg text-emerald-400">
                             <i className="fa-solid fa-hand-holding-dollar"></i>
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-slate-800">Early Check-In Monetizer</h3>
-                            <p className="text-[11px] text-slate-400 font-semibold">Immediate Non-Room Profit Generator</p>
+                            <h3 className="text-base font-bold text-white">Early Check-In Monetizer</h3>
+                            <p className="text-[11px] font-semibold text-slate-400">Immediate Non-Room Profit Generator</p>
                         </div>
                     </div>
                     <button 
                         onClick={onClose} 
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
+                        className="icon-close"
+                        aria-label="Close early check-in"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
@@ -51,21 +58,21 @@ export default function EarlyCheckinModal({
 
                 <form onSubmit={handleSubmit} className="space-y-3">
                     <div>
-                        <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label className="eyebrow mb-1 block">
                             Select Ready Clean Room
                         </label>
                         {cleanRooms.length === 0 ? (
-                            <div className="p-3 bg-rose-50 text-rose-800 border border-rose-200 rounded-xl text-xs font-bold">
+                            <div className="rounded-xl border border-rose-500/30 bg-rose-500/[0.10] p-3 text-xs font-bold text-rose-300">
                                 No clean rooms available (Turnover required before check-in)
                             </div>
                         ) : (
                             <select 
                                 value={selectedRoomId || (cleanRooms[0] ? cleanRooms[0].id : '')} 
                                 onChange={(e) => setSelectedRoomId(e.target.value)}
-                                className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
+                                className="field cursor-pointer font-bold"
                             >
                                 {cleanRooms.map(r => (
-                                    <option key={r.id} value={r.id}>
+                                    <option key={r.id} value={r.id} className="bg-ink-800 text-slate-100">
                                         Room {r.id} ({r.type} • Floor {r.floor}) - Clean & Ready
                                     </option>
                                 ))}
@@ -74,39 +81,31 @@ export default function EarlyCheckinModal({
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label className="eyebrow mb-1 block">
                             Early Fee Tier
                         </label>
                         <div className="grid grid-cols-2 gap-2">
                             <button 
                                 type="button" 
                                 onClick={() => setFee(25)} 
-                                className={`cursor-pointer p-3 rounded-xl border-2 font-black text-xs flex flex-col items-center transition ${
-                                    fee === 25 
-                                        ? 'border-emerald-500 bg-emerald-50 text-emerald-800 shadow-xs' 
-                                        : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-                                }`}
+                                className={tierClass(fee === 25)}
                             >
                                 <span>$25.00</span>
-                                <span className="text-[10px] font-normal text-slate-500 mt-0.5">Standard (1 PM - 2 PM)</span>
+                                <span className="mt-0.5 text-[10px] font-normal text-slate-400">Standard (1 PM - 2 PM)</span>
                             </button>
                             <button 
                                 type="button" 
                                 onClick={() => setFee(35)} 
-                                className={`cursor-pointer p-3 rounded-xl border-2 font-black text-xs flex flex-col items-center transition ${
-                                    fee === 35 
-                                        ? 'border-emerald-500 bg-emerald-50 text-emerald-800 shadow-xs' 
-                                        : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-                                }`}
+                                className={tierClass(fee === 35)}
                             >
                                 <span>$35.00</span>
-                                <span className="text-[10px] font-normal text-slate-500 mt-0.5">Priority (Before 1 PM)</span>
+                                <span className="mt-0.5 text-[10px] font-normal text-slate-400">Priority (Before 1 PM)</span>
                             </button>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label className="eyebrow mb-1 block">
                             Guest Name / Reservation #
                         </label>
                         <input 
@@ -114,32 +113,32 @@ export default function EarlyCheckinModal({
                             value={guestName} 
                             onChange={(e) => setGuestName(e.target.value)}
                             placeholder="e.g. John Doe / OYO-90631" 
-                            className="w-full text-xs font-medium border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white outline-none" 
+                            className="field" 
                         />
                     </div>
 
-                    <div className="bg-emerald-50/80 p-3 rounded-2xl border border-emerald-200 text-xs flex items-center justify-between">
+                    <div className="flex items-center justify-between rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.08] p-3 text-xs">
                         <div>
-                            <div className="font-bold text-emerald-900">Total Early Fees Collected Today</div>
-                            <div className="text-[10px] text-emerald-700">Logged directly to front desk audit</div>
+                            <div className="font-bold text-emerald-300">Total Early Fees Collected Today</div>
+                            <div className="text-[10px] text-emerald-400/70">Logged directly to front desk audit</div>
                         </div>
-                        <div className="text-xl font-black text-emerald-800 font-mono">
+                        <div className="font-mono text-xl font-black text-emerald-300">
                             ${todayEarlyTotal.toFixed(2)}
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                    <div className="modal-foot">
                         <button 
                             type="button" 
                             onClick={onClose} 
-                            className="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                            className="btn-quiet"
                         >
                             Cancel
                         </button>
                         <button 
                             type="submit" 
                             disabled={cleanRooms.length === 0}
-                            className="cursor-pointer px-4.5 py-2 text-xs font-bold bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 shadow-sm transition active:scale-95 flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-emerald-950/40 transition hover:bg-emerald-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
                         >
                             <i className="fa-solid fa-receipt"></i> <span>Collect Fee & Issue Key</span>
                         </button>
