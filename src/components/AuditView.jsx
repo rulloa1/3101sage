@@ -6,7 +6,7 @@ import hotelPool from '../assets/hotel-pool.jpg';
 import hotelFrontDeskParc from '../assets/hotel-front-desk-parc.jpg';
 import hotelGarageEntrance from '../assets/hotel-garage-entrance.jpg';
 
-export default function AuditView() {
+export default function AuditView({ onOpenMemo }) {
     const [earlyPerDay, setEarlyPerDay] = useState(3);
     const [directPerMonth, setDirectPerMonth] = useState(8);
     const [minsSavedPerRoom, setMinsSavedPerRoom] = useState(12);
@@ -27,16 +27,31 @@ export default function AuditView() {
                 ></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-amber-950/80"></div>
                 <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
-                    <div>
+                    <div className="max-w-xl">
                         <span className="text-xs uppercase font-extrabold tracking-wider bg-black/40 border border-amber-400/40 text-amber-300 px-3 py-1 rounded-full shadow-xs">
                             Property Operations & Brand Audit
                         </span>
                         <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-white">
                             3101 Sage Rd — Brand Conflict & Revenue Report
                         </h2>
-                        <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl leading-relaxed">
+                        <p className="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
                             Executive findings on listing fragmentation, OTA commission leakage, and operations turnover ROI for hotel ownership.
                         </p>
+                        
+                        {/* Executive Memo Launcher Button */}
+                        {onOpenMemo && (
+                            <div className="mt-4">
+                                <button
+                                    type="button"
+                                    onClick={onOpenMemo}
+                                    className="cursor-pointer text-xs font-black bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-amber-950/50 active:scale-95"
+                                >
+                                    <i className="fa-solid fa-file-contract text-sm"></i>
+                                    <span>Open Executive Pitch Proposal (Print / PDF)</span>
+                                    <i className="fa-solid fa-arrow-right text-[10px] ml-1"></i>
+                                </button>
+                            </div>
+                        )}
                     </div>
                     <div className="bg-slate-950/80 backdrop-blur-md p-4 rounded-2xl border border-amber-500/30 text-center shadow-lg">
                         <div className="text-xs font-bold text-amber-300">OTA Commission Rate</div>
@@ -301,6 +316,27 @@ export default function AuditView() {
                         </div>
                     </div>
                 </div>
+
+                {/* Printable Memorandum Action Banner */}
+                {onOpenMemo && (
+                    <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-indigo-50/80 p-4 rounded-2xl border border-indigo-100">
+                        <div>
+                            <h4 className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+                                <i className="fa-solid fa-file-pdf text-indigo-600"></i>
+                                <span>Presenting to Hotel Ownership?</span>
+                            </h4>
+                            <p className="text-[11px] text-slate-500 mt-0.5">Generate a formal, print-ready 1-page proposal memo with financial ROI tables and photo evidence.</p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={onOpenMemo}
+                            className="cursor-pointer text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95"
+                        >
+                            <i className="fa-solid fa-print"></i>
+                            <span>View & Print Proposal Memo</span>
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* INTERACTIVE OWNER ROI & BUSINESS VALUE CALCULATOR */}

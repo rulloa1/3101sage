@@ -11,6 +11,7 @@ import EarlyCheckinModal from './components/EarlyCheckinModal';
 import HousekeepingQcModal from './components/HousekeepingQcModal';
 import KeycardSleeveModal from './components/KeycardSleeveModal';
 import EditRoomModal from './components/EditRoomModal';
+import ExecutiveMemoModal from './components/ExecutiveMemoModal';
 import Toast from './components/Toast';
 
 import { initialRooms } from './constants/initialRooms';
@@ -42,6 +43,7 @@ export default function App() {
     const [isShiftReportOpen, setIsShiftReportOpen] = useState(false);
     const [isEarlyCheckinOpen, setIsEarlyCheckinOpen] = useState(false);
     const [isKeycardSleeveOpen, setIsKeycardSleeveOpen] = useState(false);
+    const [isMemoModalOpen, setIsMemoModalOpen] = useState(false);
     const [qcModalRoomId, setQcModalRoomId] = useState(null);
     const [editModalRoomId, setEditModalRoomId] = useState(null);
 
@@ -446,7 +448,7 @@ export default function App() {
                 )}
 
                 {activeView === 'audit' && (
-                    <AuditView />
+                    <AuditView onOpenMemo={() => setIsMemoModalOpen(true)} />
                 )}
             </main>
 
@@ -464,6 +466,11 @@ export default function App() {
                 onClose={() => setIsShiftReportOpen(false)}
                 rooms={rooms}
                 onCopy={showToast}
+            />
+
+            <ExecutiveMemoModal 
+                isOpen={isMemoModalOpen}
+                onClose={() => setIsMemoModalOpen(false)}
             />
 
             <EarlyCheckinModal 
