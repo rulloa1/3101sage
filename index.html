@@ -11,12 +11,25 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        },
+                        gold: {
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                        }
+                    },
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
                     },
                     boxShadow: {
-                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
                         'card-hover': '0 12px 28px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08)',
+                        'gold-glow': '0 0 20px -3px rgba(234, 179, 8, 0.25)',
                     }
                 }
             }
@@ -28,9 +41,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --cta-gold: #ca8a04;
+            --bg-surface: #f8fafc;
+            --text-main: #0f172a;
+        }
+
+        /* Micro-interactions & animations */
         .status-badge {
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .status-badge:active {
@@ -38,21 +61,31 @@
         }
 
         .glass-header {
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         /* Pulse ring animation for Cleaning in progress */
         @keyframes subtle-pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.08); }
+            50% { opacity: 0.65; transform: scale(1.06); }
         }
         .pulse-live {
             animation: subtle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        /* Custom scrollbar */
+        /* Respect accessibility reduced-motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Modern subtle scrollbar */
         ::-webkit-scrollbar {
             height: 6px;
             width: 6px;
@@ -75,30 +108,43 @@
     <!-- TOP APP HEADER -->
     <header class="glass-header text-white shadow-lg sticky top-0 z-50 border-b border-slate-800/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-            <!-- Brand / Property Details -->
+            <!-- Brand & Property Details -->
             <div class="flex items-center space-x-3.5">
-                <div class="bg-gradient-to-tr from-indigo-600 to-indigo-500 p-2.5 rounded-xl shadow-md shadow-indigo-900/30 ring-1 ring-white/20">
-                    <i class="fa-solid fa-hotel text-xl text-white"></i>
+                <div class="bg-gradient-to-tr from-indigo-600 via-indigo-700 to-amber-500 p-2.5 rounded-xl shadow-md shadow-indigo-950/40 ring-1 ring-white/20 flex items-center justify-center">
+                    <i class="fa-solid fa-hotel text-lg text-white"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-lg font-extrabold tracking-tight leading-tight text-white">RoomSync</h1>
-                        <span class="text-[10px] font-bold uppercase tracking-wider bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 px-1.5 py-0.5 rounded">Live</span>
+                        <h1 class="text-lg font-black tracking-tight leading-tight text-white flex items-center gap-1.5">
+                            <span>RoomSync</span>
+                        </h1>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>3101 Sage</span>
+                        </span>
                     </div>
-                    <p class="text-xs text-slate-300 font-medium flex items-center gap-1.5">
-                        <i class="fa-solid fa-location-dot text-indigo-400 text-[11px]"></i>
-                        <span>3101 Sage Rd</span>
+                    <p class="text-xs text-slate-300 font-medium flex items-center gap-1.5 mt-0.5">
+                        <i class="fa-solid fa-location-dot text-amber-400 text-[11px]"></i>
+                        <span>Sage Rd Operations</span>
                         <span class="text-slate-500">•</span>
-                        <span class="text-indigo-200" id="liveClock">Loading time...</span>
+                        <span class="text-indigo-200 font-semibold" id="liveClock">Loading time...</span>
                     </p>
                 </div>
             </div>
 
             <!-- VIEW TOGGLE + CONTROLS -->
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <!-- Shift Report Button -->
+                <button onclick="openShiftSummaryModal()" 
+                    class="cursor-pointer text-xs bg-slate-800/90 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border border-slate-700/80 font-bold px-3 py-2 rounded-xl transition-all duration-150 flex items-center gap-1.5 shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
+                    title="Generate Daily Shift Report">
+                    <i class="fa-solid fa-clipboard-list text-amber-400"></i>
+                    <span class="hidden md:inline" data-i18n="shiftReportBtn">Shift Report</span>
+                </button>
+
                 <!-- English / Spanish Switcher -->
                 <button id="langToggleBtn" onclick="toggleLanguage()"
-                    class="text-xs bg-slate-800/90 hover:bg-slate-700/90 active:scale-95 px-3 py-2 rounded-lg border border-slate-700 font-bold tracking-wide transition-all duration-200 flex items-center gap-1.5 shadow-sm text-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                    class="cursor-pointer text-xs bg-slate-800/90 hover:bg-slate-700 active:scale-95 px-3 py-2 rounded-xl border border-slate-700 font-bold tracking-wide transition-all duration-150 flex items-center gap-1.5 shadow-sm text-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
                     title="Change Language / Cambiar Idioma">
                     <i class="fa-solid fa-language text-indigo-400 text-sm"></i>
                     <span id="currentLangLabel">ES</span>
@@ -107,19 +153,33 @@
                 <!-- View Mode Switch -->
                 <div class="bg-slate-900/90 p-1 rounded-xl border border-slate-800 flex text-xs font-bold shadow-inner">
                     <button id="btnDeskView" onclick="setViewMode('desk')"
-                        class="px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
+                        class="cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
                         <i class="fa-solid fa-desktop text-xs"></i>
-                        <span>Front Desk</span>
+                        <span data-i18n="frontDeskTab">Front Desk</span>
                     </button>
                     <button id="btnHouseView" onclick="setViewMode('housekeeping')"
-                        class="px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
+                        class="cursor-pointer px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
                         <i class="fa-solid fa-broom text-xs"></i>
-                        <span>Housekeeping</span>
+                        <span data-i18n="housekeepingTab">Housekeeping</span>
                     </button>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- OPERATIONAL READINESS PROGRESS BAR -->
+    <section class="bg-slate-900 text-white px-4 sm:px-6 py-2 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2">
+                <span class="text-slate-400 font-semibold" data-i18n="readinessLabel">Check-in Readiness:</span>
+                <span id="readinessPercent" class="font-bold text-amber-300">0%</span>
+                <span class="text-slate-500 font-medium">(<span id="readyCountDisplay">0</span> of <span id="totalRoomsCount">0</span> rooms clean)</span>
+            </div>
+            <div class="w-full sm:w-64 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700/80">
+                <div id="readinessBar" class="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+    </section>
 
     <!-- STATS DASHBOARD BAR -->
     <section class="bg-white border-b border-slate-200/90 px-4 sm:px-6 py-3.5 shadow-soft">
@@ -127,60 +187,65 @@
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 <!-- Clean / Ready -->
                 <div onclick="setStatusQuickFilter('clean')" 
-                     class="group cursor-pointer p-3 rounded-xl bg-gradient-to-b from-emerald-50/70 to-emerald-50/30 border border-emerald-200/80 hover:border-emerald-400 hover:shadow-md transition-all duration-200 flex items-center justify-between">
+                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-emerald-50/80 to-emerald-50/30 border border-emerald-200/90 hover:border-emerald-400 hover:shadow-md transition-all duration-200 flex items-center justify-between"
+                     role="button" tabindex="0" title="Click to filter Clean rooms">
                     <div>
                         <div class="text-2xl font-black text-emerald-800 tracking-tight" id="statClean">0</div>
                         <div class="text-[11px] uppercase tracking-wider text-emerald-700 font-bold" data-i18n="clean">Clean / Ready</div>
                     </div>
-                    <div class="w-9 h-9 rounded-lg bg-emerald-100/80 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-100/90 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                         <i class="fa-solid fa-circle-check text-base"></i>
                     </div>
                 </div>
 
                 <!-- In Progress -->
                 <div onclick="setStatusQuickFilter('cleaning')" 
-                     class="group cursor-pointer p-3 rounded-xl bg-gradient-to-b from-amber-50/70 to-amber-50/30 border border-amber-200/80 hover:border-amber-400 hover:shadow-md transition-all duration-200 flex items-center justify-between">
+                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-amber-50/80 to-amber-50/30 border border-amber-200/90 hover:border-amber-400 hover:shadow-md transition-all duration-200 flex items-center justify-between"
+                     role="button" tabindex="0" title="Click to filter In-Progress rooms">
                     <div>
                         <div class="text-2xl font-black text-amber-800 tracking-tight" id="statInProgress">0</div>
                         <div class="text-[11px] uppercase tracking-wider text-amber-700 font-bold" data-i18n="cleaning">In Progress</div>
                     </div>
-                    <div class="w-9 h-9 rounded-lg bg-amber-100/80 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div class="w-9 h-9 rounded-xl bg-amber-100/90 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                         <i class="fa-solid fa-arrows-rotate text-base fa-spin"></i>
                     </div>
                 </div>
 
                 <!-- Dirty / Vacant -->
                 <div onclick="setStatusQuickFilter('dirty')" 
-                     class="group cursor-pointer p-3 rounded-xl bg-gradient-to-b from-rose-50/70 to-rose-50/30 border border-rose-200/80 hover:border-rose-400 hover:shadow-md transition-all duration-200 flex items-center justify-between">
+                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-rose-50/80 to-rose-50/30 border border-rose-200/90 hover:border-rose-400 hover:shadow-md transition-all duration-200 flex items-center justify-between"
+                     role="button" tabindex="0" title="Click to filter Dirty rooms">
                     <div>
                         <div class="text-2xl font-black text-rose-800 tracking-tight" id="statDirty">0</div>
                         <div class="text-[11px] uppercase tracking-wider text-rose-700 font-bold" data-i18n="dirty">Dirty / Vacant</div>
                     </div>
-                    <div class="w-9 h-9 rounded-lg bg-rose-100/80 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div class="w-9 h-9 rounded-xl bg-rose-100/90 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                         <i class="fa-solid fa-broom text-base"></i>
                     </div>
                 </div>
 
                 <!-- Occupied -->
                 <div onclick="setStatusQuickFilter('occupied')" 
-                     class="group cursor-pointer p-3 rounded-xl bg-gradient-to-b from-blue-50/70 to-blue-50/30 border border-blue-200/80 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex items-center justify-between">
+                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-blue-50/80 to-blue-50/30 border border-blue-200/90 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex items-center justify-between"
+                     role="button" tabindex="0" title="Click to filter Occupied rooms">
                     <div>
                         <div class="text-2xl font-black text-blue-800 tracking-tight" id="statOccupied">0</div>
                         <div class="text-[11px] uppercase tracking-wider text-blue-700 font-bold" data-i18n="occupied">Occupied</div>
                     </div>
-                    <div class="w-9 h-9 rounded-lg bg-blue-100/80 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div class="w-9 h-9 rounded-xl bg-blue-100/90 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                         <i class="fa-solid fa-user-check text-base"></i>
                     </div>
                 </div>
 
                 <!-- Maintenance / DND -->
                 <div onclick="setStatusQuickFilter('maintenance')" 
-                     class="group cursor-pointer p-3 rounded-xl bg-gradient-to-b from-purple-50/70 to-purple-50/30 border border-purple-200/80 hover:border-purple-400 hover:shadow-md transition-all duration-200 flex items-center justify-between col-span-2 sm:col-span-1">
+                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-purple-50/80 to-purple-50/30 border border-purple-200/90 hover:border-purple-400 hover:shadow-md transition-all duration-200 flex items-center justify-between col-span-2 sm:col-span-1"
+                     role="button" tabindex="0" title="Click to filter Maintenance and DND rooms">
                     <div>
                         <div class="text-2xl font-black text-purple-800 tracking-tight" id="statMaintenance">0</div>
                         <div class="text-[11px] uppercase tracking-wider text-purple-700 font-bold" data-i18n="maintenance">Maint / DND</div>
                     </div>
-                    <div class="w-9 h-9 rounded-lg bg-purple-100/80 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div class="w-9 h-9 rounded-xl bg-purple-100/90 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                         <i class="fa-solid fa-triangle-exclamation text-base"></i>
                     </div>
                 </div>
@@ -196,16 +261,16 @@
             <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
                 <span class="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1 hidden sm:inline" data-i18n="floorsLabel">Floors:</span>
                 <button onclick="setFloorFilter('ALL')"
-                    class="floor-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-slate-900 text-white shadow-sm transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
                     data-floor="ALL" data-i18n="allFloors">All Floors</button>
                 <button onclick="setFloorFilter(1)"
-                    class="floor-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
                     data-floor="1" data-i18n="floor1">1st Floor</button>
                 <button onclick="setFloorFilter(2)"
-                    class="floor-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
                     data-floor="2" data-i18n="floor2">2nd Floor</button>
                 <button onclick="setFloorFilter(3)"
-                    class="floor-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
                     data-floor="3" data-i18n="floor3">3rd Floor</button>
             </div>
 
@@ -215,15 +280,15 @@
                 <div class="relative flex-grow sm:flex-grow-0 sm:w-64">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                     <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Search room # or notes..."
-                        class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg pl-8 pr-7 py-2 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 font-medium">
-                    <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                        class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-7 py-2 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 font-medium">
+                    <button id="clearSearchBtn" onclick="clearSearch()" class="cursor-pointer hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs" title="Clear search">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </button>
                 </div>
 
                 <!-- Reset Demo Data -->
                 <button onclick="resetDemoData()" 
-                    class="text-xs text-slate-500 hover:text-rose-600 font-semibold px-2.5 py-2 rounded-lg hover:bg-rose-50 transition-colors duration-150 flex items-center gap-1.5 whitespace-nowrap focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:outline-none"
+                    class="cursor-pointer text-xs text-slate-500 hover:text-rose-600 font-semibold px-2.5 py-2 rounded-xl hover:bg-rose-50 transition-colors duration-150 flex items-center gap-1.5 whitespace-nowrap focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:outline-none"
                     title="Reset to factory demo rooms">
                     <i class="fa-solid fa-rotate-left"></i>
                     <span class="hidden sm:inline" data-i18n="resetRooms">Reset Demo</span>
@@ -232,9 +297,9 @@
         </div>
 
         <!-- Active Filter Indicator Pill (when filtered) -->
-        <div id="filterStatusPill" class="hidden mt-2 flex items-center gap-2 text-xs font-medium text-slate-600">
-            <span>Filtered by: <strong id="filterStatusText" class="text-indigo-600 uppercase font-bold"></strong></span>
-            <button onclick="setStatusQuickFilter('ALL')" class="text-xs text-slate-400 hover:text-slate-700 underline font-semibold">Clear filter</button>
+        <div id="filterStatusPill" class="hidden mt-2.5 flex items-center gap-2 text-xs font-medium text-slate-600 bg-indigo-50/70 border border-indigo-200/60 px-3 py-1.5 rounded-xl w-fit">
+            <span>Filtered by status: <strong id="filterStatusText" class="text-indigo-700 uppercase font-bold"></strong></span>
+            <button onclick="setStatusQuickFilter('ALL')" class="cursor-pointer text-xs text-indigo-500 hover:text-indigo-800 underline font-bold ml-1">Clear filter</button>
         </div>
     </section>
 
@@ -246,35 +311,38 @@
             <!-- Dynamic Room Cards rendered by JS -->
         </div>
 
-        <!-- HOUSEKEEPING MOBILE VIEW (Simplified list for phone usage) -->
+        <!-- HOUSEKEEPING MOBILE VIEW (Simplified list for phone usage with >=48px touch targets) -->
         <div id="houseViewContainer" class="hidden max-w-lg mx-auto space-y-3.5">
             <!-- Dynamic Simplified Cards rendered by JS -->
         </div>
 
         <!-- Empty State -->
-        <div id="emptyState" class="hidden text-center py-16 px-4">
+        <div id="emptyState" class="hidden text-center py-16 px-4 bg-white rounded-2xl border border-dashed border-slate-300 my-4">
             <div class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3 text-2xl">
                 <i class="fa-solid fa-bed"></i>
             </div>
-            <h3 class="text-base font-bold text-slate-700">No rooms match your filter</h3>
-            <p class="text-xs text-slate-400 mt-1">Try resetting your search query or floor selection.</p>
-            <button onclick="resetFilters()" class="mt-4 px-4 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition">
+            <h3 class="text-base font-bold text-slate-700" data-i18n="noMatchTitle">No rooms match your filter</h3>
+            <p class="text-xs text-slate-400 mt-1" data-i18n="noMatchSubtitle">Try resetting your search query or floor selection.</p>
+            <button onclick="resetFilters()" class="cursor-pointer mt-4 px-4 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition">
                 Show All Rooms
             </button>
         </div>
     </main>
 
     <!-- QUICK EDIT MODAL -->
-    <div id="editModal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 space-y-4 border border-slate-100 transform transition-all">
+    <div id="editModal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm hidden items-center justify-center p-4 z-50 transition-opacity duration-200">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100 transform transition-all">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
                         <i class="fa-solid fa-key"></i>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800" id="modalRoomTitle">Room 101</h3>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800" id="modalRoomTitle">Room 101</h3>
+                        <p class="text-[11px] text-slate-400 font-semibold" id="modalRoomSubtitle">3101 Sage Operations</p>
+                    </div>
                 </div>
-                <button onclick="closeModal()" aria-label="Close modal" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
+                <button onclick="closeModal()" aria-label="Close modal" class="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
@@ -290,13 +358,58 @@
                 <label for="modalRoomNotes" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5" data-i18n="roomNotesLabel">Room Notes / Issue</label>
                 <input type="text" id="modalRoomNotes" placeholder="e.g. Extra towels, AC check, VIP checkout..."
                     class="w-full text-xs font-medium border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition placeholder:text-slate-400 bg-slate-50 focus:bg-white">
+                
+                <!-- Quick Preset Note Chips -->
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider self-center mr-1">Presets:</span>
+                    <button type="button" onclick="appendNoteChip('Late Checkout 1PM')" class="cursor-pointer text-[11px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded-lg border border-slate-200 transition">+ Late Checkout</button>
+                    <button type="button" onclick="appendNoteChip('Extra Towels Needed')" class="cursor-pointer text-[11px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded-lg border border-slate-200 transition">+ Towels</button>
+                    <button type="button" onclick="appendNoteChip('VIP Arrival')" class="cursor-pointer text-[11px] font-semibold bg-amber-50 hover:bg-amber-100 text-amber-800 px-2 py-0.5 rounded-lg border border-amber-200 transition">+ VIP</button>
+                    <button type="button" onclick="appendNoteChip('Check AC Unit')" class="cursor-pointer text-[11px] font-semibold bg-rose-50 hover:bg-rose-100 text-rose-800 px-2 py-0.5 rounded-lg border border-rose-200 transition">+ AC Issue</button>
+                    <button type="button" onclick="appendNoteChip('DND on Door')" class="cursor-pointer text-[11px] font-semibold bg-purple-50 hover:bg-purple-100 text-purple-800 px-2 py-0.5 rounded-lg border border-purple-200 transition">+ DND</button>
+                </div>
             </div>
 
             <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
                 <button onclick="closeModal()"
-                    class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-lg transition" data-i18n="cancel">Cancel</button>
+                    class="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition" data-i18n="cancel">Cancel</button>
                 <button onclick="saveModalChanges()"
-                    class="px-4 py-2 text-xs font-bold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition active:scale-95" data-i18n="save">Save Changes</button>
+                    class="cursor-pointer px-4.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition active:scale-95" data-i18n="save">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHIFT REPORT MODAL -->
+    <div id="shiftSummaryModal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">Operational Shift Summary</h3>
+                        <p class="text-[11px] text-slate-400 font-medium">3101 Sage Rd &bull; Live Snapshot</p>
+                    </div>
+                </div>
+                <button onclick="closeShiftSummaryModal()" aria-label="Close modal" class="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Report Body -->
+            <div id="shiftReportContent" class="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs text-slate-800 space-y-2 select-all overflow-y-auto max-h-72">
+                <!-- Generated dynamically -->
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <button onclick="closeShiftSummaryModal()" class="cursor-pointer px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+                    Close
+                </button>
+                <button onclick="copyShiftReport()" class="cursor-pointer px-4 py-2 text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-sm transition active:scale-95 flex items-center gap-1.5">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>Copy to Clipboard</span>
+                </button>
             </div>
         </div>
     </div>
@@ -310,10 +423,10 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-400 font-medium">
+    <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-400 font-medium mt-auto">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <span>RoomSync Operations Pilot &bull; 3101 Sage Rd</span>
-            <span class="text-slate-400">Press <kbd class="px-1.5 py-0.5 bg-slate-100 border rounded text-[10px] text-slate-600 font-mono">Esc</kbd> to close modals</span>
+            <span class="text-slate-400">Design System: <span class="text-slate-600 font-semibold">Luxury Hospitality + Enterprise Dashboard</span></span>
         </div>
     </footer>
 
@@ -344,7 +457,13 @@
                 noInstructions: "No special instructions",
                 toastCleaned: "marked Clean & Ready",
                 toastCleaning: "cleaning in progress",
-                toastUpdated: "notes updated"
+                toastUpdated: "notes updated",
+                frontDeskTab: "Front Desk",
+                housekeepingTab: "Housekeeping",
+                shiftReportBtn: "Shift Report",
+                readinessLabel: "Check-in Readiness:",
+                noMatchTitle: "No rooms match your filter",
+                noMatchSubtitle: "Try resetting your search query or floor selection."
             },
             es: {
                 clean: "Limpia / Lista",
@@ -370,7 +489,13 @@
                 noInstructions: "Sin instrucciones especiales",
                 toastCleaned: "marcada Limpia y Lista",
                 toastCleaning: "limpieza en progreso",
-                toastUpdated: "notas guardadas"
+                toastUpdated: "notas guardadas",
+                frontDeskTab: "Recepción",
+                housekeepingTab: "Camaristas",
+                shiftReportBtn: "Reporte de Turno",
+                readinessLabel: "Listas para Check-in:",
+                noMatchTitle: "No hay habitaciones que coincidan",
+                noMatchSubtitle: "Intente restablecer la búsqueda o el filtro de pisos."
             }
         };
 
@@ -473,13 +598,13 @@
             const houseContainer = document.getElementById('houseViewContainer');
 
             if (mode === 'desk') {
-                deskBtn.className = "px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
-                houseBtn.className = "px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
+                deskBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
+                houseBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
                 deskContainer.classList.remove('hidden');
                 houseContainer.classList.add('hidden');
             } else {
-                houseBtn.className = "px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
-                deskBtn.className = "px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
+                houseBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
+                deskBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
                 houseContainer.classList.remove('hidden');
                 deskContainer.classList.add('hidden');
             }
@@ -491,9 +616,9 @@
             document.querySelectorAll('.floor-btn').forEach(btn => {
                 const bFloor = btn.getAttribute('data-floor');
                 if (bFloor == floor) {
-                    btn.className = "floor-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-slate-900 text-white shadow-sm transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500";
+                    btn.className = "cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500";
                 } else {
-                    btn.className = "floor-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500";
+                    btn.className = "cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500";
                 }
             });
             render();
@@ -546,7 +671,7 @@
                     return { 
                         bg: 'bg-emerald-600', 
                         text: 'text-emerald-700', 
-                        border: 'border-emerald-300', 
+                        border: 'border-emerald-200/90 hover:border-emerald-400', 
                         light: 'bg-emerald-50/70', 
                         badge: 'bg-emerald-100 text-emerald-800 border-emerald-300',
                         label: i18n[currentLang].clean, 
@@ -557,7 +682,7 @@
                     return { 
                         bg: 'bg-amber-500', 
                         text: 'text-amber-700', 
-                        border: 'border-amber-300', 
+                        border: 'border-amber-200/90 hover:border-amber-400', 
                         light: 'bg-amber-50/70', 
                         badge: 'bg-amber-100 text-amber-800 border-amber-300',
                         label: i18n[currentLang].cleaning, 
@@ -568,7 +693,7 @@
                     return { 
                         bg: 'bg-rose-500', 
                         text: 'text-rose-700', 
-                        border: 'border-rose-300', 
+                        border: 'border-rose-200/90 hover:border-rose-400', 
                         light: 'bg-rose-50/70', 
                         badge: 'bg-rose-100 text-rose-800 border-rose-300',
                         label: i18n[currentLang].dirty, 
@@ -579,7 +704,7 @@
                     return { 
                         bg: 'bg-blue-600', 
                         text: 'text-blue-700', 
-                        border: 'border-blue-300', 
+                        border: 'border-blue-200/90 hover:border-blue-400', 
                         light: 'bg-blue-50/70', 
                         badge: 'bg-blue-100 text-blue-800 border-blue-300',
                         label: i18n[currentLang].occupied, 
@@ -590,7 +715,7 @@
                     return { 
                         bg: 'bg-purple-600', 
                         text: 'text-purple-700', 
-                        border: 'border-purple-300', 
+                        border: 'border-purple-200/90 hover:border-purple-400', 
                         light: 'bg-purple-50/70', 
                         badge: 'bg-purple-100 text-purple-800 border-purple-300',
                         label: i18n[currentLang].dnd, 
@@ -602,7 +727,7 @@
                     return { 
                         bg: 'bg-slate-600', 
                         text: 'text-slate-700', 
-                        border: 'border-slate-300', 
+                        border: 'border-slate-300 hover:border-slate-400', 
                         light: 'bg-slate-100/70', 
                         badge: 'bg-slate-200 text-slate-800 border-slate-300',
                         label: i18n[currentLang].maintenance, 
@@ -613,11 +738,25 @@
         }
 
         function updateCounts() {
-            document.getElementById('statClean').innerText = rooms.filter(r => r.status === 'clean').length;
-            document.getElementById('statInProgress').innerText = rooms.filter(r => r.status === 'cleaning').length;
-            document.getElementById('statDirty').innerText = rooms.filter(r => r.status === 'dirty').length;
-            document.getElementById('statOccupied').innerText = rooms.filter(r => r.status === 'occupied').length;
-            document.getElementById('statMaintenance').innerText = rooms.filter(r => r.status === 'maintenance' || r.status === 'dnd').length;
+            const cleanCount = rooms.filter(r => r.status === 'clean').length;
+            const cleaningCount = rooms.filter(r => r.status === 'cleaning').length;
+            const dirtyCount = rooms.filter(r => r.status === 'dirty').length;
+            const occupiedCount = rooms.filter(r => r.status === 'occupied').length;
+            const maintCount = rooms.filter(r => r.status === 'maintenance' || r.status === 'dnd').length;
+            const total = rooms.length;
+
+            document.getElementById('statClean').innerText = cleanCount;
+            document.getElementById('statInProgress').innerText = cleaningCount;
+            document.getElementById('statDirty').innerText = dirtyCount;
+            document.getElementById('statOccupied').innerText = occupiedCount;
+            document.getElementById('statMaintenance').innerText = maintCount;
+
+            // Operational Readiness Bar calculation
+            const pct = total > 0 ? Math.round((cleanCount / total) * 100) : 0;
+            document.getElementById('readinessPercent').innerText = `${pct}%`;
+            document.getElementById('readyCountDisplay').innerText = cleanCount;
+            document.getElementById('totalRoomsCount').innerText = total;
+            document.getElementById('readinessBar').style.width = `${pct}%`;
         }
 
         function changeRoomStatusDirect(roomId, newStatus) {
@@ -636,6 +775,7 @@
             if (!room) return;
 
             document.getElementById('modalRoomTitle').innerText = `Room ${room.id} (${room.type})`;
+            document.getElementById('modalRoomSubtitle').innerText = `Floor ${room.floor} • Current: ${room.status.toUpperCase()}`;
             document.getElementById('modalRoomNotes').value = room.notes || "";
 
             const btnContainer = document.getElementById('modalStatusButtons');
@@ -646,7 +786,7 @@
                 const isActive = room.status === s;
                 return `
                     <button type="button" onclick="setModalStatus('${s}')" 
-                        class="p-2.5 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition-all duration-150 active:scale-95 focus-visible:ring-2 ${cfg.ring} focus-visible:outline-none ${isActive ? cfg.bg + ' text-white border-transparent shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'}">
+                        class="cursor-pointer p-2.5 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition-all duration-150 active:scale-95 focus-visible:ring-2 ${cfg.ring} focus-visible:outline-none ${isActive ? cfg.bg + ' text-white border-transparent shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'}">
                         <i class="fa-solid ${cfg.icon}"></i>
                         <span>${cfg.label}</span>
                     </button>
@@ -657,6 +797,18 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             setTimeout(() => document.getElementById('modalRoomNotes').focus(), 50);
+        }
+
+        function appendNoteChip(text) {
+            const input = document.getElementById('modalRoomNotes');
+            if (input) {
+                if (input.value.trim().length > 0) {
+                    input.value += `, ${text}`;
+                } else {
+                    input.value = text;
+                }
+                input.focus();
+            }
         }
 
         function setModalStatus(newStatus) {
@@ -684,31 +836,79 @@
             selectedRoomId = null;
         }
 
+        // SHIFT SUMMARY REPORT
+        function openShiftSummaryModal() {
+            const clean = rooms.filter(r => r.status === 'clean').length;
+            const inProgress = rooms.filter(r => r.status === 'cleaning').length;
+            const dirty = rooms.filter(r => r.status === 'dirty').length;
+            const occupied = rooms.filter(r => r.status === 'occupied').length;
+            const maint = rooms.filter(r => r.status === 'maintenance' || r.status === 'dnd').length;
+            const total = rooms.length;
+            const readyPct = Math.round((clean / total) * 100);
+
+            const flaggedRooms = rooms.filter(r => r.notes && r.notes.trim().length > 0);
+
+            const report = `===========================================
+ROOMSYNC OPERATIONAL REPORT | 3101 SAGE RD
+Generated: ${new Date().toLocaleString()}
+===========================================
+Total Rooms:       ${total}
+Clean & Ready:     ${clean} (${readyPct}%)
+In Progress:       ${inProgress}
+Dirty / Vacant:    ${dirty}
+Occupied:          ${occupied}
+Maintenance / DND: ${maint}
+-------------------------------------------
+FLAGGED ROOMS & SPECIAL NOTES:
+${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.toUpperCase()}): ${r.notes}`).join('\n') : '• None reported'}
+===========================================`;
+
+            document.getElementById('shiftReportContent').innerText = report;
+            const modal = document.getElementById('shiftSummaryModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeShiftSummaryModal() {
+            const modal = document.getElementById('shiftSummaryModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function copyShiftReport() {
+            const content = document.getElementById('shiftReportContent').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                showToast("Shift report copied to clipboard!", "fa-copy text-amber-400");
+                closeShiftSummaryModal();
+            }).catch(() => {
+                showToast("Unable to auto-copy, please select and copy text", "fa-triangle-exclamation text-rose-400");
+            });
+        }
+
         // KEYBOARD ACCESSIBILITY
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal();
+                closeShiftSummaryModal();
             }
             if (e.key === 'Enter' && selectedRoomId && document.activeElement === document.getElementById('modalRoomNotes')) {
                 saveModalChanges();
             }
         });
 
-        // Close modal on outside backdrop click
+        // Close modals on outside backdrop click
         document.getElementById('editModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('editModal')) {
-                closeModal();
-            }
+            if (e.target === document.getElementById('editModal')) closeModal();
+        });
+        document.getElementById('shiftSummaryModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('shiftSummaryModal')) closeShiftSummaryModal();
         });
 
         function render() {
             const filtered = rooms.filter(r => {
-                // Floor match
                 const matchFloor = currentFloor === 'ALL' || r.floor == currentFloor;
-                // Status filter match
                 const matchStatus = currentStatusFilter === 'ALL' || 
                                     (currentStatusFilter === 'maintenance' ? (r.status === 'maintenance' || r.status === 'dnd') : r.status === currentStatusFilter);
-                // Search query match (room id or notes)
                 const matchSearch = !currentSearchQuery || 
                                     String(r.id).includes(currentSearchQuery) || 
                                     (r.notes && r.notes.toLowerCase().includes(currentSearchQuery)) ||
@@ -736,7 +936,7 @@
                 }
             }
 
-            // 1. RENDER DESK VIEW
+            // 1. RENDER DESK VIEW (High Density Enterprise Cards)
             deskContainer.innerHTML = filtered.map(room => {
                 const cfg = getStatusConfig(room.status);
                 const isPulse = room.status === 'cleaning' ? 'pulse-live' : '';
@@ -760,7 +960,7 @@
                             <!-- Body of Card -->
                             <div class="p-3.5 space-y-2.5">
                                 ${room.notes ? `
-                                    <div class="text-xs bg-amber-50/90 text-amber-900 border border-amber-200/90 rounded-xl p-2 flex items-start gap-2 shadow-xs">
+                                    <div class="text-xs bg-amber-50/90 text-amber-900 border border-amber-200/90 rounded-xl p-2.5 flex items-start gap-2 shadow-xs">
                                         <i class="fa-solid fa-triangle-exclamation text-amber-600 mt-0.5 text-xs"></i>
                                         <span class="font-medium leading-relaxed">${room.notes}</span>
                                     </div>
@@ -778,27 +978,27 @@
                             <div class="flex gap-2 pt-2 border-t border-slate-100">
                                 ${room.status === 'dirty' ? `
                                     <button onclick="changeRoomStatusDirect(${room.id}, 'cleaning')" 
-                                        class="flex-1 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 shadow-sm shadow-amber-200 focus-visible:ring-2 focus-visible:ring-amber-500">
+                                        class="cursor-pointer flex-1 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 shadow-sm shadow-amber-200 focus-visible:ring-2 focus-visible:ring-amber-500">
                                         <i class="fa-solid fa-play text-[11px]"></i> <span>${i18n[currentLang].quickActionStart}</span>
                                     </button>
                                 ` : ''}
 
                                 ${room.status === 'cleaning' ? `
                                     <button onclick="changeRoomStatusDirect(${room.id}, 'clean')" 
-                                        class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-200 focus-visible:ring-2 focus-visible:ring-emerald-500">
+                                        class="cursor-pointer flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-200 focus-visible:ring-2 focus-visible:ring-emerald-500">
                                         <i class="fa-solid fa-check text-xs"></i> <span>${i18n[currentLang].quickActionClean}</span>
                                     </button>
                                 ` : ''}
 
                                 ${room.status !== 'dirty' && room.status !== 'cleaning' ? `
                                     <button onclick="changeRoomStatusDirect(${room.id}, 'dirty')" 
-                                        class="flex-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-700 active:scale-95 text-slate-600 text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 border border-slate-200">
+                                        class="cursor-pointer flex-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-700 active:scale-95 text-slate-600 text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 border border-slate-200">
                                         <i class="fa-solid fa-broom text-[11px]"></i> <span>Mark Dirty</span>
                                     </button>
                                 ` : ''}
 
                                 <button onclick="openEditModal(${room.id})" 
-                                    class="px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold py-2 rounded-xl transition-all duration-150 flex items-center justify-center border border-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400"
+                                    class="cursor-pointer px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold py-2 rounded-xl transition-all duration-150 flex items-center justify-center border border-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400"
                                     title="Edit room notes and status">
                                     <i class="fa-solid fa-sliders text-xs"></i>
                                 </button>
@@ -808,7 +1008,7 @@
                 `;
             }).join('');
 
-            // 2. RENDER HOUSEKEEPING MOBILE VIEW (Giant touch targets for mobile cleaners)
+            // 2. RENDER HOUSEKEEPING MOBILE VIEW (Touch-Optimized >=48px Touch Targets)
             houseContainer.innerHTML = filtered.map(room => {
                 const cfg = getStatusConfig(room.status);
                 return `
@@ -837,22 +1037,22 @@
                             </div>
                         ` : ''}
 
-                        <!-- 1-Tap Housekeeping Buttons -->
+                        <!-- 1-Tap Housekeeping Buttons (Min Height 48px for WCAG AAA tap-targets) -->
                         <div class="grid grid-cols-2 gap-2 pt-1">
                             <button onclick="changeRoomStatusDirect(${room.id}, 'cleaning')" 
-                                class="status-badge py-3.5 px-3 rounded-xl text-xs font-extrabold bg-amber-50 hover:bg-amber-100 text-amber-800 border-2 border-amber-300 flex items-center justify-center space-x-2 transition shadow-xs">
+                                class="cursor-pointer status-badge min-h-[48px] py-3.5 px-3 rounded-xl text-xs font-extrabold bg-amber-50 hover:bg-amber-100 text-amber-800 border-2 border-amber-300 flex items-center justify-center space-x-2 transition shadow-xs">
                                 <i class="fa-solid fa-spinner"></i>
                                 <span>${i18n[currentLang].cleaning}</span>
                             </button>
                             <button onclick="changeRoomStatusDirect(${room.id}, 'clean')" 
-                                class="status-badge py-3.5 px-3 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center space-x-2 transition">
+                                class="cursor-pointer status-badge min-h-[48px] py-3.5 px-3 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center space-x-2 transition">
                                 <i class="fa-solid fa-check text-sm"></i>
                                 <span>${i18n[currentLang].clean}</span>
                             </button>
                         </div>
 
                         <div class="flex justify-end pt-1">
-                            <button onclick="openEditModal(${room.id})" class="text-xs font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-1.5 py-1 px-2 rounded hover:bg-slate-50 transition">
+                            <button onclick="openEditModal(${room.id})" class="cursor-pointer text-xs font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-1.5 py-1 px-2 rounded hover:bg-slate-50 transition">
                                 <i class="fa-solid fa-sliders text-xs"></i>
                                 <span>${currentLang === 'es' ? 'Editar notas / otro estado' : 'Edit notes / custom status'}</span>
                             </button>
