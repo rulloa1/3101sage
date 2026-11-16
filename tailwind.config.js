@@ -7,41 +7,53 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: {
-          950: '#05080f',
-          900: '#070b14',
-          800: '#0b1120',
-          700: '#111a2e',
-          600: '#182338',
+        paper: {
+          50: '#fdfbf7',
+          100: '#f7f3ec',
+          200: '#efe9df',
+          300: '#e5ded1'
         },
+        ink: {
+          DEFAULT: '#1c1a17',
+          900: '#1c1a17',
+          800: '#2b2723'
+        },
+        // Oxblood: primary accent for the editorial/boutique direction
         brand: {
-          400: '#fb7185',
-          500: '#f43f5e',
-          600: '#e11d48',
-          700: '#be123c',
+          300: '#c4736f',
+          400: '#a94a4a',
+          500: '#963a3a',
+          600: '#7d2a2a',
+          700: '#651f1f'
+        },
+        // Brass: secondary accent, restrained
+        gold: {
+          50: '#f9f3e6',
+          100: '#f0e5cf',
+          200: '#e2d0ac',
+          300: '#d3b784',
+          400: '#bd9757',
+          500: '#a67c2e',
+          600: '#8a6522',
+          700: '#6f5019'
         },
         navy: {
           800: '#1e293b',
           900: '#0f172a',
           950: '#020617',
-        },
-        gold: {
-          400: '#facc15',
-          500: '#eab308',
-          600: '#ca8a04',
-          700: '#a16207',
         }
       },
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Fraunces', 'Playfair Display', 'Georgia', 'serif'],
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
-        'card-hover': '0 12px 28px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08)',
-        'gold-glow': '0 0 20px -3px rgba(234, 179, 8, 0.25)',
-        'lux': '0 22px 50px -30px rgba(0, 0, 0, 0.95), inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
-        'lux-hover': '0 28px 60px -26px rgba(0, 0, 0, 1), inset 0 1px 0 0 rgba(255, 255, 255, 0.09)',
-        'brand-glow': '0 0 24px -6px rgba(225, 29, 72, 0.55)',
+        'soft': '0 1px 2px rgba(28, 26, 23, 0.04), 0 10px 26px -20px rgba(28, 26, 23, 0.45)',
+        'card-hover': '0 2px 4px rgba(28, 26, 23, 0.05), 0 18px 38px -24px rgba(28, 26, 23, 0.5)',
+        'gold-glow': '0 0 0 1px rgba(166, 124, 46, 0.18)',
+        'lux': '0 1px 2px rgba(28, 26, 23, 0.05), 0 10px 26px -20px rgba(28, 26, 23, 0.45)',
+        'lux-hover': '0 2px 4px rgba(28, 26, 23, 0.06), 0 20px 40px -26px rgba(28, 26, 23, 0.55)',
+        'brand-glow': '0 1px 2px rgba(125, 42, 42, 0.25)',
       }
     },
   },

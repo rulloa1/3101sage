@@ -55,17 +55,17 @@ export default function EditRoomModal({
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/85 p-4 backdrop-blur-md"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-stone-900/35 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div className="modal-shell animate-slideUp max-w-md p-6 space-y-4">
                 <div className="modal-head">
                     <div>
-                        <h3 className="text-base font-bold text-white">
+                        <h3 className="text-base font-bold text-ink">
                             Room {room.id} ({room.type})
                         </h3>
-                        <p className="text-[11px] font-semibold text-slate-400">
-                            Floor {room.floor} <span className="text-slate-600">•</span> Current: <span className="text-gold-400">{room.status.toUpperCase()}</span>
+                        <p className="text-[11px] font-semibold text-stone-500">
+                            Floor {room.floor} <span className="text-stone-400">•</span> Current: <span className="text-gold-600">{room.status.toUpperCase()}</span>
                         </p>
                     </div>
                     <button 
@@ -92,10 +92,10 @@ export default function EditRoomModal({
                                     type="button"
                                     onClick={() => setPendingStatus(s)}
                                     aria-pressed={isActive}
-                                    className={`flex cursor-pointer items-center justify-center space-x-2 rounded-xl border p-2.5 text-xs font-bold transition ${
+                                    className={`flex cursor-pointer items-center justify-center space-x-2 rounded-md border p-2.5 text-xs font-bold transition ${
                                         isActive 
                                             ? `${cfg.bg} border-transparent text-white shadow-lg` 
-                                            : 'border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.08] hover:text-white'
+                                            : 'border-paper-300 bg-stone-900/[0.03] text-stone-700 hover:bg-stone-900/[0.06] hover:text-ink'
                                     }`}
                                 >
                                     <i className={`fa-solid ${cfg.icon}`}></i>
@@ -119,35 +119,35 @@ export default function EditRoomModal({
                         className="field"
                     />
                     <div className="mt-2 flex flex-wrap gap-1.5">
-                        <button type="button" onClick={() => appendNoteChip('Late Checkout 1PM')} className={`${chip} border-white/10 bg-white/[0.05] text-slate-300 hover:bg-white/[0.10] hover:text-white`}>+ Late Checkout</button>
-                        <button type="button" onClick={() => appendNoteChip('Extra Towels Needed')} className={`${chip} border-white/10 bg-white/[0.05] text-slate-300 hover:bg-white/[0.10] hover:text-white`}>+ Towels</button>
-                        <button type="button" onClick={() => appendNoteChip('Check AC Unit')} className={`${chip} border-rose-500/30 bg-rose-500/[0.10] text-rose-300 hover:bg-rose-500/[0.18]`}>+ AC Issue</button>
-                        <button type="button" onClick={() => appendNoteChip('VIP Arrival')} className={`${chip} border-gold-500/30 bg-gold-500/[0.10] text-gold-300 hover:bg-gold-500/[0.18]`}>+ VIP</button>
-                        <button type="button" onClick={() => appendNoteChip('DND on Door')} className={`${chip} border-purple-500/30 bg-purple-500/[0.10] text-purple-300 hover:bg-purple-500/[0.18]`}>+ DND</button>
+                        <button type="button" onClick={() => appendNoteChip('Late Checkout 1PM')} className={`${chip} border-paper-300 bg-stone-900/[0.04] text-stone-700 hover:bg-stone-900/[0.07] hover:text-ink`}>+ Late Checkout</button>
+                        <button type="button" onClick={() => appendNoteChip('Extra Towels Needed')} className={`${chip} border-paper-300 bg-stone-900/[0.04] text-stone-700 hover:bg-stone-900/[0.07] hover:text-ink`}>+ Towels</button>
+                        <button type="button" onClick={() => appendNoteChip('Check AC Unit')} className={`${chip} border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-50`}>+ AC Issue</button>
+                        <button type="button" onClick={() => appendNoteChip('VIP Arrival')} className={`${chip} border-gold-300 bg-gold-50 text-gold-700 hover:bg-gold-50`}>+ VIP</button>
+                        <button type="button" onClick={() => appendNoteChip('DND on Door')} className={`${chip} border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-50`}>+ DND</button>
                     </div>
                 </div>
 
                 {/* 1-Tap Handyman Maintenance Dispatch */}
-                <div className="space-y-2 rounded-2xl border border-gold-500/25 bg-gold-500/[0.07] p-3">
+                <div className="space-y-2 rounded-lg border border-gold-300 bg-gold-50 p-3">
                     <div className="flex items-center justify-between text-xs">
-                        <span className="flex items-center gap-1.5 font-bold text-gold-300">
-                            <i className="fa-solid fa-screwdriver-wrench text-gold-400"></i>
+                        <span className="flex items-center gap-1.5 font-bold text-gold-700">
+                            <i className="fa-solid fa-screwdriver-wrench text-gold-600"></i>
                             <span>Dispatch Handyman</span>
                         </span>
-                        <span className="rounded-md bg-gold-500/[0.14] px-2 py-0.5 text-[10px] font-semibold text-gold-300">Instant Alert</span>
+                        <span className="rounded-md bg-gold-50 px-2 py-0.5 text-[10px] font-semibold text-gold-700">Instant Alert</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         <button 
                             type="button" 
                             onClick={() => dispatchHandyman('whatsapp')} 
-                            className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-2.5 py-2 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95"
+                            className="flex cursor-pointer items-center justify-center gap-1.5 rounded-md bg-emerald-600 px-2.5 py-2 text-xs font-bold text-white transition hover:bg-emerald-500 active:scale-95"
                         >
                             <i className="fa-brands fa-whatsapp text-sm"></i> <span>WhatsApp Handyman</span>
                         </button>
                         <button 
                             type="button" 
                             onClick={() => dispatchHandyman('sms')} 
-                            className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.06] px-2.5 py-2 text-xs font-bold text-slate-200 transition hover:bg-white/[0.12] active:scale-95"
+                            className="flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-paper-300 bg-stone-900/[0.045] px-2.5 py-2 text-xs font-bold text-stone-800 transition hover:bg-stone-900/[0.08] active:scale-95"
                         >
                             <i className="fa-solid fa-comment-sms text-xs text-brand-400"></i> <span>SMS Dispatch</span>
                         </button>

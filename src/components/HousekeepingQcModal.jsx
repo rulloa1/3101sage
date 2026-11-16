@@ -44,20 +44,20 @@ export default function HousekeepingQcModal({
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/85 p-4 backdrop-blur-md"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-stone-900/35 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div className="modal-shell animate-slideUp max-w-md p-6 space-y-4">
                 <div className="modal-head">
                     <div className="flex items-center gap-2.5">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-gold-400/30 bg-gold-500/[0.12] text-lg text-gold-400">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-gold-300 bg-gold-50 text-lg text-gold-600">
                             <i className="fa-solid fa-clipboard-check"></i>
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-white">
+                            <h3 className="text-base font-bold text-ink">
                                 QC Check: Room {roomId} {room ? `(${room.type})` : ''}
                             </h3>
-                            <p className="text-[11px] font-semibold text-gold-400">3.7★ Review Defense Checklist</p>
+                            <p className="text-[11px] font-semibold text-gold-600">3.7★ Review Defense Checklist</p>
                         </div>
                     </div>
                     <button 
@@ -70,14 +70,14 @@ export default function HousekeepingQcModal({
                 </div>
 
                 <div className="space-y-2.5 text-xs">
-                    <p className="text-[11px] leading-relaxed text-slate-400">
+                    <p className="text-[11px] leading-relaxed text-stone-500">
                         Verify all 3 quality standards before certifying this room as ready for incoming guests:
                     </p>
 
                     {CHECKS.map((check, index) => (
                         <label
                             key={check.key}
-                            className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.035] p-3 transition hover:border-gold-500/30 hover:bg-white/[0.06]"
+                            className="flex cursor-pointer items-start gap-3 rounded-lg border border-paper-200 bg-stone-900/[0.025] p-3 transition hover:border-gold-300 hover:bg-stone-900/[0.045]"
                         >
                             <input 
                                 type="checkbox" 
@@ -86,8 +86,8 @@ export default function HousekeepingQcModal({
                                 className="mt-0.5 h-4 w-4 cursor-pointer rounded accent-emerald-500" 
                             />
                             <div>
-                                <strong className="text-slate-100">{index + 1}. {check.title}</strong>
-                                <p className="text-[11px] text-slate-400">{check.detail}</p>
+                                <strong className="text-stone-900">{index + 1}. {check.title}</strong>
+                                <p className="text-[11px] text-stone-500">{check.detail}</p>
                             </div>
                         </label>
                     ))}
@@ -104,7 +104,7 @@ export default function HousekeepingQcModal({
                     <button 
                         type="button" 
                         onClick={handleCertify} 
-                        className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-emerald-950/40 transition hover:bg-emerald-500 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                        className="flex cursor-pointer items-center gap-1.5 rounded-md bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-sm transition hover:bg-emerald-500 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
                     >
                         <i className="fa-solid fa-circle-check"></i> <span>Certify Clean & Ready</span>
                     </button>

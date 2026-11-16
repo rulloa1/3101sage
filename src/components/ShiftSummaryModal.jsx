@@ -34,10 +34,10 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
 
     const handleCopy = () => {
         navigator.clipboard.writeText(report).then(() => {
-            onCopy("Shift report copied to clipboard!", "fa-copy text-gold-400");
+            onCopy("Shift report copied to clipboard!", "fa-copy text-gold-600");
             onClose();
         }).catch(() => {
-            onCopy("Unable to copy automatically", "fa-triangle-exclamation text-rose-400");
+            onCopy("Unable to copy automatically", "fa-triangle-exclamation text-rose-600");
         });
     };
 
@@ -45,14 +45,14 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/85 p-4 backdrop-blur-md"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-stone-900/35 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div className="modal-shell animate-slideUp max-w-lg p-6 space-y-4">
                 <div className="modal-head">
                     <div>
                         <span className="eyebrow text-gold-500">Shift Handover</span>
-                        <h3 className="mt-1 text-base font-bold text-white">Operational Shift Summary (3101 Sage)</h3>
+                        <h3 className="mt-1 text-base font-bold text-ink">Operational Shift Summary (3101 Sage)</h3>
                     </div>
                     <button 
                         onClick={onClose} 
@@ -63,7 +63,7 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                     </button>
                 </div>
 
-                <div className="panel-inset max-h-72 select-all overflow-y-auto whitespace-pre p-4 font-mono text-[11px] leading-relaxed text-slate-300">
+                <div className="panel-inset max-h-72 select-all overflow-y-auto whitespace-pre p-4 font-mono text-[11px] leading-relaxed text-stone-700">
                     {report}
                 </div>
 

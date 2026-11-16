@@ -59,7 +59,7 @@ export default function App() {
     });
 
     // 2. TOAST HELPER
-    const showToast = useCallback((message, icon = 'fa-circle-check text-emerald-400') => {
+    const showToast = useCallback((message, icon = 'fa-circle-check text-emerald-600') => {
         setToast({ visible: true, message, icon });
         clearTimeout(window._reactToastTimer);
         window._reactToastTimer = setTimeout(() => {
@@ -103,7 +103,7 @@ export default function App() {
                 try {
                     localStorage.setItem('sage_rooms', JSON.stringify(data.rooms));
                 } catch (e) {}
-                showToast("Synced with property network!", "fa-tower-broadcast text-emerald-400");
+                showToast("Synced with property network!", "fa-tower-broadcast text-emerald-600");
                 playChime(659.25, 0.25);
                 return;
             }
@@ -208,7 +208,7 @@ export default function App() {
 
     const handleWalkInMatch = () => {
         setCurrentStatusFilter('clean');
-        showToast("Showing all rooms ready for immediate check-in!", "fa-key text-emerald-400");
+        showToast("Showing all rooms ready for immediate check-in!", "fa-key text-emerald-600");
     };
 
     const handleResetFilters = () => {
@@ -323,7 +323,7 @@ export default function App() {
 
         persistRooms(updated, true);
         playChime(659.25, 0.3);
-        showToast(`Collected $${fee} early fee! Room ${roomId} occupied.`, "fa-hand-holding-dollar text-emerald-400");
+        showToast(`Collected $${fee} early fee! Room ${roomId} occupied.`, "fa-hand-holding-dollar text-emerald-600");
     };
 
     const handleConfirmQc = (roomId) => {
@@ -347,7 +347,7 @@ export default function App() {
 
         persistRooms(updated, true);
         playChime(659.25, 0.25);
-        showToast(`Room ${roomId} certified Clean & Ready (3.7★ QC Passed)`, "fa-circle-check text-emerald-400");
+        showToast(`Room ${roomId} certified Clean & Ready (3.7★ QC Passed)`, "fa-circle-check text-emerald-600");
     };
 
     // 6. FILTER LOGIC
@@ -370,7 +370,7 @@ export default function App() {
     const activeEditRoom = useMemo(() => rooms.find(r => r.id === editModalRoomId), [rooms, editModalRoomId]);
 
     return (
-        <div className="text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-600 selection:text-white">
+        <div className="text-stone-900 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-600 selection:text-white">
             {/* Header */}
             <Header 
                 activeView={activeView}
@@ -423,8 +423,8 @@ export default function App() {
                             onOpenEdit={(id) => setEditModalRoomId(id)}
                         />
                     ) : (
-                        <div className="panel my-4 rounded-2xl border-dashed border-white/15 px-4 py-16 text-center">
-                            <h3 className="text-base font-bold text-slate-200">No rooms match this criteria</h3>
+                        <div className="panel my-4 rounded-lg border-dashed border-paper-300 px-4 py-16 text-center">
+                            <h3 className="text-base font-bold text-stone-800">No rooms match this criteria</h3>
                             <button 
                                 onClick={handleResetFilters}
                                 className="btn-primary mt-4"
@@ -451,10 +451,10 @@ export default function App() {
             </main>
 
             {/* FOOTER */}
-            <footer className="mt-auto border-t border-white/[0.07] bg-ink-950/60 py-3.5 text-center text-xs font-medium text-slate-500 backdrop-blur-md">
+            <footer className="mt-auto border-t border-paper-200 bg-paper-100 py-3.5 text-center text-xs font-medium text-stone-500 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-                    <span>RoomSync Pro Operational Suite <span className="text-slate-600">&bull;</span> 3101 Sage Rd</span>
-                    <span className="text-slate-500">Multi-tab &amp; Cloud Real-time Synced</span>
+                    <span>RoomSync Pro Operational Suite <span className="text-stone-400">&bull;</span> 3101 Sage Rd</span>
+                    <span className="text-stone-500">Multi-tab &amp; Cloud Real-time Synced</span>
                 </div>
             </footer>
 

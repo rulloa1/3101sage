@@ -11,29 +11,29 @@ const TILES = [
 
 const ACCENTS = {
     emerald: {
-        value: 'text-emerald-300',
-        well: 'bg-emerald-500/12 text-emerald-400 ring-1 ring-emerald-400/25',
-        active: 'border-emerald-400/60 bg-emerald-500/[0.12] ring-2 ring-emerald-400/25'
+        value: 'text-emerald-700',
+        well: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+        active: 'border-emerald-300 bg-emerald-50 ring-2 ring-emerald-200'
     },
     amber: {
-        value: 'text-amber-300',
-        well: 'bg-amber-500/12 text-amber-400 ring-1 ring-amber-400/25',
-        active: 'border-amber-400/60 bg-amber-500/[0.12] ring-2 ring-amber-400/25'
+        value: 'text-amber-700',
+        well: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
+        active: 'border-amber-300 bg-amber-50 ring-2 ring-amber-200'
     },
     rose: {
-        value: 'text-rose-300',
-        well: 'bg-rose-500/12 text-rose-400 ring-1 ring-rose-400/25',
-        active: 'border-rose-400/60 bg-rose-500/[0.12] ring-2 ring-rose-400/25'
+        value: 'text-rose-700',
+        well: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
+        active: 'border-rose-300 bg-rose-50 ring-2 ring-rose-200'
     },
     blue: {
-        value: 'text-blue-300',
-        well: 'bg-blue-500/12 text-blue-400 ring-1 ring-blue-400/25',
-        active: 'border-blue-400/60 bg-blue-500/[0.12] ring-2 ring-blue-400/25'
+        value: 'text-blue-700',
+        well: 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
+        active: 'border-blue-300 bg-blue-50 ring-2 ring-blue-200'
     },
     purple: {
-        value: 'text-purple-300',
-        well: 'bg-purple-500/12 text-purple-400 ring-1 ring-purple-400/25',
-        active: 'border-purple-400/60 bg-purple-500/[0.12] ring-2 ring-purple-400/25'
+        value: 'text-purple-700',
+        well: 'bg-purple-50 text-purple-700 ring-1 ring-purple-200',
+        active: 'border-purple-300 bg-purple-50 ring-2 ring-purple-200'
     }
 };
 
@@ -49,7 +49,7 @@ export default function StatsBar({ rooms, currentStatusFilter, onStatusFilter, c
     const dict = i18n[currentLang];
 
     return (
-        <section className="border-b border-white/[0.07] bg-ink-900/40 px-4 py-3.5 backdrop-blur-xl sm:px-6">
+        <section className="border-b border-paper-200 bg-paper-50/85 px-4 py-3.5 backdrop-blur-xl sm:px-6">
             <div className="mx-auto grid max-w-7xl grid-cols-2 gap-3 sm:grid-cols-5">
                 {TILES.map(({ key, accent, icon, iconSpin }) => {
                     const isActive = currentStatusFilter === key;
@@ -61,21 +61,21 @@ export default function StatsBar({ rooms, currentStatusFilter, onStatusFilter, c
                             type="button"
                             onClick={() => onStatusFilter(key)}
                             aria-pressed={isActive}
-                            className={`group flex cursor-pointer items-center justify-between rounded-2xl border p-3 text-left transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
+                            className={`group flex cursor-pointer items-center justify-between rounded-lg border p-3 text-left transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
                                 key === 'maintenance' ? 'col-span-2 sm:col-span-1' : ''
                             } ${
                                 isActive
                                     ? tone.active
-                                    : 'border-white/[0.08] bg-white/[0.035] hover:border-white/20 hover:bg-white/[0.06]'
+                                    : 'border-paper-200 bg-stone-900/[0.025] hover:border-[#d8cdb9] hover:bg-stone-900/[0.045]'
                             }`}
                         >
                             <div>
                                 <div className={`text-2xl font-black tracking-tight ${tone.value}`}>{counts[key]}</div>
-                                <div className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                                <div className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-stone-500">
                                     {dict[key]}
                                 </div>
                             </div>
-                            <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${tone.well}`}>
+                            <span className={`flex h-9 w-9 items-center justify-center rounded-md ${tone.well}`}>
                                 <i className={`fa-solid ${icon} text-base ${iconSpin ? 'fa-spin' : ''}`}></i>
                             </span>
                         </button>
