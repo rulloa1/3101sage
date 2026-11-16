@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RoomSync | 3101 Sage Operations</title>
+    <title>RoomSync Pro | 3101 Sage Operations</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -35,47 +35,28 @@
             }
         }
     </script>
-    <!-- Google Fonts -->
+    <!-- Google Fonts & Font Awesome 6 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- GunDB Decentralized Real-time Sync (Free, Zero-Config Cloud Sync Across All Phones/PCs) -->
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+
     <style>
-        :root {
-            --primary: #1e3a8a;
-            --secondary: #3b82f6;
-            --cta-gold: #ca8a04;
-            --bg-surface: #f8fafc;
-            --text-main: #0f172a;
-        }
-
-        /* Micro-interactions & animations */
-        .status-badge {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .status-badge:active {
-            transform: scale(0.96);
-        }
-
         .glass-header {
             background: rgba(15, 23, 42, 0.94);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
-
-        /* Pulse ring animation for Cleaning in progress */
         @keyframes subtle-pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.65; transform: scale(1.06); }
+            50% { opacity: 0.7; transform: scale(1.05); }
         }
-        .pulse-live {
-            animation: subtle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        /* Respect accessibility reduced-motion preferences */
+        .pulse-live { animation: subtle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .tap-target { min-height: 48px; }
+        
         @media (prefers-reduced-motion: reduce) {
             *, ::before, ::after {
                 animation-duration: 0.01ms !important;
@@ -85,21 +66,10 @@
             }
         }
 
-        /* Modern subtle scrollbar */
-        ::-webkit-scrollbar {
-            height: 6px;
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        ::-webkit-scrollbar { height: 6px; width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 
@@ -110,65 +80,66 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
             <!-- Brand & Property Details -->
             <div class="flex items-center space-x-3.5">
-                <div class="bg-gradient-to-tr from-indigo-600 via-indigo-700 to-amber-500 p-2.5 rounded-xl shadow-md shadow-indigo-950/40 ring-1 ring-white/20 flex items-center justify-center">
+                <div class="bg-gradient-to-tr from-indigo-600 via-indigo-700 to-amber-500 p-2.5 rounded-xl shadow-md ring-1 ring-white/20 flex items-center justify-center">
                     <i class="fa-solid fa-hotel text-lg text-white"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-lg font-black tracking-tight leading-tight text-white flex items-center gap-1.5">
-                            <span>RoomSync</span>
-                        </h1>
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <h1 class="text-lg font-black tracking-tight leading-tight text-white">RoomSync <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-mono font-bold">PRO</span></h1>
+                        <span id="syncStatusBadge" class="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full flex items-center gap-1">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span>3101 Sage</span>
+                            <span>Cloud Live</span>
                         </span>
                     </div>
                     <p class="text-xs text-slate-300 font-medium flex items-center gap-1.5 mt-0.5">
                         <i class="fa-solid fa-location-dot text-amber-400 text-[11px]"></i>
-                        <span>Sage Rd Operations</span>
+                        <span>3101 Sage Rd</span>
                         <span class="text-slate-500">•</span>
-                        <span class="text-indigo-200 font-semibold" id="liveClock">Loading time...</span>
+                        <span class="text-indigo-200 font-semibold" id="liveClock">--:--</span>
                     </p>
                 </div>
             </div>
 
-            <!-- VIEW TOGGLE + CONTROLS -->
+            <!-- VIEW TOGGLES & ACTIONS -->
             <div class="flex items-center gap-2 sm:gap-2.5">
                 <!-- Shift Report Button -->
                 <button onclick="openShiftSummaryModal()" 
-                    class="cursor-pointer text-xs bg-slate-800/90 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border border-slate-700/80 font-bold px-3 py-2 rounded-xl transition-all duration-150 flex items-center gap-1.5 shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
-                    title="Generate Daily Shift Report">
+                    class="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none">
                     <i class="fa-solid fa-clipboard-list text-amber-400"></i>
                     <span class="hidden md:inline" data-i18n="shiftReportBtn">Shift Report</span>
                 </button>
 
                 <!-- English / Spanish Switcher -->
                 <button id="langToggleBtn" onclick="toggleLanguage()"
-                    class="cursor-pointer text-xs bg-slate-800/90 hover:bg-slate-700 active:scale-95 px-3 py-2 rounded-xl border border-slate-700 font-bold tracking-wide transition-all duration-150 flex items-center gap-1.5 shadow-sm text-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-                    title="Change Language / Cambiar Idioma">
+                    class="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl border border-slate-700 font-bold transition flex items-center gap-1.5 shadow-sm text-slate-100 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
                     <i class="fa-solid fa-language text-indigo-400 text-sm"></i>
                     <span id="currentLangLabel">ES</span>
                 </button>
 
-                <!-- View Mode Switch -->
+                <!-- Navigation Tabs -->
                 <div class="bg-slate-900/90 p-1 rounded-xl border border-slate-800 flex text-xs font-bold shadow-inner">
                     <button id="btnDeskView" onclick="setViewMode('desk')"
-                        class="cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
+                        class="cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
                         <i class="fa-solid fa-desktop text-xs"></i>
-                        <span data-i18n="frontDeskTab">Front Desk</span>
+                        <span data-i18n="frontDeskTab">Desk</span>
                     </button>
                     <button id="btnHouseView" onclick="setViewMode('housekeeping')"
-                        class="cursor-pointer px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
+                        class="cursor-pointer px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none">
                         <i class="fa-solid fa-broom text-xs"></i>
                         <span data-i18n="housekeepingTab">Housekeeping</span>
+                    </button>
+                    <button id="btnAuditView" onclick="setViewMode('audit')"
+                        class="cursor-pointer px-3.5 py-1.5 rounded-lg text-amber-400 hover:text-amber-200 transition flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none">
+                        <i class="fa-solid fa-triangle-exclamation text-xs"></i>
+                        <span>Audit</span>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- OPERATIONAL READINESS PROGRESS BAR -->
-    <section class="bg-slate-900 text-white px-4 sm:px-6 py-2 border-b border-slate-800">
+    <!-- READINESS PROGRESS BAR -->
+    <section id="readinessSection" class="bg-slate-900 text-white px-4 sm:px-6 py-2 border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
             <div class="flex items-center gap-2">
                 <span class="text-slate-400 font-semibold" data-i18n="readinessLabel">Check-in Readiness:</span>
@@ -182,240 +153,242 @@
     </section>
 
     <!-- STATS DASHBOARD BAR -->
-    <section class="bg-white border-b border-slate-200/90 px-4 sm:px-6 py-3.5 shadow-soft">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                <!-- Clean / Ready -->
-                <div onclick="setStatusQuickFilter('clean')" 
-                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-emerald-50/80 to-emerald-50/30 border border-emerald-200/90 hover:border-emerald-400 hover:shadow-md transition-all duration-200 flex items-center justify-between"
-                     role="button" tabindex="0" title="Click to filter Clean rooms">
-                    <div>
-                        <div class="text-2xl font-black text-emerald-800 tracking-tight" id="statClean">0</div>
-                        <div class="text-[11px] uppercase tracking-wider text-emerald-700 font-bold" data-i18n="clean">Clean / Ready</div>
-                    </div>
-                    <div class="w-9 h-9 rounded-xl bg-emerald-100/90 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
-                        <i class="fa-solid fa-circle-check text-base"></i>
-                    </div>
+    <section id="statsSection" class="bg-white border-b border-slate-200/90 px-4 sm:px-6 py-3.5 shadow-soft">
+        <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div onclick="setStatusQuickFilter('clean')" class="cursor-pointer group p-3 rounded-2xl bg-emerald-50/60 border border-emerald-200/90 hover:border-emerald-400 hover:shadow-md transition flex items-center justify-between">
+                <div>
+                    <div class="text-2xl font-black text-emerald-800 tracking-tight" id="statClean">0</div>
+                    <div class="text-[11px] uppercase tracking-wider text-emerald-700 font-bold" data-i18n="clean">Clean / Ready</div>
                 </div>
-
-                <!-- In Progress -->
-                <div onclick="setStatusQuickFilter('cleaning')" 
-                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-amber-50/80 to-amber-50/30 border border-amber-200/90 hover:border-amber-400 hover:shadow-md transition-all duration-200 flex items-center justify-between"
-                     role="button" tabindex="0" title="Click to filter In-Progress rooms">
-                    <div>
-                        <div class="text-2xl font-black text-amber-800 tracking-tight" id="statInProgress">0</div>
-                        <div class="text-[11px] uppercase tracking-wider text-amber-700 font-bold" data-i18n="cleaning">In Progress</div>
-                    </div>
-                    <div class="w-9 h-9 rounded-xl bg-amber-100/90 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
-                        <i class="fa-solid fa-arrows-rotate text-base fa-spin"></i>
-                    </div>
+                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                    <i class="fa-solid fa-circle-check text-base"></i>
                 </div>
+            </div>
 
-                <!-- Dirty / Vacant -->
-                <div onclick="setStatusQuickFilter('dirty')" 
-                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-rose-50/80 to-rose-50/30 border border-rose-200/90 hover:border-rose-400 hover:shadow-md transition-all duration-200 flex items-center justify-between"
-                     role="button" tabindex="0" title="Click to filter Dirty rooms">
-                    <div>
-                        <div class="text-2xl font-black text-rose-800 tracking-tight" id="statDirty">0</div>
-                        <div class="text-[11px] uppercase tracking-wider text-rose-700 font-bold" data-i18n="dirty">Dirty / Vacant</div>
-                    </div>
-                    <div class="w-9 h-9 rounded-xl bg-rose-100/90 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
-                        <i class="fa-solid fa-broom text-base"></i>
-                    </div>
+            <div onclick="setStatusQuickFilter('cleaning')" class="cursor-pointer group p-3 rounded-2xl bg-amber-50/60 border border-amber-200/90 hover:border-amber-400 hover:shadow-md transition flex items-center justify-between">
+                <div>
+                    <div class="text-2xl font-black text-amber-800 tracking-tight" id="statInProgress">0</div>
+                    <div class="text-[11px] uppercase tracking-wider text-amber-700 font-bold" data-i18n="cleaning">In Progress</div>
                 </div>
-
-                <!-- Occupied -->
-                <div onclick="setStatusQuickFilter('occupied')" 
-                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-blue-50/80 to-blue-50/30 border border-blue-200/90 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex items-center justify-between"
-                     role="button" tabindex="0" title="Click to filter Occupied rooms">
-                    <div>
-                        <div class="text-2xl font-black text-blue-800 tracking-tight" id="statOccupied">0</div>
-                        <div class="text-[11px] uppercase tracking-wider text-blue-700 font-bold" data-i18n="occupied">Occupied</div>
-                    </div>
-                    <div class="w-9 h-9 rounded-xl bg-blue-100/90 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
-                        <i class="fa-solid fa-user-check text-base"></i>
-                    </div>
+                <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                    <i class="fa-solid fa-arrows-rotate text-base fa-spin"></i>
                 </div>
+            </div>
 
-                <!-- Maintenance / DND -->
-                <div onclick="setStatusQuickFilter('maintenance')" 
-                     class="cursor-pointer group p-3 rounded-2xl bg-gradient-to-b from-purple-50/80 to-purple-50/30 border border-purple-200/90 hover:border-purple-400 hover:shadow-md transition-all duration-200 flex items-center justify-between col-span-2 sm:col-span-1"
-                     role="button" tabindex="0" title="Click to filter Maintenance and DND rooms">
-                    <div>
-                        <div class="text-2xl font-black text-purple-800 tracking-tight" id="statMaintenance">0</div>
-                        <div class="text-[11px] uppercase tracking-wider text-purple-700 font-bold" data-i18n="maintenance">Maint / DND</div>
-                    </div>
-                    <div class="w-9 h-9 rounded-xl bg-purple-100/90 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
-                        <i class="fa-solid fa-triangle-exclamation text-base"></i>
-                    </div>
+            <div onclick="setStatusQuickFilter('dirty')" class="cursor-pointer group p-3 rounded-2xl bg-rose-50/60 border border-rose-200/90 hover:border-rose-400 hover:shadow-md transition flex items-center justify-between">
+                <div>
+                    <div class="text-2xl font-black text-rose-800 tracking-tight" id="statDirty">0</div>
+                    <div class="text-[11px] uppercase tracking-wider text-rose-700 font-bold" data-i18n="dirty">Dirty / Vacant</div>
+                </div>
+                <div class="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center">
+                    <i class="fa-solid fa-broom text-base"></i>
+                </div>
+            </div>
+
+            <div onclick="setStatusQuickFilter('occupied')" class="cursor-pointer group p-3 rounded-2xl bg-blue-50/60 border border-blue-200/90 hover:border-blue-400 hover:shadow-md transition flex items-center justify-between">
+                <div>
+                    <div class="text-2xl font-black text-blue-800 tracking-tight" id="statOccupied">0</div>
+                    <div class="text-[11px] uppercase tracking-wider text-blue-700 font-bold" data-i18n="occupied">Occupied</div>
+                </div>
+                <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                    <i class="fa-solid fa-user-check text-base"></i>
+                </div>
+            </div>
+
+            <div onclick="setStatusQuickFilter('maintenance')" class="cursor-pointer group p-3 rounded-2xl bg-purple-50/60 border border-purple-200/90 hover:border-purple-400 hover:shadow-md transition flex items-center justify-between col-span-2 sm:col-span-1">
+                <div>
+                    <div class="text-2xl font-black text-purple-800 tracking-tight" id="statMaintenance">0</div>
+                    <div class="text-[11px] uppercase tracking-wider text-purple-700 font-bold" data-i18n="maintenance">Maint / DND</div>
+                </div>
+                <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+                    <i class="fa-solid fa-triangle-exclamation text-base"></i>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CONTROLS & FILTER BAR -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-2 w-full">
+    <!-- FILTER & SEARCH CONTROLS -->
+    <section id="filterControlsBar" class="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-2 w-full">
         <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/90 shadow-soft flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5">
-            
-            <!-- Floor Filters -->
-            <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1 hidden sm:inline" data-i18n="floorsLabel">Floors:</span>
-                <button onclick="setFloorFilter('ALL')"
-                    class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
-                    data-floor="ALL" data-i18n="allFloors">All Floors</button>
-                <button onclick="setFloorFilter(1)"
-                    class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
-                    data-floor="1" data-i18n="floor1">1st Floor</button>
-                <button onclick="setFloorFilter(2)"
-                    class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
-                    data-floor="2" data-i18n="floor2">2nd Floor</button>
-                <button onclick="setFloorFilter(3)"
-                    class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500"
-                    data-floor="3" data-i18n="floor3">3rd Floor</button>
+            <!-- Floor Filters + Walk-in Matcher -->
+            <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0">
+                <button onclick="setFloorFilter('ALL')" class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm" data-floor="ALL">All Floors</button>
+                <button onclick="setFloorFilter(1)" class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" data-floor="1">1st Floor</button>
+                <button onclick="setFloorFilter(2)" class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" data-floor="2">2nd Floor</button>
+                <button onclick="setFloorFilter(3)" class="cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" data-floor="3">3rd Floor</button>
+                
+                <!-- Walk-In Matcher Quick Button -->
+                <button onclick="matchWalkInReady()" class="cursor-pointer ml-2 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-1.5 shadow-sm transition active:scale-95">
+                    <i class="fa-solid fa-key text-[11px]"></i>
+                    <span>Ready for Walk-In</span>
+                </button>
             </div>
 
-            <!-- Search Bar + Quick Actions -->
+            <!-- Search Bar -->
             <div class="flex items-center gap-2.5">
-                <!-- Live Search Box -->
                 <div class="relative flex-grow sm:flex-grow-0 sm:w-64">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Search room # or notes..."
-                        class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-7 py-2 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 font-medium">
-                    <button id="clearSearchBtn" onclick="clearSearch()" class="cursor-pointer hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs" title="Clear search">
+                    <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Search room # or note..."
+                        class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-7 py-2 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <button id="clearSearchBtn" onclick="clearSearch()" class="cursor-pointer hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </button>
                 </div>
-
-                <!-- Reset Demo Data -->
-                <button onclick="resetDemoData()" 
-                    class="cursor-pointer text-xs text-slate-500 hover:text-rose-600 font-semibold px-2.5 py-2 rounded-xl hover:bg-rose-50 transition-colors duration-150 flex items-center gap-1.5 whitespace-nowrap focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:outline-none"
-                    title="Reset to factory demo rooms">
+                <button onclick="resetDemoData()" class="cursor-pointer text-xs text-slate-500 hover:text-rose-600 font-semibold px-2.5 py-2 rounded-xl hover:bg-rose-50 transition flex items-center gap-1.5 whitespace-nowrap">
                     <i class="fa-solid fa-rotate-left"></i>
-                    <span class="hidden sm:inline" data-i18n="resetRooms">Reset Demo</span>
+                    <span class="hidden sm:inline">Reset</span>
                 </button>
             </div>
         </div>
-
-        <!-- Active Filter Indicator Pill (when filtered) -->
-        <div id="filterStatusPill" class="hidden mt-2.5 flex items-center gap-2 text-xs font-medium text-slate-600 bg-indigo-50/70 border border-indigo-200/60 px-3 py-1.5 rounded-xl w-fit">
-            <span>Filtered by status: <strong id="filterStatusText" class="text-indigo-700 uppercase font-bold"></strong></span>
-            <button onclick="setStatusQuickFilter('ALL')" class="cursor-pointer text-xs text-indigo-500 hover:text-indigo-800 underline font-bold ml-1">Clear filter</button>
-        </div>
     </section>
 
-    <!-- MAIN ROOMS DISPLAY -->
+    <!-- MAIN VIEW CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-4 w-full flex-grow">
+        <!-- 1. DESK GRID VIEW -->
+        <div id="deskViewContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
-        <!-- DESK VIEW (Grid of rich tiles) -->
-        <div id="deskViewContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <!-- Dynamic Room Cards rendered by JS -->
-        </div>
+        <!-- 2. HOUSEKEEPING MOBILE VIEW -->
+        <div id="houseViewContainer" class="hidden max-w-lg mx-auto space-y-3.5"></div>
 
-        <!-- HOUSEKEEPING MOBILE VIEW (Simplified list for phone usage with >=48px touch targets) -->
-        <div id="houseViewContainer" class="hidden max-w-lg mx-auto space-y-3.5">
-            <!-- Dynamic Simplified Cards rendered by JS -->
-        </div>
-
-        <!-- Empty State -->
-        <div id="emptyState" class="hidden text-center py-16 px-4 bg-white rounded-2xl border border-dashed border-slate-300 my-4">
-            <div class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3 text-2xl">
-                <i class="fa-solid fa-bed"></i>
+        <!-- 3. BRANDING & OTA AUDIT TAB (THE PITCH ARTIFACT FOR THE OWNER) -->
+        <div id="auditViewContainer" class="hidden max-w-4xl mx-auto space-y-6">
+            <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-800">
+                <div class="flex items-start gap-4">
+                    <div class="bg-amber-500 text-slate-950 p-3 rounded-2xl text-2xl font-black">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-black">Digital Presence & Branding Audit: 3101 Sage Rd</h2>
+                        <p class="text-slate-300 text-xs sm:text-sm mt-1.5 leading-relaxed">
+                            The property currently operates under <strong>3 conflicting online identities</strong>. This causes search fragmentation, guest arrival confusion, and lost direct booking revenue.
+                        </p>
+                    </div>
+                </div>
             </div>
-            <h3 class="text-base font-bold text-slate-700" data-i18n="noMatchTitle">No rooms match your filter</h3>
-            <p class="text-xs text-slate-400 mt-1" data-i18n="noMatchSubtitle">Try resetting your search query or floor selection.</p>
-            <button onclick="resetFilters()" class="cursor-pointer mt-4 px-4 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition">
-                Show All Rooms
-            </button>
+
+            <!-- The 3 Conflicting Names Breakdown -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-soft space-y-2.5">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                        <span>Physical / Primary</span>
+                        <i class="fa-solid fa-building text-indigo-600"></i>
+                    </div>
+                    <div class="text-lg font-black text-slate-800">"Stellar Stay"</div>
+                    <p class="text-xs text-slate-500">Current on-site physical branding and Booking.com / Agoda title.</p>
+                    <div class="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-1 rounded-lg">Guests arriving from OYO app can't find logo</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-soft space-y-2.5">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                        <span>Franchise Network</span>
+                        <i class="fa-solid fa-globe text-rose-500"></i>
+                    </div>
+                    <div class="text-lg font-black text-slate-800">"OYO Hotel Houston Galleria"</div>
+                    <p class="text-xs text-slate-500">Listed on OYO corporate app and Expedia network.</p>
+                    <div class="text-[11px] font-semibold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg">Chargebacks occur when card bill says "Stellar Stay"</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-soft space-y-2.5">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                        <span>Legacy / Google Maps</span>
+                        <i class="fa-brands fa-google text-blue-500"></i>
+                    </div>
+                    <div class="text-lg font-black text-slate-800">"Galleria Garden Hotel / Parc"</div>
+                    <p class="text-xs text-slate-500">Legacy profiles holding old historical reviews and outdated photos.</p>
+                    <div class="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-1 rounded-lg">Splits review authority & lowers Google Rank</div>
+                </div>
+            </div>
+
+            <!-- Action Plan to Hand to Owner -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-soft space-y-4">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-emerald-600"></i> 3-Step Remediation Plan for Ownership
+                </h3>
+                <div class="space-y-3 text-xs sm:text-sm">
+                    <div class="p-3.5 bg-slate-50 rounded-2xl flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">1</span>
+                        <div>
+                            <strong class="text-slate-800">Consolidate Google Business Profile:</strong>
+                            <p class="text-slate-500 text-xs mt-0.5">Merge the duplicate legacy pin into one verified listing: <em>"Stellar Stay, an OYO Hotel - Houston Galleria"</em>. This unifies all review stars.</p>
+                        </div>
+                    </div>
+                    <div class="p-3.5 bg-slate-50 rounded-2xl flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">2</span>
+                        <div>
+                            <strong class="text-slate-800">Sync OTA Channel Manager Descriptors:</strong>
+                            <p class="text-slate-500 text-xs mt-0.5">Align Booking.com, Expedia, and OYO metadata so guest confirmations match the building signage.</p>
+                        </div>
+                    </div>
+                    <div class="p-3.5 bg-slate-50 rounded-2xl flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">3</span>
+                        <div>
+                            <strong class="text-slate-800">Deploy RoomSync for Turnover:</strong>
+                            <p class="text-slate-500 text-xs mt-0.5">Give housekeepers 1-tap English/Spanish status buttons to eliminate 20+ daily phone calls to the desk.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty Filter State -->
+        <div id="emptyState" class="hidden text-center py-16 px-4 bg-white rounded-2xl border border-dashed border-slate-300 my-4">
+            <h3 class="text-base font-bold text-slate-700">No rooms match this criteria</h3>
+            <button onclick="resetFilters()" class="cursor-pointer mt-4 px-4 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition">Show All Rooms</button>
         </div>
     </main>
 
     <!-- QUICK EDIT MODAL -->
-    <div id="editModal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm hidden items-center justify-center p-4 z-50 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100 transform transition-all">
+    <div id="editModal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
-                        <i class="fa-solid fa-key"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-slate-800" id="modalRoomTitle">Room 101</h3>
-                        <p class="text-[11px] text-slate-400 font-semibold" id="modalRoomSubtitle">3101 Sage Operations</p>
-                    </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-800" id="modalRoomTitle">Room 101</h3>
+                    <p class="text-[11px] text-slate-400 font-semibold" id="modalRoomSubtitle">3101 Sage Operations</p>
                 </div>
-                <button onclick="closeModal()" aria-label="Close modal" class="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
-                    <i class="fa-solid fa-xmark text-base"></i>
-                </button>
+                <button onclick="closeModal()" class="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2" data-i18n="selectStatus">Change Status</label>
-                <div class="grid grid-cols-2 gap-2" id="modalStatusButtons">
-                    <!-- Filled dynamically with current language -->
-                </div>
+                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Change Status</label>
+                <div class="grid grid-cols-2 gap-2" id="modalStatusButtons"></div>
             </div>
 
             <div>
-                <label for="modalRoomNotes" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5" data-i18n="roomNotesLabel">Room Notes / Issue</label>
-                <input type="text" id="modalRoomNotes" placeholder="e.g. Extra towels, AC check, VIP checkout..."
-                    class="w-full text-xs font-medium border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition placeholder:text-slate-400 bg-slate-50 focus:bg-white">
-                
-                <!-- Quick Preset Note Chips -->
+                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Room Notes / Issue</label>
+                <input type="text" id="modalRoomNotes" placeholder="e.g. Extra towels, AC check..." class="w-full text-xs font-medium border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50">
                 <div class="mt-2 flex flex-wrap gap-1.5">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider self-center mr-1">Presets:</span>
-                    <button type="button" onclick="appendNoteChip('Late Checkout 1PM')" class="cursor-pointer text-[11px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded-lg border border-slate-200 transition">+ Late Checkout</button>
-                    <button type="button" onclick="appendNoteChip('Extra Towels Needed')" class="cursor-pointer text-[11px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded-lg border border-slate-200 transition">+ Towels</button>
-                    <button type="button" onclick="appendNoteChip('VIP Arrival')" class="cursor-pointer text-[11px] font-semibold bg-amber-50 hover:bg-amber-100 text-amber-800 px-2 py-0.5 rounded-lg border border-amber-200 transition">+ VIP</button>
-                    <button type="button" onclick="appendNoteChip('Check AC Unit')" class="cursor-pointer text-[11px] font-semibold bg-rose-50 hover:bg-rose-100 text-rose-800 px-2 py-0.5 rounded-lg border border-rose-200 transition">+ AC Issue</button>
-                    <button type="button" onclick="appendNoteChip('DND on Door')" class="cursor-pointer text-[11px] font-semibold bg-purple-50 hover:bg-purple-100 text-purple-800 px-2 py-0.5 rounded-lg border border-purple-200 transition">+ DND</button>
+                    <button type="button" onclick="appendNoteChip('Late Checkout 1PM')" class="cursor-pointer text-[11px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg border hover:bg-slate-200 transition">+ Late Checkout</button>
+                    <button type="button" onclick="appendNoteChip('Extra Towels Needed')" class="cursor-pointer text-[11px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg border hover:bg-slate-200 transition">+ Towels</button>
+                    <button type="button" onclick="appendNoteChip('Check AC Unit')" class="cursor-pointer text-[11px] font-semibold bg-rose-50 text-rose-800 px-2 py-0.5 rounded-lg border border-rose-200 hover:bg-rose-100 transition">+ AC Issue</button>
+                    <button type="button" onclick="appendNoteChip('VIP Arrival')" class="cursor-pointer text-[11px] font-semibold bg-amber-50 text-amber-800 px-2 py-0.5 rounded-lg border border-amber-200 hover:bg-amber-100 transition">+ VIP</button>
+                    <button type="button" onclick="appendNoteChip('DND on Door')" class="cursor-pointer text-[11px] font-semibold bg-purple-50 text-purple-800 px-2 py-0.5 rounded-lg border border-purple-200 hover:bg-purple-100 transition">+ DND</button>
                 </div>
             </div>
 
             <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
-                <button onclick="closeModal()"
-                    class="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition" data-i18n="cancel">Cancel</button>
-                <button onclick="saveModalChanges()"
-                    class="cursor-pointer px-4.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition active:scale-95" data-i18n="save">Save Changes</button>
+                <button onclick="closeModal()" class="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
+                <button onclick="saveModalChanges()" class="cursor-pointer px-4.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm transition active:scale-95">Save Changes</button>
             </div>
         </div>
     </div>
 
-    <!-- SHIFT REPORT MODAL -->
+    <!-- SHIFT SUMMARY REPORT MODAL -->
     <div id="shiftSummaryModal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-sm">
-                        <i class="fa-solid fa-file-lines"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-slate-800">Operational Shift Summary</h3>
-                        <p class="text-[11px] text-slate-400 font-medium">3101 Sage Rd &bull; Live Snapshot</p>
-                    </div>
-                </div>
-                <button onclick="closeShiftSummaryModal()" aria-label="Close modal" class="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
-                    <i class="fa-solid fa-xmark text-base"></i>
-                </button>
+                <h3 class="text-base font-bold text-slate-800">Operational Shift Summary (3101 Sage)</h3>
+                <button onclick="closeShiftSummaryModal()" class="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
-            <!-- Report Body -->
-            <div id="shiftReportContent" class="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs text-slate-800 space-y-2 select-all overflow-y-auto max-h-72">
-                <!-- Generated dynamically -->
-            </div>
-
+            <div id="shiftReportContent" class="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs text-slate-800 space-y-2 select-all overflow-y-auto max-h-72"></div>
             <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
-                <button onclick="closeShiftSummaryModal()" class="cursor-pointer px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition">
-                    Close
-                </button>
-                <button onclick="copyShiftReport()" class="cursor-pointer px-4 py-2 text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-sm transition active:scale-95 flex items-center gap-1.5">
-                    <i class="fa-regular fa-copy"></i>
-                    <span>Copy to Clipboard</span>
-                </button>
+                <button onclick="closeShiftSummaryModal()" class="cursor-pointer px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition">Close</button>
+                <button onclick="copyShiftReport()" class="cursor-pointer px-4 py-2 text-xs font-bold bg-amber-600 text-white rounded-xl hover:bg-amber-700 flex items-center gap-1.5 transition active:scale-95"><i class="fa-regular fa-copy"></i> Copy</button>
             </div>
         </div>
     </div>
 
     <!-- TOAST NOTIFICATION -->
-    <div id="toastNotification" class="fixed bottom-5 right-5 pointer-events-none z-50 transform translate-y-12 opacity-0 transition-all duration-300 ease-out">
+    <div id="toastNotification" class="fixed bottom-5 right-5 pointer-events-none z-50 transform translate-y-12 opacity-0 transition-all duration-300">
         <div class="bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl border border-slate-800 flex items-center gap-2.5">
             <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
             <span id="toastMessage">Status updated</span>
@@ -425,45 +398,47 @@
     <!-- FOOTER -->
     <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-400 font-medium mt-auto">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <span>RoomSync Operations Pilot &bull; 3101 Sage Rd</span>
-            <span class="text-slate-400">Design System: <span class="text-slate-600 font-semibold">Luxury Hospitality + Enterprise Dashboard</span></span>
+            <span>RoomSync Pro Operational Suite &bull; 3101 Sage Rd</span>
+            <span class="text-slate-400">Press <kbd class="px-1.5 py-0.5 bg-slate-100 border rounded text-[10px] text-slate-600 font-mono">Esc</kbd> to close modals</span>
         </div>
     </footer>
 
     <script>
-        // BILINGUAL DICTIONARY
+        // WEB AUDIO NOTIFICATION CHIME
+        function playChime(freq = 587.33, duration = 0.22) {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        // BILINGUAL STRINGS
         const i18n = {
             en: {
                 clean: "Clean / Ready",
                 cleaning: "In Progress",
                 dirty: "Dirty / Vacant",
                 occupied: "Occupied",
-                maintenance: "Maintenance / OOO",
+                maintenance: "Maint / DND",
                 dnd: "Do Not Disturb",
                 quickActionClean: "Mark Clean",
                 quickActionStart: "Start Cleaning",
-                selectStatus: "Select Status",
-                roomNote: "Note",
-                roomNotesLabel: "Room Notes / Issue",
-                langToggle: "Switch to Spanish (ES)",
-                allFloors: "All Floors",
-                floor1: "1st Floor",
-                floor2: "2nd Floor",
-                floor3: "3rd Floor",
-                floorsLabel: "Floors:",
-                resetRooms: "Reset Demo",
-                cancel: "Cancel",
-                save: "Save Changes",
-                noInstructions: "No special instructions",
-                toastCleaned: "marked Clean & Ready",
-                toastCleaning: "cleaning in progress",
-                toastUpdated: "notes updated",
-                frontDeskTab: "Front Desk",
+                selectStatus: "Change Status",
+                frontDeskTab: "Desk",
                 housekeepingTab: "Housekeeping",
                 shiftReportBtn: "Shift Report",
                 readinessLabel: "Check-in Readiness:",
-                noMatchTitle: "No rooms match your filter",
-                noMatchSubtitle: "Try resetting your search query or floor selection."
+                toastCleaned: "marked Clean & Ready",
+                toastCleaning: "cleaning in progress"
             },
             es: {
                 clean: "Limpia / Lista",
@@ -475,27 +450,12 @@
                 quickActionClean: "Marcar Limpia",
                 quickActionStart: "Empezar Limpieza",
                 selectStatus: "Cambiar Estado",
-                roomNote: "Nota",
-                roomNotesLabel: "Notas de Habitación / Reporte",
-                langToggle: "Cambiar a Inglés (EN)",
-                allFloors: "Todos los Pisos",
-                floor1: "Piso 1",
-                floor2: "Piso 2",
-                floor3: "Piso 3",
-                floorsLabel: "Pisos:",
-                resetRooms: "Reiniciar Demo",
-                cancel: "Cancelar",
-                save: "Guardar Cambios",
-                noInstructions: "Sin instrucciones especiales",
-                toastCleaned: "marcada Limpia y Lista",
-                toastCleaning: "limpieza en progreso",
-                toastUpdated: "notas guardadas",
                 frontDeskTab: "Recepción",
                 housekeepingTab: "Camaristas",
-                shiftReportBtn: "Reporte de Turno",
+                shiftReportBtn: "Reporte Turno",
                 readinessLabel: "Listas para Check-in:",
-                noMatchTitle: "No hay habitaciones que coincidan",
-                noMatchSubtitle: "Intente restablecer la búsqueda o el filtro de pisos."
+                toastCleaned: "marcada Limpia y Lista",
+                toastCleaning: "limpieza en progreso"
             }
         };
 
@@ -506,25 +466,51 @@
         let activeView = 'desk';
         let selectedRoomId = null;
 
-        // DEFAULT DATA (Realistic for 3101 Sage layout)
+        // REALISTIC 3101 SAGE ROOM INVENTORY
         const initialRooms = [
-            { id: 101, floor: 1, type: "1 King", status: "clean", notes: "" },
-            { id: 102, floor: 1, type: "2 Queen", status: "dirty", notes: "Check-in at 3 PM" },
-            { id: 103, floor: 1, type: "1 King", status: "occupied", notes: "" },
-            { id: 104, floor: 1, type: "2 Queen", status: "cleaning", notes: "" },
-            { id: 105, floor: 1, type: "1 King", status: "maintenance", notes: "AC dripping" },
-            { id: 201, floor: 2, type: "1 King", status: "clean", notes: "" },
-            { id: 202, floor: 2, type: "2 Queen", status: "occupied", notes: "" },
-            { id: 203, floor: 2, type: "1 King", status: "dirty", notes: "High priority" },
-            { id: 204, floor: 2, type: "2 Queen", status: "cleaning", notes: "" },
-            { id: 205, floor: 2, type: "1 King", status: "dnd", notes: "" },
-            { id: 301, floor: 3, type: "1 King Suite", status: "clean", notes: "" },
-            { id: 302, floor: 3, type: "2 Queen", status: "dirty", notes: "" },
-            { id: 303, floor: 3, type: "1 King", status: "occupied", notes: "" },
-            { id: 304, floor: 3, type: "1 King", status: "clean", notes: "" }
+            { id: 101, floor: 1, type: "1 King Suite", status: "clean", notes: "", cleaningStartedAt: null },
+            { id: 102, floor: 1, type: "2 Queen Kitchenette", status: "dirty", notes: "Check-in 3 PM", cleaningStartedAt: null },
+            { id: 103, floor: 1, type: "1 King Suite", status: "occupied", notes: "", cleaningStartedAt: null },
+            { id: 104, floor: 1, type: "2 Queen Kitchenette", status: "cleaning", notes: "", cleaningStartedAt: Date.now() - (12 * 60 * 1000) },
+            { id: 105, floor: 1, type: "1 King Suite", status: "maintenance", notes: "AC leak reported", cleaningStartedAt: null },
+            { id: 201, floor: 2, type: "1 King", status: "clean", notes: "", cleaningStartedAt: null },
+            { id: 202, floor: 2, type: "2 Queen Kitchenette", status: "occupied", notes: "", cleaningStartedAt: null },
+            { id: 203, floor: 2, type: "1 King", status: "dirty", notes: "High priority turnover", cleaningStartedAt: null },
+            { id: 204, floor: 2, type: "2 Queen Kitchenette", status: "cleaning", notes: "", cleaningStartedAt: Date.now() - (8 * 60 * 1000) },
+            { id: 205, floor: 2, type: "1 King", status: "dnd", notes: "Guest requested privacy", cleaningStartedAt: null },
+            { id: 301, floor: 3, type: "1 King Suite", status: "clean", notes: "", cleaningStartedAt: null },
+            { id: 302, floor: 3, type: "2 Queen Kitchenette", status: "dirty", notes: "", cleaningStartedAt: null },
+            { id: 303, floor: 3, type: "1 King Suite", status: "occupied", notes: "", cleaningStartedAt: null },
+            { id: 304, floor: 3, type: "1 King Suite", status: "clean", notes: "", cleaningStartedAt: null }
         ];
 
         let rooms = JSON.parse(localStorage.getItem('sage_rooms')) || initialRooms;
+
+        // GunDB CLOUD SYNC INITIALIZATION
+        let sageSync = null;
+        try {
+            if (typeof Gun !== 'undefined') {
+                const gun = Gun(['https://gun-manhattan.herokuapp.com/gun', 'https://relay.peer.ooo/gun']);
+                sageSync = gun.get('property_3101_sage_roomsync_prod_v1');
+
+                sageSync.map().on((remoteRoom) => {
+                    if (remoteRoom && remoteRoom.id) {
+                        const local = rooms.find(r => r.id === remoteRoom.id);
+                        if (local && (local.status !== remoteRoom.status || local.notes !== remoteRoom.notes)) {
+                            local.status = remoteRoom.status;
+                            local.notes = remoteRoom.notes || '';
+                            local.cleaningStartedAt = remoteRoom.cleaningStartedAt || null;
+                            updateCounts();
+                            render();
+                            showToast(`Room ${remoteRoom.id} updated via cloud sync!`, 'fa-tower-broadcast text-emerald-400');
+                            playChime(659.25, 0.25);
+                        }
+                    }
+                });
+            }
+        } catch (e) {
+            console.warn('GunDB initialized in offline fallback mode:', e);
+        }
 
         // LIVE CLOCK
         function updateLiveClock() {
@@ -537,18 +523,40 @@
         setInterval(updateLiveClock, 1000);
         updateLiveClock();
 
-        // TOAST FEEDBACK
+        // RE-RENDER RUNNING TIMERS EVERY 30 SECONDS
+        setInterval(() => {
+            if (rooms.some(r => r.status === 'cleaning')) {
+                render();
+            }
+        }, 30000);
+
+        function saveToStorage(publishCloud = true) {
+            localStorage.setItem('sage_rooms', JSON.stringify(rooms));
+            updateCounts();
+            render();
+            if (publishCloud && sageSync) {
+                try {
+                    rooms.forEach(r => {
+                        sageSync.get('room_' + r.id).put({
+                            id: r.id,
+                            status: r.status,
+                            notes: r.notes || '',
+                            cleaningStartedAt: r.cleaningStartedAt || 0
+                        });
+                    });
+                } catch(e) {}
+            }
+        }
+
         function showToast(message, iconClass = 'fa-circle-check text-emerald-400') {
             const toast = document.getElementById('toastNotification');
             const msgEl = document.getElementById('toastMessage');
             const iconEl = document.getElementById('toastIcon');
             if (!toast || !msgEl || !iconEl) return;
-
             msgEl.innerText = message;
             iconEl.className = `fa-solid ${iconClass} text-sm`;
             toast.classList.remove('translate-y-12', 'opacity-0');
             toast.classList.add('translate-y-0', 'opacity-100');
-
             clearTimeout(window._toastTimer);
             window._toastTimer = setTimeout(() => {
                 toast.classList.remove('translate-y-0', 'opacity-100');
@@ -556,57 +564,53 @@
             }, 2500);
         }
 
-        function saveToStorage() {
-            localStorage.setItem('sage_rooms', JSON.stringify(rooms));
-            updateCounts();
-            render();
-        }
-
-        function resetDemoData() {
-            if (confirm("Reset rooms to demo layout?")) {
-                rooms = JSON.parse(JSON.stringify(initialRooms));
-                currentStatusFilter = 'ALL';
-                currentSearchQuery = '';
-                document.getElementById('searchInput').value = '';
-                saveToStorage();
-                showToast("Demo rooms reset to default", "fa-rotate-left text-indigo-400");
-            }
-        }
-
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'es' : 'en';
             document.getElementById('currentLangLabel').innerText = currentLang === 'en' ? 'ES' : 'EN';
-            updateTranslations();
-            render();
-            showToast(currentLang === 'en' ? "Language set to English" : "Idioma cambiado a Español", "fa-globe text-indigo-400");
-        }
-
-        function updateTranslations() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (i18n[currentLang] && i18n[currentLang][key]) {
-                    el.innerText = i18n[currentLang][key];
-                }
+                if (i18n[currentLang][key]) el.innerText = i18n[currentLang][key];
             });
+            render();
         }
 
         function setViewMode(mode) {
             activeView = mode;
             const deskBtn = document.getElementById('btnDeskView');
             const houseBtn = document.getElementById('btnHouseView');
-            const deskContainer = document.getElementById('deskViewContainer');
-            const houseContainer = document.getElementById('houseViewContainer');
+            const auditBtn = document.getElementById('btnAuditView');
+
+            const deskC = document.getElementById('deskViewContainer');
+            const houseC = document.getElementById('houseViewContainer');
+            const auditC = document.getElementById('auditViewContainer');
+            const filterBar = document.getElementById('filterControlsBar');
+            const readiness = document.getElementById('readinessSection');
+            const stats = document.getElementById('statsSection');
+
+            [deskBtn, houseBtn, auditBtn].forEach(b => b.className = "cursor-pointer px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition");
+
+            deskC.classList.add('hidden');
+            houseC.classList.add('hidden');
+            auditC.classList.add('hidden');
 
             if (mode === 'desk') {
-                deskBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
-                houseBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
-                deskContainer.classList.remove('hidden');
-                houseContainer.classList.add('hidden');
-            } else {
-                houseBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
-                deskBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all duration-150 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none";
-                houseContainer.classList.remove('hidden');
-                deskContainer.classList.add('hidden');
+                deskBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm";
+                deskC.classList.remove('hidden');
+                filterBar.classList.remove('hidden');
+                readiness.classList.remove('hidden');
+                stats.classList.remove('hidden');
+            } else if (mode === 'housekeeping') {
+                houseBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm";
+                houseC.classList.remove('hidden');
+                filterBar.classList.add('hidden');
+                readiness.classList.remove('hidden');
+                stats.classList.remove('hidden');
+            } else if (mode === 'audit') {
+                auditBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-black shadow-sm";
+                auditC.classList.remove('hidden');
+                filterBar.classList.add('hidden');
+                readiness.classList.add('hidden');
+                stats.classList.add('hidden');
             }
             render();
         }
@@ -614,41 +618,27 @@
         function setFloorFilter(floor) {
             currentFloor = floor;
             document.querySelectorAll('.floor-btn').forEach(btn => {
-                const bFloor = btn.getAttribute('data-floor');
-                if (bFloor == floor) {
-                    btn.className = "cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500";
-                } else {
-                    btn.className = "cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500";
-                }
+                btn.className = btn.getAttribute('data-floor') == floor ? 
+                    "cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm" :
+                    "cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200";
             });
             render();
         }
 
         function setStatusQuickFilter(status) {
-            if (currentStatusFilter === status) {
-                currentStatusFilter = 'ALL';
-            } else {
-                currentStatusFilter = status;
-            }
-            const pill = document.getElementById('filterStatusPill');
-            const pillText = document.getElementById('filterStatusText');
-            if (currentStatusFilter !== 'ALL') {
-                pill.classList.remove('hidden');
-                pillText.innerText = currentStatusFilter;
-            } else {
-                pill.classList.add('hidden');
-            }
+            currentStatusFilter = currentStatusFilter === status ? 'ALL' : status;
             render();
+        }
+
+        function matchWalkInReady() {
+            currentStatusFilter = 'clean';
+            render();
+            showToast("Showing all rooms ready for immediate check-in!", "fa-key text-emerald-400");
         }
 
         function handleSearch(val) {
             currentSearchQuery = val.trim().toLowerCase();
-            const clearBtn = document.getElementById('clearSearchBtn');
-            if (currentSearchQuery.length > 0) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
+            document.getElementById('clearSearchBtn').classList.toggle('hidden', currentSearchQuery.length === 0);
             render();
         }
 
@@ -662,99 +652,50 @@
             currentStatusFilter = 'ALL';
             clearSearch();
             setFloorFilter('ALL');
-            setStatusQuickFilter('ALL');
+        }
+
+        function resetDemoData() {
+            if (confirm("Reset rooms to demo layout?")) {
+                rooms = JSON.parse(JSON.stringify(initialRooms));
+                saveToStorage();
+                showToast("Demo layout reset", "fa-rotate-left text-indigo-400");
+            }
         }
 
         function getStatusConfig(status) {
             switch (status) {
                 case 'clean':
-                    return { 
-                        bg: 'bg-emerald-600', 
-                        text: 'text-emerald-700', 
-                        border: 'border-emerald-200/90 hover:border-emerald-400', 
-                        light: 'bg-emerald-50/70', 
-                        badge: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-                        label: i18n[currentLang].clean, 
-                        icon: 'fa-circle-check',
-                        ring: 'focus-visible:ring-emerald-500'
-                    };
+                    return { bg: 'bg-emerald-600', border: 'border-emerald-300', light: 'bg-emerald-50/70', label: i18n[currentLang].clean, icon: 'fa-circle-check' };
                 case 'cleaning':
-                    return { 
-                        bg: 'bg-amber-500', 
-                        text: 'text-amber-700', 
-                        border: 'border-amber-200/90 hover:border-amber-400', 
-                        light: 'bg-amber-50/70', 
-                        badge: 'bg-amber-100 text-amber-800 border-amber-300',
-                        label: i18n[currentLang].cleaning, 
-                        icon: 'fa-arrows-rotate fa-spin',
-                        ring: 'focus-visible:ring-amber-500'
-                    };
+                    return { bg: 'bg-amber-500', border: 'border-amber-300', light: 'bg-amber-50/70', label: i18n[currentLang].cleaning, icon: 'fa-arrows-rotate fa-spin' };
                 case 'dirty':
-                    return { 
-                        bg: 'bg-rose-500', 
-                        text: 'text-rose-700', 
-                        border: 'border-rose-200/90 hover:border-rose-400', 
-                        light: 'bg-rose-50/70', 
-                        badge: 'bg-rose-100 text-rose-800 border-rose-300',
-                        label: i18n[currentLang].dirty, 
-                        icon: 'fa-broom',
-                        ring: 'focus-visible:ring-rose-500'
-                    };
+                    return { bg: 'bg-rose-500', border: 'border-rose-300', light: 'bg-rose-50/70', label: i18n[currentLang].dirty, icon: 'fa-broom' };
                 case 'occupied':
-                    return { 
-                        bg: 'bg-blue-600', 
-                        text: 'text-blue-700', 
-                        border: 'border-blue-200/90 hover:border-blue-400', 
-                        light: 'bg-blue-50/70', 
-                        badge: 'bg-blue-100 text-blue-800 border-blue-300',
-                        label: i18n[currentLang].occupied, 
-                        icon: 'fa-user-check',
-                        ring: 'focus-visible:ring-blue-500'
-                    };
+                    return { bg: 'bg-blue-600', border: 'border-blue-300', light: 'bg-blue-50/70', label: i18n[currentLang].occupied, icon: 'fa-user-check' };
                 case 'dnd':
-                    return { 
-                        bg: 'bg-purple-600', 
-                        text: 'text-purple-700', 
-                        border: 'border-purple-200/90 hover:border-purple-400', 
-                        light: 'bg-purple-50/70', 
-                        badge: 'bg-purple-100 text-purple-800 border-purple-300',
-                        label: i18n[currentLang].dnd, 
-                        icon: 'fa-ban',
-                        ring: 'focus-visible:ring-purple-500'
-                    };
-                case 'maintenance':
+                    return { bg: 'bg-purple-600', border: 'border-purple-300', light: 'bg-purple-50/70', label: i18n[currentLang].dnd, icon: 'fa-ban' };
                 default:
-                    return { 
-                        bg: 'bg-slate-600', 
-                        text: 'text-slate-700', 
-                        border: 'border-slate-300 hover:border-slate-400', 
-                        light: 'bg-slate-100/70', 
-                        badge: 'bg-slate-200 text-slate-800 border-slate-300',
-                        label: i18n[currentLang].maintenance, 
-                        icon: 'fa-wrench',
-                        ring: 'focus-visible:ring-slate-500'
-                    };
+                    return { bg: 'bg-slate-600', border: 'border-slate-300', light: 'bg-slate-100/70', label: i18n[currentLang].maintenance, icon: 'fa-wrench' };
             }
         }
 
         function updateCounts() {
-            const cleanCount = rooms.filter(r => r.status === 'clean').length;
-            const cleaningCount = rooms.filter(r => r.status === 'cleaning').length;
-            const dirtyCount = rooms.filter(r => r.status === 'dirty').length;
-            const occupiedCount = rooms.filter(r => r.status === 'occupied').length;
-            const maintCount = rooms.filter(r => r.status === 'maintenance' || r.status === 'dnd').length;
+            const clean = rooms.filter(r => r.status === 'clean').length;
+            const cleaning = rooms.filter(r => r.status === 'cleaning').length;
+            const dirty = rooms.filter(r => r.status === 'dirty').length;
+            const occupied = rooms.filter(r => r.status === 'occupied').length;
+            const maint = rooms.filter(r => r.status === 'maintenance' || r.status === 'dnd').length;
             const total = rooms.length;
 
-            document.getElementById('statClean').innerText = cleanCount;
-            document.getElementById('statInProgress').innerText = cleaningCount;
-            document.getElementById('statDirty').innerText = dirtyCount;
-            document.getElementById('statOccupied').innerText = occupiedCount;
-            document.getElementById('statMaintenance').innerText = maintCount;
+            document.getElementById('statClean').innerText = clean;
+            document.getElementById('statInProgress').innerText = cleaning;
+            document.getElementById('statDirty').innerText = dirty;
+            document.getElementById('statOccupied').innerText = occupied;
+            document.getElementById('statMaintenance').innerText = maint;
 
-            // Operational Readiness Bar calculation
-            const pct = total > 0 ? Math.round((cleanCount / total) * 100) : 0;
+            const pct = total > 0 ? Math.round((clean / total) * 100) : 0;
             document.getElementById('readinessPercent').innerText = `${pct}%`;
-            document.getElementById('readyCountDisplay').innerText = cleanCount;
+            document.getElementById('readyCountDisplay').innerText = clean;
             document.getElementById('totalRoomsCount').innerText = total;
             document.getElementById('readinessBar').style.width = `${pct}%`;
         }
@@ -763,9 +704,13 @@
             const room = rooms.find(r => r.id === roomId);
             if (room) {
                 room.status = newStatus;
+                if (newStatus === 'cleaning') room.cleaningStartedAt = Date.now();
+                if (newStatus === 'clean') {
+                    room.cleaningStartedAt = null;
+                    playChime(523.25, 0.2);
+                }
                 saveToStorage();
-                const cfg = getStatusConfig(newStatus);
-                showToast(`Room ${roomId} ${newStatus === 'clean' ? i18n[currentLang].toastCleaned : cfg.label}`, cfg.icon + ' ' + cfg.text);
+                showToast(`Room ${roomId} marked ${getStatusConfig(newStatus).label}`);
             }
         }
 
@@ -773,49 +718,34 @@
             selectedRoomId = roomId;
             const room = rooms.find(r => r.id === roomId);
             if (!room) return;
-
             document.getElementById('modalRoomTitle').innerText = `Room ${room.id} (${room.type})`;
             document.getElementById('modalRoomSubtitle').innerText = `Floor ${room.floor} • Current: ${room.status.toUpperCase()}`;
             document.getElementById('modalRoomNotes').value = room.notes || "";
 
             const btnContainer = document.getElementById('modalStatusButtons');
             const statuses = ['dirty', 'cleaning', 'clean', 'occupied', 'dnd', 'maintenance'];
-
             btnContainer.innerHTML = statuses.map(s => {
                 const cfg = getStatusConfig(s);
                 const isActive = room.status === s;
                 return `
                     <button type="button" onclick="setModalStatus('${s}')" 
-                        class="cursor-pointer p-2.5 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition-all duration-150 active:scale-95 focus-visible:ring-2 ${cfg.ring} focus-visible:outline-none ${isActive ? cfg.bg + ' text-white border-transparent shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'}">
+                        class="cursor-pointer p-2.5 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition ${isActive ? cfg.bg + ' text-white border-transparent shadow' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'}">
                         <i class="fa-solid ${cfg.icon}"></i>
                         <span>${cfg.label}</span>
                     </button>
                 `;
             }).join('');
 
-            const modal = document.getElementById('editModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => document.getElementById('modalRoomNotes').focus(), 50);
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
         }
 
-        function appendNoteChip(text) {
-            const input = document.getElementById('modalRoomNotes');
-            if (input) {
-                if (input.value.trim().length > 0) {
-                    input.value += `, ${text}`;
-                } else {
-                    input.value = text;
-                }
-                input.focus();
-            }
-        }
-
-        function setModalStatus(newStatus) {
+        function setModalStatus(s) {
             if (selectedRoomId) {
                 const room = rooms.find(r => r.id === selectedRoomId);
-                room.status = newStatus;
-                openEditModal(selectedRoomId); // re-render buttons
+                room.status = s;
+                if (s === 'cleaning') room.cleaningStartedAt = Date.now();
+                openEditModal(selectedRoomId);
             }
         }
 
@@ -824,16 +754,22 @@
                 const room = rooms.find(r => r.id === selectedRoomId);
                 room.notes = document.getElementById('modalRoomNotes').value.trim();
                 saveToStorage();
-                showToast(`Room ${room.id} ${i18n[currentLang].toastUpdated}`, 'fa-pen-to-square text-indigo-400');
                 closeModal();
             }
         }
 
         function closeModal() {
-            const modal = document.getElementById('editModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('editModal').classList.remove('flex');
             selectedRoomId = null;
+        }
+
+        function appendNoteChip(text) {
+            const input = document.getElementById('modalRoomNotes');
+            if (input) {
+                input.value = input.value.trim() ? `${input.value.trim()}, ${text}` : text;
+                input.focus();
+            }
         }
 
         // SHIFT SUMMARY REPORT
@@ -845,11 +781,10 @@
             const maint = rooms.filter(r => r.status === 'maintenance' || r.status === 'dnd').length;
             const total = rooms.length;
             const readyPct = Math.round((clean / total) * 100);
-
             const flaggedRooms = rooms.filter(r => r.notes && r.notes.trim().length > 0);
 
             const report = `===========================================
-ROOMSYNC OPERATIONAL REPORT | 3101 SAGE RD
+ROOMSYNC PRO OPERATIONAL REPORT | 3101 SAGE RD
 Generated: ${new Date().toLocaleString()}
 ===========================================
 Total Rooms:       ${total}
@@ -881,7 +816,7 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                 showToast("Shift report copied to clipboard!", "fa-copy text-amber-400");
                 closeShiftSummaryModal();
             }).catch(() => {
-                showToast("Unable to auto-copy, please select and copy text", "fa-triangle-exclamation text-rose-400");
+                showToast("Unable to copy automatically", "fa-triangle-exclamation text-rose-400");
             });
         }
 
@@ -896,13 +831,19 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
             }
         });
 
-        // Close modals on outside backdrop click
+        // Close on backdrop click
         document.getElementById('editModal').addEventListener('click', (e) => {
             if (e.target === document.getElementById('editModal')) closeModal();
         });
         document.getElementById('shiftSummaryModal').addEventListener('click', (e) => {
             if (e.target === document.getElementById('shiftSummaryModal')) closeShiftSummaryModal();
         });
+
+        function getCleaningMinutes(startedAt) {
+            if (!startedAt) return null;
+            const elapsedMs = Date.now() - startedAt;
+            return Math.max(1, Math.floor(elapsedMs / 60000));
+        }
 
         function render() {
             const filtered = rooms.filter(r => {
@@ -930,20 +871,19 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                 if (activeView === 'desk') {
                     deskContainer.classList.remove('hidden');
                     houseContainer.classList.add('hidden');
-                } else {
+                } else if (activeView === 'housekeeping') {
                     houseContainer.classList.remove('hidden');
                     deskContainer.classList.add('hidden');
                 }
             }
 
-            // 1. RENDER DESK VIEW (High Density Enterprise Cards)
+            // 1. DESK GRID VIEW
             deskContainer.innerHTML = filtered.map(room => {
                 const cfg = getStatusConfig(room.status);
-                const isPulse = room.status === 'cleaning' ? 'pulse-live' : '';
+                const cleaningMins = room.status === 'cleaning' ? getCleaningMinutes(room.cleaningStartedAt) : null;
                 return `
                     <div class="bg-white rounded-2xl shadow-soft border ${cfg.border} overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between">
                         <div>
-                            <!-- Header of Card -->
                             <div class="p-4 flex items-center justify-between border-b ${cfg.light}">
                                 <div>
                                     <div class="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-1.5">
@@ -952,13 +892,19 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                                     </div>
                                     <div class="text-xs text-slate-500 font-semibold mt-0.5">${room.type} • Floor ${room.floor}</div>
                                 </div>
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold ${cfg.bg} text-white shadow-sm tracking-wide ${isPulse}">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold ${cfg.bg} text-white shadow-sm tracking-wide ${room.status === 'cleaning' ? 'pulse-live' : ''}">
                                     <i class="fa-solid ${cfg.icon} mr-1.5 text-[10px]"></i> ${cfg.label}
                                 </span>
                             </div>
 
-                            <!-- Body of Card -->
-                            <div class="p-3.5 space-y-2.5">
+                            <div class="p-3.5 space-y-2">
+                                ${cleaningMins ? `
+                                    <div class="text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200/90 rounded-xl px-2.5 py-1.5 flex items-center justify-between">
+                                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-stopwatch fa-spin text-amber-600"></i> Active Cleaning</span>
+                                        <span class="font-mono">${cleaningMins} min elapsed</span>
+                                    </div>
+                                ` : ''}
+
                                 ${room.notes ? `
                                     <div class="text-xs bg-amber-50/90 text-amber-900 border border-amber-200/90 rounded-xl p-2.5 flex items-start gap-2 shadow-xs">
                                         <i class="fa-solid fa-triangle-exclamation text-amber-600 mt-0.5 text-xs"></i>
@@ -967,39 +913,37 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                                 ` : `
                                     <div class="text-xs text-slate-400 italic py-1 flex items-center gap-1.5">
                                         <i class="fa-regular fa-comment-dots text-slate-300"></i>
-                                        <span>${i18n[currentLang].noInstructions}</span>
+                                        <span>No special notes</span>
                                     </div>
                                 `}
                             </div>
                         </div>
 
-                        <!-- Footer Actions -->
                         <div class="p-3.5 pt-0">
                             <div class="flex gap-2 pt-2 border-t border-slate-100">
                                 ${room.status === 'dirty' ? `
                                     <button onclick="changeRoomStatusDirect(${room.id}, 'cleaning')" 
-                                        class="cursor-pointer flex-1 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 shadow-sm shadow-amber-200 focus-visible:ring-2 focus-visible:ring-amber-500">
-                                        <i class="fa-solid fa-play text-[11px]"></i> <span>${i18n[currentLang].quickActionStart}</span>
+                                        class="cursor-pointer flex-1 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-amber-200">
+                                        <i class="fa-solid fa-play text-[11px]"></i> <span>Start Clean</span>
                                     </button>
                                 ` : ''}
 
                                 ${room.status === 'cleaning' ? `
                                     <button onclick="changeRoomStatusDirect(${room.id}, 'clean')" 
-                                        class="cursor-pointer flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-200 focus-visible:ring-2 focus-visible:ring-emerald-500">
-                                        <i class="fa-solid fa-check text-xs"></i> <span>${i18n[currentLang].quickActionClean}</span>
+                                        class="cursor-pointer flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-200">
+                                        <i class="fa-solid fa-check text-xs"></i> <span>Mark Clean</span>
                                     </button>
                                 ` : ''}
 
                                 ${room.status !== 'dirty' && room.status !== 'cleaning' ? `
                                     <button onclick="changeRoomStatusDirect(${room.id}, 'dirty')" 
-                                        class="cursor-pointer flex-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-700 active:scale-95 text-slate-600 text-xs font-bold py-2 px-2.5 rounded-xl transition-all duration-150 flex items-center justify-center gap-1.5 border border-slate-200">
+                                        class="cursor-pointer flex-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-700 active:scale-95 text-slate-600 text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 border border-slate-200">
                                         <i class="fa-solid fa-broom text-[11px]"></i> <span>Mark Dirty</span>
                                     </button>
                                 ` : ''}
 
                                 <button onclick="openEditModal(${room.id})" 
-                                    class="cursor-pointer px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold py-2 rounded-xl transition-all duration-150 flex items-center justify-center border border-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400"
-                                    title="Edit room notes and status">
+                                    class="cursor-pointer px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold py-2 rounded-xl transition flex items-center justify-center border border-slate-200">
                                     <i class="fa-solid fa-sliders text-xs"></i>
                                 </button>
                             </div>
@@ -1008,11 +952,12 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                 `;
             }).join('');
 
-            // 2. RENDER HOUSEKEEPING MOBILE VIEW (Touch-Optimized >=48px Touch Targets)
+            // 2. HOUSEKEEPING MOBILE VIEW
             houseContainer.innerHTML = filtered.map(room => {
                 const cfg = getStatusConfig(room.status);
+                const cleaningMins = room.status === 'cleaning' ? getCleaningMinutes(room.cleaningStartedAt) : null;
                 return `
-                    <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-soft border-2 ${cfg.border} space-y-3.5 hover:shadow-md transition">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-soft border-2 ${cfg.border} space-y-3 hover:shadow-md transition">
                         <div class="flex items-center justify-between">
                             <div>
                                 <span class="text-3xl font-black text-slate-800 tracking-tight">#${room.id}</span>
@@ -1026,8 +971,9 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                             </span>
                         </div>
 
-                        <div class="text-xs font-medium text-slate-500 flex items-center gap-2">
+                        <div class="text-xs font-medium text-slate-500 flex items-center justify-between">
                             <span><i class="fa-solid fa-bed text-slate-400 mr-1"></i> ${room.type}</span>
+                            ${cleaningMins ? `<span class="text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded border border-amber-200"><i class="fa-solid fa-stopwatch mr-1"></i>${cleaningMins}m</span>` : ''}
                         </div>
 
                         ${room.notes ? `
@@ -1037,15 +983,14 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                             </div>
                         ` : ''}
 
-                        <!-- 1-Tap Housekeeping Buttons (Min Height 48px for WCAG AAA tap-targets) -->
                         <div class="grid grid-cols-2 gap-2 pt-1">
                             <button onclick="changeRoomStatusDirect(${room.id}, 'cleaning')" 
-                                class="cursor-pointer status-badge min-h-[48px] py-3.5 px-3 rounded-xl text-xs font-extrabold bg-amber-50 hover:bg-amber-100 text-amber-800 border-2 border-amber-300 flex items-center justify-center space-x-2 transition shadow-xs">
+                                class="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-amber-50 hover:bg-amber-100 text-amber-800 border-2 border-amber-300 flex items-center justify-center space-x-2 transition shadow-xs active:scale-95">
                                 <i class="fa-solid fa-spinner"></i>
                                 <span>${i18n[currentLang].cleaning}</span>
                             </button>
                             <button onclick="changeRoomStatusDirect(${room.id}, 'clean')" 
-                                class="cursor-pointer status-badge min-h-[48px] py-3.5 px-3 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center space-x-2 transition">
+                                class="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center space-x-2 transition active:scale-95">
                                 <i class="fa-solid fa-check text-sm"></i>
                                 <span>${i18n[currentLang].clean}</span>
                             </button>
@@ -1064,7 +1009,6 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
 
         // INIT
         updateCounts();
-        updateTranslations();
         render();
     </script>
 </body>
