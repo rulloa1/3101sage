@@ -3,6 +3,8 @@ import oyoLogo from '../assets/oyo-logo.png';
 import hotelHeroBg from '../assets/hotel-hero-bg.jpg';
 import hotelSuite from '../assets/hotel-suite.jpg';
 import hotelPool from '../assets/hotel-pool.jpg';
+import hotelFrontDeskParc from '../assets/hotel-front-desk-parc.jpg';
+import hotelGarageEntrance from '../assets/hotel-garage-entrance.jpg';
 
 export default function AuditView() {
     const [earlyPerDay, setEarlyPerDay] = useState(3);
@@ -46,15 +48,15 @@ export default function AuditView() {
 
             {/* 3-Way Brand Identity Mismatch Analysis */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2.5">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
-                        <span>Physical / Primary</span>
-                        <i className="fa-solid fa-building text-indigo-600"></i>
+                <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-rose-200/90 shadow-soft space-y-2.5">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-rose-600 flex items-center justify-between">
+                        <span>Physical Signage on Door</span>
+                        <i className="fa-solid fa-door-open text-rose-600"></i>
                     </div>
-                    <div className="text-lg font-black text-slate-800">"Stellar Stay"</div>
-                    <p className="text-xs text-slate-500">Current on-site physical branding and Booking.com / Agoda title.</p>
-                    <div className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-1 rounded-lg">
-                        Guests arriving from OYO app can't find logo
+                    <div className="text-lg font-black text-slate-900">"PARC HOTEL"</div>
+                    <p className="text-xs text-slate-500">The actual garage check-in entrance door is boldly labeled <strong>"PARC HOTEL"</strong> with drive-up front desk windows.</p>
+                    <div className="text-[11px] font-semibold text-rose-800 bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-lg">
+                        ⚠️ OYO & OTA guests pull in and think they have the wrong hotel
                     </div>
                 </div>
 
@@ -63,22 +65,22 @@ export default function AuditView() {
                         <span>Franchise Network</span>
                         <i className="fa-solid fa-globe text-rose-500"></i>
                     </div>
-                    <div className="text-lg font-black text-slate-800">"OYO Hotel & Apartments Houston Galleria"</div>
-                    <p className="text-xs text-slate-500">Listed on OYO corporate app and Expedia network (Property #90631).</p>
-                    <div className="text-[11px] font-semibold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg">
-                        Chargebacks occur when card bill says "Stellar Stay"
+                    <div className="text-lg font-black text-slate-800">"OYO Hotel Houston Galleria"</div>
+                    <p className="text-xs text-slate-500">Listed on OYO corporate app and Expedia network under official Property #90631.</p>
+                    <div className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-lg">
+                        ⚠️ Credit card chargebacks when bill name doesn't match entrance
                     </div>
                 </div>
 
                 <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2.5">
                     <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
-                        <span>Legacy / Google Maps</span>
+                        <span>OTA & Legacy Listings</span>
                         <i className="fa-brands fa-google text-blue-500"></i>
                     </div>
-                    <div className="text-lg font-black text-slate-800">"Galleria Garden Hotel / Parc"</div>
-                    <p className="text-xs text-slate-500">Legacy profiles holding old historical reviews and outdated photos.</p>
-                    <div className="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-1 rounded-lg">
-                        Splits review authority & lowers Google Rank
+                    <div className="text-lg font-black text-slate-800">"Stellar Stay / Galleria Garden"</div>
+                    <p className="text-xs text-slate-500">Listed on Booking.com / Agoda as "Stellar Stay" with legacy Google Maps pins.</p>
+                    <div className="text-[11px] font-semibold text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1.5 rounded-lg">
+                        ⚠️ Splits review volume (3.7★) and pays 18%–22% commission
                     </div>
                 </div>
             </div>
@@ -153,67 +155,119 @@ export default function AuditView() {
             </div>
 
             {/* PROPERTY PHOTO SHOWCASE (ACTUAL 3101 SAGE PHOTOGRAPHY) */}
-            <div className="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/90 shadow-soft space-y-4">
+            <div className="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/90 shadow-soft space-y-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
                         <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider flex items-center gap-1.5">
                             <i className="fa-solid fa-camera"></i>
                             <span>Verified Property Visual Assets</span>
                         </span>
-                        <h3 className="text-base font-extrabold text-slate-800">Actual 3101 Sage Rd Photography (OYO #90631)</h3>
+                        <h3 className="text-base font-extrabold text-slate-800">Actual 3101 Sage Rd Photography (On-Site & OYO #90631)</h3>
                     </div>
                     <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
                         <i className="fa-solid fa-circle-check text-emerald-500"></i>
-                        <span>Direct from OYO Channel Assets</span>
+                        <span>On-Site Field Inspection & Channel Verified</span>
                     </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Facade Photo */}
-                    <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
-                        <div 
-                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                            style={{ backgroundImage: `url(${hotelHeroBg})` }}
-                        ></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
-                        <div className="absolute bottom-3 left-3 right-3 text-white">
-                            <span className="bg-amber-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
-                                Property Facade
-                            </span>
-                            <h4 className="text-sm font-bold mt-1 text-white">3101 Sage Rd Exterior</h4>
-                            <p className="text-[11px] text-slate-300">Porte-cochère entrance & guest parking</p>
+                {/* Ground Arrival & Physical Door Signage (The Brand Conflict Proof) */}
+                <div>
+                    <div className="text-xs font-extrabold uppercase tracking-wider text-rose-700 mb-2 flex items-center gap-1.5">
+                        <i className="fa-solid fa-triangle-exclamation"></i>
+                        <span>Physical Arrival Evidence — Garage Front Desk Signage</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {/* Parc Hotel Check-in Door */}
+                        <div className="relative group overflow-hidden rounded-2xl h-60 border-2 border-rose-300 shadow-md">
+                            <div 
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                                style={{ backgroundImage: `url(${hotelFrontDeskParc})` }}
+                            ></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent"></div>
+                            <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                                <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider shadow-xs flex items-center gap-1 w-max">
+                                    <i className="fa-solid fa-magnifying-glass"></i> Physical Door Evidence
+                                </span>
+                                <h4 className="text-sm sm:text-base font-black mt-1.5 text-white">Garage Front Desk Door ("PARC HOTEL")</h4>
+                                <p className="text-[11px] text-slate-300 leading-snug mt-0.5">
+                                    Physical entrance door is boldly signed <strong>"PARC HOTEL"</strong> alongside drive-up office service windows & red geometric accent wall.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Covered Garage Entrance */}
+                        <div className="relative group overflow-hidden rounded-2xl h-60 border border-slate-300 shadow-md">
+                            <div 
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                                style={{ backgroundImage: `url(${hotelGarageEntrance})` }}
+                            ></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent"></div>
+                            <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                                <span className="bg-indigo-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider shadow-xs w-max">
+                                    Ground Operations
+                                </span>
+                                <h4 className="text-sm sm:text-base font-black mt-1.5 text-white">Covered Garage Drive-In Entrance</h4>
+                                <p className="text-[11px] text-slate-300 leading-snug mt-0.5">
+                                    Driveway entry with speed limit 5 MPH safety lanes leading directly into the covered front desk check-in bay.
+                                </p>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* Suite Photo */}
-                    <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
-                        <div 
-                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                            style={{ backgroundImage: `url(${hotelSuite})` }}
-                        ></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
-                        <div className="absolute bottom-3 left-3 right-3 text-white">
-                            <span className="bg-indigo-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
-                                Guest Suite
-                            </span>
-                            <h4 className="text-sm font-bold mt-1 text-white">Actual Room Suite Interior</h4>
-                            <p className="text-[11px] text-slate-300">2 Queen & 1 Queen bed layouts with kitchenette</p>
-                        </div>
+                {/* Building Architecture & Guest Amenities */}
+                <div className="pt-2">
+                    <div className="text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2 flex items-center gap-1.5">
+                        <i className="fa-solid fa-hotel"></i>
+                        <span>Property Facade & Guest Amenities</span>
                     </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Facade Photo */}
+                        <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
+                            <div 
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                                style={{ backgroundImage: `url(${hotelHeroBg})` }}
+                            ></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                            <div className="absolute bottom-3 left-3 right-3 text-white">
+                                <span className="bg-amber-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
+                                    Property Facade
+                                </span>
+                                <h4 className="text-sm font-bold mt-1 text-white">3101 Sage Rd Exterior</h4>
+                                <p className="text-[11px] text-slate-300">Porte-cochère entrance & guest parking</p>
+                            </div>
+                        </div>
 
-                    {/* Pool Photo */}
-                    <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
-                        <div 
-                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                            style={{ backgroundImage: `url(${hotelPool})` }}
-                        ></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
-                        <div className="absolute bottom-3 left-3 right-3 text-white">
-                            <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
-                                Courtyard Pool
-                            </span>
-                            <h4 className="text-sm font-bold mt-1 text-white">Outdoor Swimming Pool</h4>
-                            <p className="text-[11px] text-slate-300">On-site recreation courtyard for guests</p>
+                        {/* Suite Photo */}
+                        <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
+                            <div 
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                                style={{ backgroundImage: `url(${hotelSuite})` }}
+                            ></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                            <div className="absolute bottom-3 left-3 right-3 text-white">
+                                <span className="bg-indigo-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
+                                    Guest Suite
+                                </span>
+                                <h4 className="text-sm font-bold mt-1 text-white">Actual Room Suite Interior</h4>
+                                <p className="text-[11px] text-slate-300">2 Queen & 1 Queen bed layouts with kitchenette</p>
+                            </div>
+                        </div>
+
+                        {/* Pool Photo */}
+                        <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
+                            <div 
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                                style={{ backgroundImage: `url(${hotelPool})` }}
+                            ></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                            <div className="absolute bottom-3 left-3 right-3 text-white">
+                                <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
+                                    Courtyard Pool
+                                </span>
+                                <h4 className="text-sm font-bold mt-1 text-white">Outdoor Swimming Pool</h4>
+                                <p className="text-[11px] text-slate-300">On-site recreation courtyard for guests</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -228,15 +282,15 @@ export default function AuditView() {
                     <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">
                         <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">1</span>
                         <div>
-                            <strong className="text-slate-800">Consolidate Google Business Profile:</strong>
-                            <p className="text-slate-500 text-xs mt-0.5">Merge the duplicate legacy pin into one verified listing: <em>"Stellar Stay, an OYO Hotel - Houston Galleria"</em>. This unifies all review stars.</p>
+                            <strong className="text-slate-800">Bridge Garage Signage & Consolidate Google Business Profile:</strong>
+                            <p className="text-slate-500 text-xs mt-0.5">Add an OYO brand plaque alongside the physical <em>"PARC HOTEL"</em> garage door, and unify Google Maps into one verified listing: <em>"Parc Hotel & Suites, an OYO Hotel - Houston Galleria"</em>. This unifies all review stars and ends lost arrivals.</p>
                         </div>
                     </div>
                     <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">
                         <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">2</span>
                         <div>
-                            <strong className="text-slate-800">Sync OTA Channel Manager Descriptors:</strong>
-                            <p className="text-slate-500 text-xs mt-0.5">Align Booking.com, Expedia, and OYO metadata so guest confirmations match the building signage.</p>
+                            <strong className="text-slate-800">Sync Merchant Billing & OTA Channel Manager:</strong>
+                            <p className="text-slate-500 text-xs mt-0.5">Align Booking.com, Expedia, and credit card merchant terminal descriptors to <em>"PARC HOTEL / OYO 90631"</em> so guest credit card statements match the physical door, stopping chargebacks before they happen.</p>
                         </div>
                     </div>
                     <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">

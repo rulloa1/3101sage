@@ -90,7 +90,7 @@ export default function KeycardSleeveModal({
                                     Houston Galleria
                                 </span>
                             </div>
-                            <h4 className="text-base font-black text-white leading-tight">STELLAR STAY &bull; OYO GALLERIA</h4>
+                            <h4 className="text-base font-black text-white leading-tight">PARC HOTEL &bull; OYO GALLERIA &bull; STELLAR STAY</h4>
                             <div className="text-[10px] text-slate-400">3101 Sage Rd, Houston, TX 77056</div>
                         </div>
                         <div className="text-right">
@@ -126,7 +126,7 @@ export default function KeycardSleeveModal({
 
                     {/* Chargeback Shield Disclaimer */}
                     <div className="text-[9px] text-slate-400 leading-tight border-t border-slate-800/80 pt-2 font-mono">
-                        *BILLING NOTICE: Credit card charges for your stay at 3101 Sage Rd will appear as <strong>"STELLAR STAY / OYO 90631"</strong>. Verified at check-in.
+                        *BILLING NOTICE: Credit card charges for your stay at 3101 Sage Rd will appear as <strong>"PARC HOTEL / STELLAR STAY / OYO 90631"</strong>. Verified by guest signature at check-in.
                     </div>
                 </div>
 
