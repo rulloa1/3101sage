@@ -40,9 +40,40 @@ A lightweight, enterprise-grade hotel operations management dashboard built spec
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Tech Stack & React Architecture
 
-Simply open `index.html` in any modern web browser or visit the live deployment:
+- **Frontend**: **React 18** + **Vite 6**
+- **Styling**: **Tailwind CSS 3** with custom executive dot-matrix luxury theme & glassmorphism
+- **Sync Engine**: Native browser `BroadcastChannel` (0ms multi-tab sync) + `ntfy.sh` Cloud WebSocket pub/sub (zero-config cross-device synchronization)
+- **Deployment**: Automated **GitHub Actions** CI/CD pipeline deploying to **GitHub Pages**
+- **Components Structure**:
+  - `Header.jsx`: OYO brand badge, live clock, language toggle, view selector & tool launchers
+  - `DeskView.jsx`: Responsive room turnover grid with active cleaning stopwatches
+  - `HousekeepingView.jsx`: Mobile-first large touch-target cards for floor rounds
+  - `AuditView.jsx`: Property brand audit, live OYO OTA data & interactive ROI calculator
+  - `EarlyCheckinModal.jsx`: Monetization tool collecting $25–$35 early fees
+  - `HousekeepingQcModal.jsx`: 3-Point quality check checklist defending review ratings
+  - `KeycardSleeveModal.jsx`: Printable direct booking Wi-Fi card slip
+  - `EditRoomModal.jsx`: Custom status, notes chips, and 1-tap WhatsApp/SMS Handyman dispatch
+  - `ShiftSummaryModal.jsx`: Formatted timestamped report with 1-click clipboard copy
+
+---
+
+## 🚀 Development & Local Setup
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Start local development server with instant HMR
+npm run dev
+
+# 3. Build optimized production bundle
+npm run build
+
+# 4. Preview production build locally
+npm run preview
+```
+
+🌐 **Production Deployment**: Automatically built and deployed on every push to `main` via GitHub Actions at:  
 [https://rulloa1.github.io/3101sage/](https://rulloa1.github.io/3101sage/)
-
-No build steps, databases, or API keys required. Zero cost, 100% serverless.

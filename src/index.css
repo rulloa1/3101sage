@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modern Executive Dashboard Ambient Canvas */
+body {
+    background-color: #f1f5f9;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.10) 0px, transparent 45%),
+        radial-gradient(at 100% 0%, rgba(217, 119, 6, 0.09) 0px, transparent 40%),
+        radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.06) 0px, transparent 50%),
+        radial-gradient(#cbd5e1 1.25px, transparent 1.25px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+    background-attachment: fixed;
+}
+
+.glass-header {
+    background: rgba(10, 15, 29, 0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+@keyframes subtle-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+.pulse-live {
+    animation: subtle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.tap-target {
+    min-height: 48px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #0b1120;
+}
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+/* Print Styling for Keycard Sleeve Slip */
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+    #printableSleeveArea, #printableSleeveArea * {
+        visibility: visible !important;
+    }
+    #printableSleeveArea {
+        position: fixed !important;
+        left: 10% !important;
+        top: 10% !important;
+        width: 80% !important;
+        max-width: 480px !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 2px dashed #334155 !important;
+        box-shadow: none !important;
+        padding: 24px !important;
+    }
+    #printableSleeveArea * {
+        color: #0f172a !important;
+        background: transparent !important;
+    }
+    #printableSleeveArea h4, #printableSleeveArea code, #printableSleeveArea strong {
+        color: #000000 !important;
+    }
+}
