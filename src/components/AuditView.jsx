@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import oyoLogo from '../../assets/oyo-logo.png';
 
 export default function AuditView() {
     const [earlyPerDay, setEarlyPerDay] = useState(3);
@@ -75,7 +76,7 @@ export default function AuditView() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                         <div className="px-3 py-2 rounded-2xl bg-white border border-rose-200 flex items-center justify-center shadow-md shadow-rose-100">
-                            <img src="assets/oyo-logo.png" alt="OYO" className="h-6 w-auto object-contain" />
+                            <img src={oyoLogo} alt="OYO" className="h-6 w-auto object-contain" />
                         </div>
                         <div>
                             <div className="flex items-center gap-2">

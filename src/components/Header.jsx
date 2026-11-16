@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { i18n } from '../constants/i18n';
+import oyoLogo from '../../assets/oyo-logo.png';
 
 export default function Header({
     activeView,
@@ -41,7 +42,7 @@ export default function Header({
                     >
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 rounded-2xl blur-xs opacity-75 group-hover:opacity-100 transition duration-300"></div>
                         <div className="relative px-2.5 py-1.5 rounded-xl bg-white border border-rose-200/90 flex items-center justify-center shadow-lg shadow-rose-950/40">
-                            <img src="assets/oyo-logo.png" alt="OYO" className="h-6 w-auto object-contain" />
+                            <img src={oyoLogo} alt="OYO" className="h-6 w-auto object-contain" />
                         </div>
                     </a>
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import oyoLogo from '../../assets/oyo-logo.png';
 
 export default function KeycardSleeveModal({
     isOpen,
@@ -78,7 +79,7 @@ export default function KeycardSleeveModal({
                         <div>
                             <div className="flex items-center gap-2 mb-1.5">
                                 <span className="bg-white px-2 py-0.5 rounded shadow-xs inline-flex items-center">
-                                    <img src="assets/oyo-logo.png" alt="OYO" className="h-3.5 w-auto object-contain" />
+                                    <img src={oyoLogo} alt="OYO" className="h-3.5 w-auto object-contain" />
                                 </span>
                                 <span className="text-[10px] font-mono text-amber-400 font-extrabold uppercase tracking-wide">
                                     Houston Galleria
