@@ -40,9 +40,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- GunDB Decentralized Real-time Sync (Free, Zero-Config Cloud Sync Across All Phones/PCs) -->
-    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 
     <style>
         .glass-header {
@@ -86,10 +83,13 @@
                 <div>
                     <div class="flex items-center gap-2">
                         <h1 class="text-lg font-black tracking-tight leading-tight text-white">RoomSync <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-mono font-bold">PRO</span></h1>
-                        <span id="syncStatusBadge" class="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span>Cloud Live</span>
-                        </span>
+                        
+                        <!-- Real-time Cloud Connection Badge -->
+                        <button id="syncStatusBadge" onclick="forceCloudResync()" title="Click to refresh cloud sync"
+                            class="cursor-pointer text-[10px] font-extrabold uppercase tracking-wider bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full flex items-center gap-1.5 transition hover:brightness-125">
+                            <span id="syncPulseDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span id="syncStatusText">Cloud Live</span>
+                        </button>
                     </div>
                     <p class="text-xs text-slate-300 font-medium flex items-center gap-1.5 mt-0.5">
                         <i class="fa-solid fa-location-dot text-amber-400 text-[11px]"></i>
@@ -207,7 +207,7 @@
         </div>
     </section>
 
-    <!-- FILTER & SEARCH CONTROLS -->
+    <!-- FILTER & SEARCH CONTROLS (DESK & GENERAL) -->
     <section id="filterControlsBar" class="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-2 w-full">
         <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/90 shadow-soft flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5">
             <!-- Floor Filters + Walk-in Matcher -->
@@ -240,6 +240,12 @@
                 </button>
             </div>
         </div>
+
+        <!-- Filter indicator chip -->
+        <div id="filterStatusPill" class="hidden mt-2.5 flex items-center gap-2 text-xs font-medium text-slate-600 bg-indigo-50/70 border border-indigo-200/60 px-3 py-1.5 rounded-xl w-fit">
+            <span>Filtered by: <strong id="filterStatusText" class="text-indigo-700 uppercase font-bold"></strong></span>
+            <button onclick="resetFilters()" class="cursor-pointer text-xs text-indigo-500 hover:text-indigo-800 underline font-bold ml-1">Clear</button>
+        </div>
     </section>
 
     <!-- MAIN VIEW CONTAINER -->
@@ -248,7 +254,20 @@
         <div id="deskViewContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
         <!-- 2. HOUSEKEEPING MOBILE VIEW -->
-        <div id="houseViewContainer" class="hidden max-w-lg mx-auto space-y-3.5"></div>
+        <div id="houseViewContainer" class="hidden max-w-lg mx-auto space-y-3.5">
+            <!-- Housekeeping Quick Floor Switcher -->
+            <div class="flex items-center justify-between bg-white p-2.5 rounded-2xl border border-slate-200 shadow-soft mb-2">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1" data-i18n="houseFloorSelect">Floor:</span>
+                <div class="flex gap-1">
+                    <button onclick="setFloorFilter('ALL')" class="house-floor-btn px-3 py-1 text-xs font-bold rounded-lg bg-slate-900 text-white" data-house-floor="ALL">All</button>
+                    <button onclick="setFloorFilter(1)" class="house-floor-btn px-3 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-700" data-house-floor="1">1</button>
+                    <button onclick="setFloorFilter(2)" class="house-floor-btn px-3 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-700" data-house-floor="2">2</button>
+                    <button onclick="setFloorFilter(3)" class="house-floor-btn px-3 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-700" data-house-floor="3">3</button>
+                </div>
+            </div>
+            <!-- Cards populated here -->
+            <div id="houseCardsList" class="space-y-3.5"></div>
+        </div>
 
         <!-- 3. BRANDING & OTA AUDIT TAB (THE PITCH ARTIFACT FOR THE OWNER) -->
         <div id="auditViewContainer" class="hidden max-w-4xl mx-auto space-y-6">
@@ -399,11 +418,20 @@
     <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-400 font-medium mt-auto">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <span>RoomSync Pro Operational Suite &bull; 3101 Sage Rd</span>
-            <span class="text-slate-400">Press <kbd class="px-1.5 py-0.5 bg-slate-100 border rounded text-[10px] text-slate-600 font-mono">Esc</kbd> to close modals</span>
+            <span class="text-slate-400">Multi-tab & Cloud Real-time Synced</span>
         </div>
     </footer>
 
     <script>
+        // UNIQUE CLIENT IDENTIFIER TO PREVENT ECHO LOOPS
+        const myClientId = 'client_' + Math.random().toString(36).substring(2, 9);
+        const CLOUD_SYNC_TOPIC = 'roomsync_3101_sage_operations_v2';
+        const WS_URL = 'wss://ntfy.sh/' + CLOUD_SYNC_TOPIC + '/ws';
+        const POST_URL = 'https://ntfy.sh/' + CLOUD_SYNC_TOPIC;
+
+        // MULTI-TAB BROADCAST CHANNEL (INSTANT 0MS SYNC ACROSS TABS/WINDOWS ON SAME MACHINE)
+        const localBroadcast = ('BroadcastChannel' in window) ? new BroadcastChannel('roomsync_sage_local_v2') : null;
+
         // WEB AUDIO NOTIFICATION CHIME
         function playChime(freq = 587.33, duration = 0.22) {
             try {
@@ -438,7 +466,8 @@
                 shiftReportBtn: "Shift Report",
                 readinessLabel: "Check-in Readiness:",
                 toastCleaned: "marked Clean & Ready",
-                toastCleaning: "cleaning in progress"
+                toastCleaning: "cleaning in progress",
+                houseFloorSelect: "Floor:"
             },
             es: {
                 clean: "Limpia / Lista",
@@ -455,7 +484,8 @@
                 shiftReportBtn: "Reporte Turno",
                 readinessLabel: "Listas para Check-in:",
                 toastCleaned: "marcada Limpia y Lista",
-                toastCleaning: "limpieza en progreso"
+                toastCleaning: "limpieza en progreso",
+                houseFloorSelect: "Piso:"
             }
         };
 
@@ -465,6 +495,7 @@
         let currentSearchQuery = '';
         let activeView = 'desk';
         let selectedRoomId = null;
+        let modalPendingStatus = null;
 
         // REALISTIC 3101 SAGE ROOM INVENTORY
         const initialRooms = [
@@ -486,31 +517,144 @@
 
         let rooms = JSON.parse(localStorage.getItem('sage_rooms')) || initialRooms;
 
-        // GunDB CLOUD SYNC INITIALIZATION
-        let sageSync = null;
-        try {
-            if (typeof Gun !== 'undefined') {
-                const gun = Gun(['https://gun-manhattan.herokuapp.com/gun', 'https://relay.peer.ooo/gun']);
-                sageSync = gun.get('property_3101_sage_roomsync_prod_v1');
+        // REAL-TIME CLOUD WEBSOCKET SYNC
+        let cloudWs = null;
+        let isCloudConnected = false;
+        let reconnectTimer = null;
 
-                sageSync.map().on((remoteRoom) => {
-                    if (remoteRoom && remoteRoom.id) {
-                        const local = rooms.find(r => r.id === remoteRoom.id);
-                        if (local && (local.status !== remoteRoom.status || local.notes !== remoteRoom.notes)) {
-                            local.status = remoteRoom.status;
-                            local.notes = remoteRoom.notes || '';
-                            local.cleaningStartedAt = remoteRoom.cleaningStartedAt || null;
-                            updateCounts();
-                            render();
-                            showToast(`Room ${remoteRoom.id} updated via cloud sync!`, 'fa-tower-broadcast text-emerald-400');
-                            playChime(659.25, 0.25);
-                        }
-                    }
-                });
+        function updateCloudBadge(connected, label = null) {
+            const badge = document.getElementById('syncStatusBadge');
+            const dot = document.getElementById('syncPulseDot');
+            const text = document.getElementById('syncStatusText');
+            if (!badge || !dot || !text) return;
+
+            isCloudConnected = connected;
+            if (connected) {
+                badge.className = "cursor-pointer text-[10px] font-extrabold uppercase tracking-wider bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full flex items-center gap-1.5 transition hover:brightness-125";
+                dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse";
+                text.innerText = label || "Cloud Live";
+            } else {
+                badge.className = "cursor-pointer text-[10px] font-extrabold uppercase tracking-wider bg-amber-950/80 text-amber-400 border border-amber-700/60 px-2 py-0.5 rounded-full flex items-center gap-1.5 transition hover:brightness-125";
+                dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400";
+                text.innerText = label || "Connecting...";
             }
-        } catch (e) {
-            console.warn('GunDB initialized in offline fallback mode:', e);
         }
+
+        function initCloudSync() {
+            try {
+                if (cloudWs) {
+                    try { cloudWs.close(); } catch(e) {}
+                }
+                updateCloudBadge(false, "Connecting...");
+                cloudWs = new WebSocket(WS_URL);
+
+                cloudWs.onopen = () => {
+                    updateCloudBadge(true, "Cloud Live");
+                    // Send a sync request so already open devices send their latest state
+                    publishCloud({ type: 'SYNC_REQUEST', senderId: myClientId });
+                };
+
+                cloudWs.onmessage = (event) => {
+                    try {
+                        const parsed = JSON.parse(event.data);
+                        if (parsed.event === 'message' && parsed.message) {
+                            const data = JSON.parse(parsed.message);
+                            handleIncomingSync(data);
+                        }
+                    } catch (e) {
+                        // ignore malformed packets
+                    }
+                };
+
+                cloudWs.onclose = () => {
+                    updateCloudBadge(false, "Offline / Retry");
+                    clearTimeout(reconnectTimer);
+                    reconnectTimer = setTimeout(initCloudSync, 4000);
+                };
+
+                cloudWs.onerror = () => {
+                    try { cloudWs.close(); } catch(e) {}
+                };
+            } catch (e) {
+                updateCloudBadge(false, "Local Only");
+            }
+        }
+
+        function publishCloud(payload) {
+            // Send via HTTP POST so it dispatches to all WebSocket subscribers anywhere
+            payload.senderId = myClientId;
+            payload.timestamp = Date.now();
+            fetch(POST_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(() => {});
+        }
+
+        function forceCloudResync() {
+            showToast("Syncing with cloud network...", "fa-rotate text-indigo-400");
+            initCloudSync();
+            publishCloud({ type: 'FULL_SYNC', rooms: rooms, senderId: myClientId });
+        }
+
+        // HANDLE INCOMING SYNC (FROM CLOUD OR MULTI-TAB)
+        function handleIncomingSync(data) {
+            if (!data || data.senderId === myClientId) return; // avoid echo loops
+
+            if (data.type === 'SYNC_REQUEST') {
+                // Another device/tab just connected; send our full rooms state to bring them up to date
+                publishCloud({ type: 'FULL_SYNC', rooms: rooms });
+                return;
+            }
+
+            if (data.type === 'FULL_SYNC' && Array.isArray(data.rooms)) {
+                rooms = data.rooms;
+                localStorage.setItem('sage_rooms', JSON.stringify(rooms));
+                updateCounts();
+                render();
+                showToast("Synced with property network!", "fa-tower-broadcast text-emerald-400");
+                playChime(659.25, 0.25);
+                return;
+            }
+
+            if (data.type === 'ROOM_UPDATE' && data.roomId) {
+                const target = rooms.find(r => r.id === data.roomId);
+                if (target) {
+                    const statusChanged = target.status !== data.status;
+                    target.status = data.status;
+                    target.notes = data.notes !== undefined ? data.notes : target.notes;
+                    target.cleaningStartedAt = data.cleaningStartedAt !== undefined ? data.cleaningStartedAt : target.cleaningStartedAt;
+                    
+                    localStorage.setItem('sage_rooms', JSON.stringify(rooms));
+                    updateCounts();
+                    render();
+
+                    if (statusChanged) {
+                        const cfg = getStatusConfig(data.status);
+                        showToast(`Room ${data.roomId} updated to ${cfg.label}!`, cfg.icon + ' ' + (cfg.bg.replace('bg-', 'text-')));
+                        playChime(statusChanged ? 659.25 : 523.25, 0.22);
+                    }
+                }
+            }
+        }
+
+        // MULTI-TAB CROSS-COMMUNICATION
+        if (localBroadcast) {
+            localBroadcast.onmessage = (event) => {
+                if (event.data) handleIncomingSync(event.data);
+            };
+        }
+
+        // STORAGE EVENT LISTENER FOR BROWSERS
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'sage_rooms' && e.newValue) {
+                try {
+                    rooms = JSON.parse(e.newValue);
+                    updateCounts();
+                    render();
+                } catch(err) {}
+            }
+        });
 
         // LIVE CLOCK
         function updateLiveClock() {
@@ -530,21 +674,15 @@
             }
         }, 30000);
 
-        function saveToStorage(publishCloud = true) {
+        function saveToStorage(publish = true) {
             localStorage.setItem('sage_rooms', JSON.stringify(rooms));
             updateCounts();
             render();
-            if (publishCloud && sageSync) {
-                try {
-                    rooms.forEach(r => {
-                        sageSync.get('room_' + r.id).put({
-                            id: r.id,
-                            status: r.status,
-                            notes: r.notes || '',
-                            cleaningStartedAt: r.cleaningStartedAt || 0
-                        });
-                    });
-                } catch(e) {}
+
+            if (publish) {
+                const payload = { type: 'FULL_SYNC', rooms: rooms, senderId: myClientId };
+                if (localBroadcast) localBroadcast.postMessage(payload);
+                publishCloud(payload);
             }
         }
 
@@ -605,6 +743,13 @@
                 filterBar.classList.add('hidden');
                 readiness.classList.remove('hidden');
                 stats.classList.remove('hidden');
+
+                // In housekeeping mode, ensure all rooms are visible so nothing is obscured by desk filters
+                currentFloor = 'ALL';
+                currentStatusFilter = 'ALL';
+                currentSearchQuery = '';
+                document.getElementById('searchInput').value = '';
+                document.getElementById('filterStatusPill').classList.add('hidden');
             } else if (mode === 'audit') {
                 auditBtn.className = "cursor-pointer px-3.5 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-black shadow-sm";
                 auditC.classList.remove('hidden');
@@ -617,21 +762,40 @@
 
         function setFloorFilter(floor) {
             currentFloor = floor;
+            // Update Desk filter buttons
             document.querySelectorAll('.floor-btn').forEach(btn => {
                 btn.className = btn.getAttribute('data-floor') == floor ? 
                     "cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm" :
                     "cursor-pointer floor-btn px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200";
+            });
+            // Update Housekeeping floor buttons
+            document.querySelectorAll('.house-floor-btn').forEach(btn => {
+                btn.className = btn.getAttribute('data-house-floor') == floor ? 
+                    "house-floor-btn px-3 py-1 text-xs font-bold rounded-lg bg-slate-900 text-white" :
+                    "house-floor-btn px-3 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-700";
             });
             render();
         }
 
         function setStatusQuickFilter(status) {
             currentStatusFilter = currentStatusFilter === status ? 'ALL' : status;
+            const pill = document.getElementById('filterStatusPill');
+            const pillText = document.getElementById('filterStatusText');
+            if (currentStatusFilter !== 'ALL') {
+                pill.classList.remove('hidden');
+                pillText.innerText = currentStatusFilter;
+            } else {
+                pill.classList.add('hidden');
+            }
             render();
         }
 
         function matchWalkInReady() {
             currentStatusFilter = 'clean';
+            const pill = document.getElementById('filterStatusPill');
+            const pillText = document.getElementById('filterStatusText');
+            pill.classList.remove('hidden');
+            pillText.innerText = 'Ready for Walk-in (Clean)';
             render();
             showToast("Showing all rooms ready for immediate check-in!", "fa-key text-emerald-400");
         }
@@ -652,13 +816,14 @@
             currentStatusFilter = 'ALL';
             clearSearch();
             setFloorFilter('ALL');
+            document.getElementById('filterStatusPill').classList.add('hidden');
         }
 
         function resetDemoData() {
-            if (confirm("Reset rooms to demo layout?")) {
+            if (confirm("Reset rooms to demo layout across all screens?")) {
                 rooms = JSON.parse(JSON.stringify(initialRooms));
-                saveToStorage();
-                showToast("Demo layout reset", "fa-rotate-left text-indigo-400");
+                saveToStorage(true);
+                showToast("Demo layout reset and synced to cloud", "fa-rotate-left text-indigo-400");
             }
         }
 
@@ -709,7 +874,24 @@
                     room.cleaningStartedAt = null;
                     playChime(523.25, 0.2);
                 }
-                saveToStorage();
+                
+                // Save locally and broadcast to all tabs & cloud
+                localStorage.setItem('sage_rooms', JSON.stringify(rooms));
+                updateCounts();
+                render();
+
+                const updatePayload = {
+                    type: 'ROOM_UPDATE',
+                    roomId: room.id,
+                    status: room.status,
+                    notes: room.notes,
+                    cleaningStartedAt: room.cleaningStartedAt,
+                    senderId: myClientId
+                };
+
+                if (localBroadcast) localBroadcast.postMessage(updatePayload);
+                publishCloud(updatePayload);
+
                 showToast(`Room ${roomId} marked ${getStatusConfig(newStatus).label}`);
             }
         }
@@ -718,15 +900,24 @@
             selectedRoomId = roomId;
             const room = rooms.find(r => r.id === roomId);
             if (!room) return;
+            modalPendingStatus = room.status;
+
             document.getElementById('modalRoomTitle').innerText = `Room ${room.id} (${room.type})`;
             document.getElementById('modalRoomSubtitle').innerText = `Floor ${room.floor} • Current: ${room.status.toUpperCase()}`;
             document.getElementById('modalRoomNotes').value = room.notes || "";
 
+            renderModalStatusButtons();
+
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
+        }
+
+        function renderModalStatusButtons() {
             const btnContainer = document.getElementById('modalStatusButtons');
             const statuses = ['dirty', 'cleaning', 'clean', 'occupied', 'dnd', 'maintenance'];
             btnContainer.innerHTML = statuses.map(s => {
                 const cfg = getStatusConfig(s);
-                const isActive = room.status === s;
+                const isActive = modalPendingStatus === s;
                 return `
                     <button type="button" onclick="setModalStatus('${s}')" 
                         class="cursor-pointer p-2.5 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition ${isActive ? cfg.bg + ' text-white border-transparent shadow' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'}">
@@ -735,25 +926,39 @@
                     </button>
                 `;
             }).join('');
-
-            document.getElementById('editModal').classList.remove('hidden');
-            document.getElementById('editModal').classList.add('flex');
         }
 
         function setModalStatus(s) {
-            if (selectedRoomId) {
-                const room = rooms.find(r => r.id === selectedRoomId);
-                room.status = s;
-                if (s === 'cleaning') room.cleaningStartedAt = Date.now();
-                openEditModal(selectedRoomId);
-            }
+            modalPendingStatus = s;
+            renderModalStatusButtons();
         }
 
         function saveModalChanges() {
             if (selectedRoomId) {
                 const room = rooms.find(r => r.id === selectedRoomId);
+                const oldStatus = room.status;
+                room.status = modalPendingStatus;
+                if (modalPendingStatus === 'cleaning' && oldStatus !== 'cleaning') room.cleaningStartedAt = Date.now();
+                if (modalPendingStatus === 'clean') room.cleaningStartedAt = null;
                 room.notes = document.getElementById('modalRoomNotes').value.trim();
-                saveToStorage();
+
+                localStorage.setItem('sage_rooms', JSON.stringify(rooms));
+                updateCounts();
+                render();
+
+                const updatePayload = {
+                    type: 'ROOM_UPDATE',
+                    roomId: room.id,
+                    status: room.status,
+                    notes: room.notes,
+                    cleaningStartedAt: room.cleaningStartedAt,
+                    senderId: myClientId
+                };
+
+                if (localBroadcast) localBroadcast.postMessage(updatePayload);
+                publishCloud(updatePayload);
+
+                showToast(`Room ${room.id} updated!`, 'fa-floppy-disk text-indigo-400');
                 closeModal();
             }
         }
@@ -762,6 +967,7 @@
             document.getElementById('editModal').classList.add('hidden');
             document.getElementById('editModal').classList.remove('flex');
             selectedRoomId = null;
+            modalPendingStatus = null;
         }
 
         function appendNoteChip(text) {
@@ -860,11 +1066,12 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
             const emptyState = document.getElementById('emptyState');
             const deskContainer = document.getElementById('deskViewContainer');
             const houseContainer = document.getElementById('houseViewContainer');
+            const houseCardsList = document.getElementById('houseCardsList');
 
             if (filtered.length === 0) {
                 emptyState.classList.remove('hidden');
                 deskContainer.classList.add('hidden');
-                houseContainer.classList.add('hidden');
+                if (houseCardsList) houseCardsList.innerHTML = '';
                 return;
             } else {
                 emptyState.classList.add('hidden');
@@ -943,7 +1150,7 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
                                 ` : ''}
 
                                 <button onclick="openEditModal(${room.id})" 
-                                    class="cursor-pointer px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold py-2 rounded-xl transition flex items-center justify-center border border-slate-200">
+                                    class="cursor-pointer px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold py-2 rounded-xl transition flex items-center justify-center border border-slate-200" title="Edit room details">
                                     <i class="fa-solid fa-sliders text-xs"></i>
                                 </button>
                             </div>
@@ -953,63 +1160,66 @@ ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.
             }).join('');
 
             // 2. HOUSEKEEPING MOBILE VIEW
-            houseContainer.innerHTML = filtered.map(room => {
-                const cfg = getStatusConfig(room.status);
-                const cleaningMins = room.status === 'cleaning' ? getCleaningMinutes(room.cleaningStartedAt) : null;
-                return `
-                    <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-soft border-2 ${cfg.border} space-y-3 hover:shadow-md transition">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <span class="text-3xl font-black text-slate-800 tracking-tight">#${room.id}</span>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-2 bg-slate-100 px-2 py-0.5 rounded-md">
-                                    ${currentLang === 'es' ? 'Piso' : 'Floor'} ${room.floor}
+            if (houseCardsList) {
+                houseCardsList.innerHTML = filtered.map(room => {
+                    const cfg = getStatusConfig(room.status);
+                    const cleaningMins = room.status === 'cleaning' ? getCleaningMinutes(room.cleaningStartedAt) : null;
+                    return `
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-soft border-2 ${cfg.border} space-y-3 hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-3xl font-black text-slate-800 tracking-tight">#${room.id}</span>
+                                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-2 bg-slate-100 px-2 py-0.5 rounded-md">
+                                        ${currentLang === 'es' ? 'Piso' : 'Floor'} ${room.floor}
+                                    </span>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold ${cfg.bg} text-white shadow-sm flex items-center gap-1.5">
+                                    <i class="fa-solid ${cfg.icon} text-xs"></i>
+                                    <span>${cfg.label}</span>
                                 </span>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold ${cfg.bg} text-white shadow-sm flex items-center gap-1.5">
-                                <i class="fa-solid ${cfg.icon} text-xs"></i>
-                                <span>${cfg.label}</span>
-                            </span>
-                        </div>
 
-                        <div class="text-xs font-medium text-slate-500 flex items-center justify-between">
-                            <span><i class="fa-solid fa-bed text-slate-400 mr-1"></i> ${room.type}</span>
-                            ${cleaningMins ? `<span class="text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded border border-amber-200"><i class="fa-solid fa-stopwatch mr-1"></i>${cleaningMins}m</span>` : ''}
-                        </div>
-
-                        ${room.notes ? `
-                            <div class="bg-amber-50 text-amber-900 border border-amber-200 text-xs p-2.5 rounded-xl font-medium flex items-start gap-2">
-                                <i class="fa-solid fa-note-sticky text-amber-600 mt-0.5"></i>
-                                <span>${room.notes}</span>
+                            <div class="text-xs font-medium text-slate-500 flex items-center justify-between">
+                                <span><i class="fa-solid fa-bed text-slate-400 mr-1"></i> ${room.type}</span>
+                                ${cleaningMins ? `<span class="text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded border border-amber-200"><i class="fa-solid fa-stopwatch mr-1"></i>${cleaningMins}m</span>` : ''}
                             </div>
-                        ` : ''}
 
-                        <div class="grid grid-cols-2 gap-2 pt-1">
-                            <button onclick="changeRoomStatusDirect(${room.id}, 'cleaning')" 
-                                class="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-amber-50 hover:bg-amber-100 text-amber-800 border-2 border-amber-300 flex items-center justify-center space-x-2 transition shadow-xs active:scale-95">
-                                <i class="fa-solid fa-spinner"></i>
-                                <span>${i18n[currentLang].cleaning}</span>
-                            </button>
-                            <button onclick="changeRoomStatusDirect(${room.id}, 'clean')" 
-                                class="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center space-x-2 transition active:scale-95">
-                                <i class="fa-solid fa-check text-sm"></i>
-                                <span>${i18n[currentLang].clean}</span>
-                            </button>
-                        </div>
+                            ${room.notes ? `
+                                <div class="bg-amber-50 text-amber-900 border border-amber-200 text-xs p-2.5 rounded-xl font-medium flex items-start gap-2">
+                                    <i class="fa-solid fa-note-sticky text-amber-600 mt-0.5"></i>
+                                    <span>${room.notes}</span>
+                                </div>
+                            ` : ''}
 
-                        <div class="flex justify-end pt-1">
-                            <button onclick="openEditModal(${room.id})" class="cursor-pointer text-xs font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-1.5 py-1 px-2 rounded hover:bg-slate-50 transition">
-                                <i class="fa-solid fa-sliders text-xs"></i>
-                                <span>${currentLang === 'es' ? 'Editar notas / otro estado' : 'Edit notes / custom status'}</span>
-                            </button>
+                            <div class="grid grid-cols-2 gap-2 pt-1">
+                                <button onclick="changeRoomStatusDirect(${room.id}, 'cleaning')" 
+                                    class="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-amber-50 hover:bg-amber-100 text-amber-800 border-2 border-amber-300 flex items-center justify-center space-x-2 transition shadow-xs active:scale-95">
+                                    <i class="fa-solid fa-spinner"></i>
+                                    <span>${i18n[currentLang].cleaning}</span>
+                                </button>
+                                <button onclick="changeRoomStatusDirect(${room.id}, 'clean')" 
+                                    class="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center space-x-2 transition active:scale-95">
+                                    <i class="fa-solid fa-check text-sm"></i>
+                                    <span>${i18n[currentLang].clean}</span>
+                                </button>
+                            </div>
+
+                            <div class="flex justify-end pt-1">
+                                <button onclick="openEditModal(${room.id})" class="cursor-pointer text-xs font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-1.5 py-1 px-2 rounded hover:bg-slate-50 transition">
+                                    <i class="fa-solid fa-sliders text-xs"></i>
+                                    <span>${currentLang === 'es' ? 'Editar notas / otro estado' : 'Edit notes / custom status'}</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
         }
 
-        // INIT
+        // INITIALIZE APP & CLOUD SYNC
         updateCounts();
         render();
+        initCloudSync();
     </script>
 </body>
 
