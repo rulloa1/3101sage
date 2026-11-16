@@ -25,7 +25,7 @@ export default function KeycardSleeveModal({
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div className="screen-only flex justify-between items-center border-b border-slate-100 pb-3">
                     <div className="flex items-center gap-2.5">
                         <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-black shadow-xs">
                             <i className="fa-solid fa-qrcode"></i>
@@ -43,7 +43,7 @@ export default function KeycardSleeveModal({
                     </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="screen-only grid grid-cols-2 gap-3 text-xs">
                     <div>
                         <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Room Number
@@ -130,7 +130,7 @@ export default function KeycardSleeveModal({
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <div className="screen-only flex justify-end gap-2 pt-2 border-t border-slate-100">
                     <button 
                         type="button" 
                         onClick={onClose} 

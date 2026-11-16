@@ -101,40 +101,169 @@ body::before {
 
 /* Print Styling for Keycard Sleeve Slip and Executive Memorandum */
 @media print {
-    body * {
-        visibility: hidden !important;
+    @page {
+        size: letter portrait;
+        margin: 0.5in;
     }
-    #printableSleeveArea, #printableSleeveArea *,
-    #printableMemoArea, #printableMemoArea * {
-        visibility: visible !important;
-    }
-    #printableSleeveArea {
-        position: fixed !important;
-        left: 10% !important;
-        top: 10% !important;
-        width: 80% !important;
-        max-width: 480px !important;
+
+    /* 1. Global Canvas Reset */
+    html, body {
         background: #ffffff !important;
         color: #0f172a !important;
-        border: 2px dashed #334155 !important;
-        box-shadow: none !important;
-        padding: 24px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
+
+    body::before {
+        display: none !important;
+    }
+
+    /* 2. Hide Screen-Only Controls, Application Shell & Background Nav */
+    .screen-only,
+    .no-print,
+    button,
+    header,
+    footer,
+    #root > div > header,
+    #root > div > section,
+    #root > div > main,
+    #root > div > footer,
+    [role="alert"] {
+        display: none !important;
+    }
+
+    /* 3. Modal Overlays Reset: Flow naturally without scroll trapping or fixed offsets */
+    [role="dialog"] {
+        position: static !important;
+        inset: auto !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    [role="dialog"] > div {
+        position: static !important;
+        background: #ffffff !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* 4. Executive Proposal Memo Clean Print Flow */
+    #printableMemoArea {
+        position: static !important;
+        display: block !important;
+        overflow: visible !important;
+        max-height: none !important;
+        height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: #0f172a !important;
+        background: #ffffff !important;
+    }
+
+    /* Avoid page-break cuts, collisions and text overlap */
+    .memo-section,
+    #printableMemoArea > div {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 8pt !important;
+    }
+
+    #printableMemoArea h2 {
+        font-size: 14pt !important;
+        line-height: 1.2 !important;
+        margin-bottom: 2pt !important;
+    }
+
+    #printableMemoArea h4 {
+        font-size: 10.5pt !important;
+        line-height: 1.3 !important;
+        margin-top: 6pt !important;
+        margin-bottom: 3pt !important;
+    }
+
+    #printableMemoArea p, 
+    #printableMemoArea li {
+        font-size: 9pt !important;
+        line-height: 1.4 !important;
+    }
+
+    #printableMemoArea table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-top: 3pt !important;
+        margin-bottom: 3pt !important;
+        font-size: 8.5pt !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    #printableMemoArea tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    #printableMemoArea th,
+    #printableMemoArea td {
+        padding: 4pt 6pt !important;
+        border: 1px solid #cbd5e1 !important;
+        line-height: 1.25 !important;
+    }
+
+    #printableMemoArea th {
+        background-color: #f1f5f9 !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }
+
+    /* 5. Keycard Sleeve Slip Clean Print Layout */
+    #printableSleeveArea {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        margin: 0.5in auto !important;
+        width: 380px !important;
+        max-width: 100% !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 2px dashed #0f172a !important;
+        box-shadow: none !important;
+        padding: 16pt !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
     #printableSleeveArea * {
         color: #0f172a !important;
         background: transparent !important;
     }
-    #printableSleeveArea h4, #printableSleeveArea code, #printableSleeveArea strong {
+
+    #printableSleeveArea strong,
+    #printableSleeveArea h4,
+    #printableSleeveArea code {
         color: #000000 !important;
-    }
-    #printableMemoArea {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        background: #ffffff !important;
-        color: #0f172a !important;
-        padding: 24px !important;
     }
 }

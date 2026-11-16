@@ -53,7 +53,7 @@ Payback Period: Immediate ($0 software or hardware fees).
         >
             <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col border border-slate-200 overflow-hidden">
                 {/* Modal Action Header (Screen Only) */}
-                <div className="px-6 py-3.5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+                <div className="screen-only px-6 py-3.5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800 flex-shrink-0">
                     <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm font-bold">
                             <i className="fa-solid fa-file-contract"></i>
@@ -92,9 +92,9 @@ Payback Period: Immediate ($0 software or hardware fees).
                 </div>
 
                 {/* Printable Memorandum Content */}
-                <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-slate-800" id="printableMemoArea">
+                <div className="p-6 sm:p-8 overflow-y-auto space-y-5 text-slate-800" id="printableMemoArea">
                     {/* Header Letterhead */}
-                    <div className="border-b-2 border-slate-900 pb-4 flex flex-wrap items-center justify-between gap-4">
+                    <div className="memo-section border-b-2 border-slate-900 pb-3 flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center gap-3">
                             <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center">
                                 <img src={oyoLogo} alt="OYO" className="h-6 w-auto object-contain" />
@@ -111,7 +111,7 @@ Payback Period: Immediate ($0 software or hardware fees).
                     </div>
 
                     {/* Memo Metadata Block */}
-                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="memo-section bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div><strong>TO:</strong> Ownership & Asset Management, 3101 Sage Rd</div>
                         <div><strong>FROM:</strong> Hospitality Operations Team</div>
                         <div className="sm:col-span-2"><strong>SUBJECT:</strong> Operational Turnover Modernization, Brand Consolidation & Revenue Optimization</div>
@@ -119,7 +119,7 @@ Payback Period: Immediate ($0 software or hardware fees).
                     </div>
 
                     {/* 1. Executive Summary */}
-                    <div className="space-y-2">
+                    <div className="memo-section space-y-1.5">
                         <h4 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-l-4 border-indigo-600 pl-2.5">
                             1. Executive Summary
                         </h4>
@@ -130,7 +130,7 @@ Payback Period: Immediate ($0 software or hardware fees).
                     </div>
 
                     {/* 2. On-Site Physical Reality vs. Digital Channels */}
-                    <div className="space-y-2">
+                    <div className="memo-section space-y-1.5">
                         <h4 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-l-4 border-rose-600 pl-2.5">
                             2. On-Site Physical Evidence: Brand Identity Disconnect
                         </h4>
@@ -138,26 +138,26 @@ Payback Period: Immediate ($0 software or hardware fees).
                             <table className="w-full text-left border-collapse">
                                 <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                                     <tr>
-                                        <th className="p-2.5">Channel / Touchpoint</th>
-                                        <th className="p-2.5">Current Brand Name</th>
-                                        <th className="p-2.5">Identified Impact / Risk</th>
+                                        <th className="p-2 sm:p-2.5">Channel / Touchpoint</th>
+                                        <th className="p-2 sm:p-2.5">Current Brand Name</th>
+                                        <th className="p-2 sm:p-2.5">Identified Impact / Risk</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 text-slate-600">
                                     <tr>
-                                        <td className="p-2.5 font-bold text-slate-800">Physical Garage Check-In Door</td>
-                                        <td className="p-2.5 font-bold text-rose-600">"PARC HOTEL"</td>
-                                        <td className="p-2.5 text-rose-700">Guests think they arrived at wrong hotel; drive-offs</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-800">Physical Garage Check-In Door</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-rose-600">"PARC HOTEL"</td>
+                                        <td className="p-2 sm:p-2.5 text-rose-700">Guests think they arrived at wrong hotel; drive-offs</td>
                                     </tr>
                                     <tr>
-                                        <td className="p-2.5 font-bold text-slate-800">OYO Corporate App & Expedia</td>
-                                        <td className="p-2.5 font-bold text-indigo-600">OYO Property #90631</td>
-                                        <td className="p-2.5">Card statement disputes when bill reads "Stellar Stay"</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-800">OYO Corporate App & Expedia</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-indigo-600">OYO Property #90631</td>
+                                        <td className="p-2 sm:p-2.5">Card statement disputes when bill reads "Stellar Stay"</td>
                                     </tr>
                                     <tr>
-                                        <td className="p-2.5 font-bold text-slate-800">Booking.com / Agoda / Google</td>
-                                        <td className="p-2.5 font-bold text-slate-700">"Stellar Stay" / "Galleria Garden"</td>
-                                        <td className="p-2.5">Splits review volume across 3 pins; suppresses rank</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-800">Booking.com / Agoda / Google</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-700">"Stellar Stay" / "Galleria Garden"</td>
+                                        <td className="p-2 sm:p-2.5">Splits review volume across 3 pins; suppresses rank</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -165,7 +165,7 @@ Payback Period: Immediate ($0 software or hardware fees).
                     </div>
 
                     {/* 3. Financial ROI Projections */}
-                    <div className="space-y-2">
+                    <div className="memo-section space-y-1.5">
                         <h4 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-l-4 border-emerald-600 pl-2.5">
                             3. Projected Financial ROI & Margin Recovery
                         </h4>
@@ -173,36 +173,36 @@ Payback Period: Immediate ($0 software or hardware fees).
                             <table className="w-full text-left border-collapse">
                                 <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                                     <tr>
-                                        <th className="p-2.5">Revenue Driver</th>
-                                        <th className="p-2.5">Operational Mechanism</th>
-                                        <th className="p-2.5 text-right">Annual Impact</th>
+                                        <th className="p-2 sm:p-2.5">Revenue Driver</th>
+                                        <th className="p-2 sm:p-2.5">Operational Mechanism</th>
+                                        <th className="p-2 sm:p-2.5 text-right">Annual Impact</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 text-slate-600">
                                     <tr>
-                                        <td className="p-2.5 font-bold text-slate-800">Early Arrival Monetization</td>
-                                        <td className="p-2.5">3 rooms/day captured at standard $25 early check-in fee</td>
-                                        <td className="p-2.5 font-bold text-emerald-700 text-right">+$27,375 / yr</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-800">Early Arrival Monetization</td>
+                                        <td className="p-2 sm:p-2.5">3 rooms/day captured at standard $25 early check-in fee</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-emerald-700 text-right">+$27,375 / yr</td>
                                     </tr>
                                     <tr>
-                                        <td className="p-2.5 font-bold text-slate-800">Direct Booking Recapture</td>
-                                        <td className="p-2.5">8 repeat guests/month booking direct via Keycard QR (bypassing 18% OTA fee)</td>
-                                        <td className="p-2.5 font-bold text-emerald-700 text-right">+$2,488 / yr</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-800">Direct Booking Recapture</td>
+                                        <td className="p-2 sm:p-2.5">8 repeat guests/month booking direct via Keycard QR (bypassing 18% OTA fee)</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-emerald-700 text-right">+$2,488 / yr</td>
                                     </tr>
                                     <tr>
-                                        <td className="p-2.5 font-bold text-slate-800">Housekeeping Labor Efficiency</td>
-                                        <td className="p-2.5">12 minutes saved per room turn via 1-tap Spanish/English dashboard</td>
-                                        <td className="p-2.5 font-bold text-indigo-700 text-right">1,022 hrs saved</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-800">Housekeeping Labor Efficiency</td>
+                                        <td className="p-2 sm:p-2.5">12 minutes saved per room turn via 1-tap Spanish/English dashboard</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-indigo-700 text-right">1,022 hrs saved</td>
                                     </tr>
                                     <tr>
-                                        <td className="p-2.5 font-bold text-slate-800">Chargeback Defense Shield</td>
-                                        <td className="p-2.5">Mandatory printed billing disclosure signed on Keycard Sleeve</td>
-                                        <td className="p-2.5 font-bold text-slate-700 text-right">~$1,800 saved</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-800">Chargeback Defense Shield</td>
+                                        <td className="p-2 sm:p-2.5">Mandatory printed billing disclosure signed on Keycard Sleeve</td>
+                                        <td className="p-2 sm:p-2.5 font-bold text-slate-700 text-right">~$1,800 saved</td>
                                     </tr>
                                     <tr className="bg-emerald-50 font-black text-slate-900">
-                                        <td className="p-2.5 uppercase">Total Net Annual Value</td>
-                                        <td className="p-2.5 text-emerald-800 font-bold">Zero software licensing fees &bull; Instant deployment</td>
-                                        <td className="p-2.5 text-emerald-800 font-mono text-base text-right">+$31,663 / yr</td>
+                                        <td className="p-2 sm:p-2.5 uppercase">Total Net Annual Value</td>
+                                        <td className="p-2 sm:p-2.5 text-emerald-800 font-bold">Zero software licensing fees &bull; Instant deployment</td>
+                                        <td className="p-2 sm:p-2.5 text-emerald-800 font-mono text-base text-right">+$31,663 / yr</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -210,11 +210,11 @@ Payback Period: Immediate ($0 software or hardware fees).
                     </div>
 
                     {/* 4. 3-Step Remediation Plan */}
-                    <div className="space-y-2">
+                    <div className="memo-section space-y-1.5">
                         <h4 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-l-4 border-amber-500 pl-2.5">
                             4. Immediate 3-Step Remediation Roadmap
                         </h4>
-                        <ol className="list-decimal pl-4 space-y-1.5 text-xs text-slate-600">
+                        <ol className="list-decimal pl-4 space-y-1 text-xs text-slate-600">
                             <li>
                                 <strong>Deploy RoomSync Pro (Day 1):</strong> Load on front desk PC and housekeeper smartphones. Zero hardware required.
                             </li>
@@ -228,14 +228,14 @@ Payback Period: Immediate ($0 software or hardware fees).
                     </div>
 
                     {/* Sign-off */}
-                    <div className="pt-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
+                    <div className="memo-section pt-3 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
                         <div>RoomSync Pro &bull; Houston Galleria Operations</div>
                         <div>Authorized Proposal &bull; 3101 Sage Rd</div>
                     </div>
                 </div>
 
                 {/* Bottom Footer Close (Screen Only) */}
-                <div className="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-end gap-2">
+                <div className="screen-only px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-end gap-2 flex-shrink-0">
                     <button 
                         type="button" 
                         onClick={onClose}
