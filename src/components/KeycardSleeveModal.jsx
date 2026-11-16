@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import oyoLogo from '../../assets/oyo-logo.png';
+import oyoLogo from '../assets/oyo-logo.png';
+import hotelHeroBg from '../assets/hotel-hero-bg.jpg';
 
 export default function KeycardSleeveModal({
     isOpen,
@@ -74,7 +75,11 @@ export default function KeycardSleeveModal({
                 </div>
 
                 {/* PRINTABLE CARD SLEEVE PREVIEW */}
-                <div id="printableSleeveArea" className="bg-slate-900 text-white p-5 rounded-2xl border-2 border-amber-500/50 shadow-inner space-y-3 font-sans">
+                <div id="printableSleeveArea" className="relative overflow-hidden bg-slate-900 text-white p-5 rounded-2xl border-2 border-amber-500/50 shadow-inner space-y-3 font-sans">
+                    <div 
+                        className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
+                        style={{ backgroundImage: `url(${hotelHeroBg})` }}
+                    ></div>
                     <div className="flex justify-between items-start border-b border-slate-800 pb-2.5">
                         <div>
                             <div className="flex items-center gap-2 mb-1.5">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getStatusConfig, i18n } from '../constants/i18n';
+import hotelSuite from '../assets/hotel-suite.jpg';
 
 function getCleaningMinutes(startedAt) {
     if (!startedAt) return null;
@@ -21,22 +22,30 @@ export default function HousekeepingView({
 
     return (
         <div className="max-w-2xl mx-auto space-y-4">
-            {/* Housekeeping View Header with Dedicated Floor Selector */}
-            <div className="bg-slate-900 text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-md">
-                <div className="flex items-center space-x-2">
-                    <i className="fa-solid fa-broom text-amber-400 text-lg"></i>
+            {/* Housekeeping View Header with Luxury Hospitality Suite Backdrop */}
+            <div className="relative overflow-hidden bg-slate-900 text-white p-4.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-xl border border-slate-700/80">
+                <div 
+                    className="absolute inset-0 bg-cover bg-center opacity-25 filter contrast-125"
+                    style={{ backgroundImage: `url(${hotelSuite})` }}
+                ></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-slate-950/80"></div>
+                
+                <div className="relative z-10 flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-300 flex items-center justify-center shadow-xs">
+                        <i className="fa-solid fa-broom text-lg"></i>
+                    </div>
                     <div>
-                        <h2 className="font-bold text-sm leading-tight">
+                        <h2 className="font-bold text-sm leading-tight text-white">
                             {currentLang === 'es' ? 'Panel de Camaristas' : 'Housekeeping Turnover View'}
                         </h2>
-                        <p className="text-[11px] text-slate-400">
+                        <p className="text-[11px] text-slate-300">
                             {currentLang === 'es' ? 'Optimizado para teléfonos y rondas' : 'Mobile-first large touch targets'}
                         </p>
                     </div>
                 </div>
 
                 {/* Housekeeping Floor Selector */}
-                <div className="flex items-center space-x-1 bg-slate-800 p-1 rounded-xl border border-slate-700">
+                <div className="relative z-10 flex items-center space-x-1 bg-slate-800/90 backdrop-blur-sm p-1 rounded-xl border border-slate-700">
                     <span className="text-[10px] font-bold text-slate-400 px-2 uppercase">
                         {dict.houseFloorSelect}
                     </span>

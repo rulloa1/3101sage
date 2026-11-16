@@ -11,7 +11,7 @@ export default function StatsBar({ rooms, currentStatusFilter, onStatusFilter, c
     const dict = i18n[currentLang];
 
     return (
-        <section className="bg-white border-b border-slate-200/90 px-4 sm:px-6 py-3.5 shadow-soft">
+        <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/90 px-4 sm:px-6 py-3.5 shadow-soft">
             <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-5 gap-3">
                 {/* Clean / Ready */}
                 <div 

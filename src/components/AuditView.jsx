@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import oyoLogo from '../../assets/oyo-logo.png';
+import oyoLogo from '../assets/oyo-logo.png';
+import hotelHeroBg from '../assets/hotel-hero-bg.jpg';
+import hotelSuite from '../assets/hotel-suite.jpg';
+import hotelPool from '../assets/hotel-pool.jpg';
 
 export default function AuditView() {
     const [earlyPerDay, setEarlyPerDay] = useState(3);
@@ -14,27 +17,36 @@ export default function AuditView() {
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            {/* Header Banner */}
-            <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-indigo-700 text-white p-6 rounded-3xl shadow-lg flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <span className="text-xs uppercase font-extrabold tracking-wider bg-black/25 px-2.5 py-1 rounded-full">
-                        Property Operations & Brand Audit
-                    </span>
-                    <h2 className="text-2xl font-black tracking-tight mt-1">3101 Sage Rd — Brand Conflict & Revenue Report</h2>
-                    <p className="text-xs text-amber-100 mt-1 max-w-xl">
-                        Executive findings on listing fragmentation, OTA commission leakage, and operations turnover ROI for hotel ownership.
-                    </p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20 text-center">
-                    <div className="text-xs font-bold text-amber-200">OTA Commission Rate</div>
-                    <div className="text-2xl font-black">18% – 22%</div>
-                    <div className="text-[10px] text-slate-200">Lost on 3rd party bookings</div>
+            {/* Header Banner with Real Hotel Architecture Background */}
+            <div className="relative overflow-hidden text-white p-6 sm:p-8 rounded-3xl shadow-2xl border border-amber-500/30">
+                <div 
+                    className="absolute inset-0 bg-cover bg-center filter brightness-90 contrast-110"
+                    style={{ backgroundImage: `url(${hotelHeroBg})` }}
+                ></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-amber-950/80"></div>
+                <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span className="text-xs uppercase font-extrabold tracking-wider bg-black/40 border border-amber-400/40 text-amber-300 px-3 py-1 rounded-full shadow-xs">
+                            Property Operations & Brand Audit
+                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-white">
+                            3101 Sage Rd — Brand Conflict & Revenue Report
+                        </h2>
+                        <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl leading-relaxed">
+                            Executive findings on listing fragmentation, OTA commission leakage, and operations turnover ROI for hotel ownership.
+                        </p>
+                    </div>
+                    <div className="bg-slate-950/80 backdrop-blur-md p-4 rounded-2xl border border-amber-500/30 text-center shadow-lg">
+                        <div className="text-xs font-bold text-amber-300">OTA Commission Rate</div>
+                        <div className="text-2xl sm:text-3xl font-black text-rose-400">18% – 22%</div>
+                        <div className="text-[10px] text-slate-400">Lost on 3rd party bookings</div>
+                    </div>
                 </div>
             </div>
 
             {/* 3-Way Brand Identity Mismatch Analysis */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-soft space-y-2.5">
+                <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2.5">
                     <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
                         <span>Physical / Primary</span>
                         <i className="fa-solid fa-building text-indigo-600"></i>
@@ -46,7 +58,7 @@ export default function AuditView() {
                     </div>
                 </div>
 
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-soft space-y-2.5">
+                <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2.5">
                     <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
                         <span>Franchise Network</span>
                         <i className="fa-solid fa-globe text-rose-500"></i>
@@ -58,7 +70,7 @@ export default function AuditView() {
                     </div>
                 </div>
 
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-soft space-y-2.5">
+                <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2.5">
                     <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
                         <span>Legacy / Google Maps</span>
                         <i className="fa-brands fa-google text-blue-500"></i>
@@ -140,27 +152,74 @@ export default function AuditView() {
                 </div>
             </div>
 
+            {/* PROPERTY PHOTO SHOWCASE (GALLERIA SUITES & POOL) */}
+            <div className="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/90 shadow-soft space-y-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider">Property Visual Assets</span>
+                        <h3 className="text-base font-extrabold text-slate-800">Galleria Suites & Courtyard Pool Showcase</h3>
+                    </div>
+                    <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                        3101 Sage Rd On-Site Amenities
+                    </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Suite Photo with Overlay */}
+                    <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
+                        <div 
+                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                            style={{ backgroundImage: `url(${hotelSuite})` }}
+                        ></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent"></div>
+                        <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                            <span className="bg-indigo-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
+                                Suite Inventory
+                            </span>
+                            <h4 className="text-sm font-bold mt-1 text-white">Renovated 2-Queen & 1-Queen Suites</h4>
+                            <p className="text-[11px] text-slate-300">Equipped with kitchenette, refrigerator & microwave</p>
+                        </div>
+                    </div>
+
+                    {/* Pool Photo with Overlay */}
+                    <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
+                        <div 
+                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                            style={{ backgroundImage: `url(${hotelPool})` }}
+                        ></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent"></div>
+                        <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                            <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
+                                Outdoor Amenity
+                            </span>
+                            <h4 className="text-sm font-bold mt-1 text-white">Outdoor Swimming Pool & Fitness Courtyard</h4>
+                            <p className="text-[11px] text-slate-300">Walking distance to The Galleria Mall (Greater Uptown)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Action Plan to Hand to Owner */}
-            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-soft space-y-4">
+            <div className="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/90 shadow-soft space-y-4">
                 <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
                     <i className="fa-solid fa-list-check text-emerald-600"></i> 3-Step Remediation Plan for Ownership
                 </h3>
                 <div className="space-y-3 text-xs sm:text-sm">
-                    <div className="p-3.5 bg-slate-50 rounded-2xl flex items-start gap-3">
+                    <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">
                         <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">1</span>
                         <div>
                             <strong className="text-slate-800">Consolidate Google Business Profile:</strong>
                             <p className="text-slate-500 text-xs mt-0.5">Merge the duplicate legacy pin into one verified listing: <em>"Stellar Stay, an OYO Hotel - Houston Galleria"</em>. This unifies all review stars.</p>
                         </div>
                     </div>
-                    <div className="p-3.5 bg-slate-50 rounded-2xl flex items-start gap-3">
+                    <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">
                         <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">2</span>
                         <div>
                             <strong className="text-slate-800">Sync OTA Channel Manager Descriptors:</strong>
                             <p className="text-slate-500 text-xs mt-0.5">Align Booking.com, Expedia, and OYO metadata so guest confirmations match the building signage.</p>
                         </div>
                     </div>
-                    <div className="p-3.5 bg-slate-50 rounded-2xl flex items-start gap-3">
+                    <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">
                         <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">3</span>
                         <div>
                             <strong className="text-slate-800">Deploy RoomSync for Turnover:</strong>
@@ -171,8 +230,14 @@ export default function AuditView() {
             </div>
 
             {/* INTERACTIVE OWNER ROI & BUSINESS VALUE CALCULATOR */}
-            <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xl space-y-6">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div className="relative overflow-hidden text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-6">
+                <div 
+                    className="absolute inset-0 bg-cover bg-center opacity-15 filter blur-xs"
+                    style={{ backgroundImage: `url(${hotelHeroBg})` }}
+                ></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/95"></div>
+
+                <div className="relative z-10 flex items-center justify-between border-b border-slate-800 pb-4">
                     <div>
                         <div className="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-extrabold flex items-center gap-1.5">
                             <i className="fa-solid fa-calculator"></i>
@@ -186,7 +251,7 @@ export default function AuditView() {
                 </div>
 
                 {/* Calculator Controls */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/80">
                         <label className="block text-xs font-bold text-slate-300 mb-1">Early Check-ins Monetized / Day</label>
                         <div className="flex items-center gap-3">
@@ -237,7 +302,7 @@ export default function AuditView() {
                 </div>
 
                 {/* Dynamic Results Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3.5 pt-2">
+                <div className="relative z-10 grid grid-cols-1 sm:grid-cols-4 gap-3.5 pt-2">
                     <div className="bg-slate-950/80 p-4 rounded-2xl border border-amber-500/30">
                         <div className="text-[10px] uppercase font-bold text-amber-400/80">Annual Early Check-In Revenue</div>
                         <div className="text-2xl font-black text-amber-300 font-mono mt-1">+${annualEarly.toLocaleString()}</div>

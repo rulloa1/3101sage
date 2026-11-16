@@ -2,22 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Executive Dashboard Ambient Canvas */
+/* Modern Executive Dashboard Ambient Canvas with Real Hotel Architecture */
 body {
-    background-color: #f1f5f9;
+    background-color: #0b1120;
+    min-height: 100vh;
+    position: relative;
+    color: #0f172a;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-image: 
-        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.10) 0px, transparent 45%),
-        radial-gradient(at 100% 0%, rgba(217, 119, 6, 0.09) 0px, transparent 40%),
-        radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.06) 0px, transparent 50%),
-        radial-gradient(#cbd5e1 1.25px, transparent 1.25px);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+        linear-gradient(to bottom, rgba(11, 17, 32, 0.72) 0%, rgba(15, 23, 42, 0.82) 45%, rgba(15, 23, 42, 0.90) 100%),
+        radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.15) 0px, transparent 45%),
+        url('./assets/hotel-hero-bg.jpg');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
     background-attachment: fixed;
+    pointer-events: none;
+    z-index: -1;
+    filter: brightness(0.92) saturate(1.15);
 }
 
 .glass-header {
-    background: rgba(10, 15, 29, 0.92);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    background: rgba(10, 15, 29, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 @keyframes subtle-pulse {

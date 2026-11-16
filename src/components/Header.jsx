@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { i18n } from '../constants/i18n';
-import oyoLogo from '../../assets/oyo-logo.png';
+import oyoLogo from '../assets/oyo-logo.png';
 
 export default function Header({
     activeView,

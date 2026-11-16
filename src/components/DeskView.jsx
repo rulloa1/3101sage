@@ -27,7 +27,7 @@ export default function DeskView({
                 return (
                     <div 
                         key={room.id}
-                        className={`bg-white rounded-2xl shadow-soft border ${cfg.border} overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between`}
+                        className={`bg-white/95 backdrop-blur-md rounded-2xl shadow-soft border ${cfg.border} overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between`}
                     >
                         <div>
                             {/* Card Header */}
