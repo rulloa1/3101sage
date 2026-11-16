@@ -8,6 +8,7 @@ export default function FilterControls({
     searchQuery,
     setSearchQuery,
     onWalkInMatch,
+    onOpenAddRoom,
     onResetDemo
 }) {
     return (
@@ -38,6 +39,19 @@ export default function FilterControls({
                         <i className="fa-solid fa-key text-amber-600 text-xs"></i>
                         <span>Quick Match: Ready for Walk-in</span>
                     </button>
+
+                    {/* Add Room Button */}
+                    {onOpenAddRoom && (
+                        <button 
+                            type="button"
+                            onClick={onOpenAddRoom} 
+                            className="cursor-pointer ml-1 px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition flex items-center gap-1.5 active:scale-95"
+                            title="Add a custom room to inventory"
+                        >
+                            <i className="fa-solid fa-plus text-amber-600"></i>
+                            <span className="hidden sm:inline">Add Room</span>
+                        </button>
+                    )}
                 </div>
 
                 {/* Search & Reset */}

@@ -12,6 +12,7 @@ import HousekeepingQcModal from './components/HousekeepingQcModal';
 import KeycardSleeveModal from './components/KeycardSleeveModal';
 import EditRoomModal from './components/EditRoomModal';
 import ExecutiveMemoModal from './components/ExecutiveMemoModal';
+import AddRoomModal from './components/AddRoomModal';
 import Toast from './components/Toast';
 
 import { initialRooms } from './constants/initialRooms';
@@ -44,6 +45,7 @@ export default function App() {
     const [isEarlyCheckinOpen, setIsEarlyCheckinOpen] = useState(false);
     const [isKeycardSleeveOpen, setIsKeycardSleeveOpen] = useState(false);
     const [isMemoModalOpen, setIsMemoModalOpen] = useState(false);
+    const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
     const [qcModalRoomId, setQcModalRoomId] = useState(null);
     const [editModalRoomId, setEditModalRoomId] = useState(null);
 
@@ -224,6 +226,13 @@ export default function App() {
             persistRooms(JSON.parse(JSON.stringify(initialRooms)), true);
             showToast("Demo layout reset and synced to cloud", "fa-rotate-left text-indigo-400");
         }
+    };
+
+    const handleAddRoom = (newRoom) => {
+        const updated = [...rooms, newRoom].sort((a, b) => a.id - b.id);
+        persistRooms(updated, true);
+        playChime(659.25, 0.25);
+        showToast(`Room ${newRoom.id} added to inventory!`, 'fa-circle-plus text-amber-500');
     };
 
     const handleChangeStatusDirect = (roomId, newStatus) => {
@@ -409,6 +418,7 @@ export default function App() {
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                     onWalkInMatch={handleWalkInMatch}
+                    onOpenAddRoom={() => setIsAddRoomOpen(true)}
                     onResetDemo={handleResetDemo}
                 />
             )}
@@ -503,6 +513,13 @@ export default function App() {
                 onClose={() => setEditModalRoomId(null)}
                 onSave={handleSaveEdit}
                 currentLang={currentLang}
+            />
+
+            <AddRoomModal 
+                isOpen={isAddRoomOpen}
+                onClose={() => setIsAddRoomOpen(false)}
+                onAddRoom={handleAddRoom}
+                existingRoomIds={rooms.map(r => r.id)}
             />
 
             {/* FLOATING TOAST NOTIFICATION */}
