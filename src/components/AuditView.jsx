@@ -152,48 +152,68 @@ export default function AuditView() {
                 </div>
             </div>
 
-            {/* PROPERTY PHOTO SHOWCASE (GALLERIA SUITES & POOL) */}
+            {/* PROPERTY PHOTO SHOWCASE (ACTUAL 3101 SAGE PHOTOGRAPHY) */}
             <div className="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/90 shadow-soft space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
-                        <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider">Property Visual Assets</span>
-                        <h3 className="text-base font-extrabold text-slate-800">Galleria Suites & Courtyard Pool Showcase</h3>
+                        <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider flex items-center gap-1.5">
+                            <i className="fa-solid fa-camera"></i>
+                            <span>Verified Property Visual Assets</span>
+                        </span>
+                        <h3 className="text-base font-extrabold text-slate-800">Actual 3101 Sage Rd Photography (OYO #90631)</h3>
                     </div>
-                    <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
-                        3101 Sage Rd On-Site Amenities
+                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+                        <i className="fa-solid fa-circle-check text-emerald-500"></i>
+                        <span>Direct from OYO Channel Assets</span>
                     </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Suite Photo with Overlay */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Facade Photo */}
+                    <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
+                        <div 
+                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                            style={{ backgroundImage: `url(${hotelHeroBg})` }}
+                        ></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                        <div className="absolute bottom-3 left-3 right-3 text-white">
+                            <span className="bg-amber-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
+                                Property Facade
+                            </span>
+                            <h4 className="text-sm font-bold mt-1 text-white">3101 Sage Rd Exterior</h4>
+                            <p className="text-[11px] text-slate-300">Porte-cochère entrance & guest parking</p>
+                        </div>
+                    </div>
+
+                    {/* Suite Photo */}
                     <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
                         <div 
                             className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                             style={{ backgroundImage: `url(${hotelSuite})` }}
                         ></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent"></div>
-                        <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                        <div className="absolute bottom-3 left-3 right-3 text-white">
                             <span className="bg-indigo-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
-                                Suite Inventory
+                                Guest Suite
                             </span>
-                            <h4 className="text-sm font-bold mt-1 text-white">Renovated 2-Queen & 1-Queen Suites</h4>
-                            <p className="text-[11px] text-slate-300">Equipped with kitchenette, refrigerator & microwave</p>
+                            <h4 className="text-sm font-bold mt-1 text-white">Actual Room Suite Interior</h4>
+                            <p className="text-[11px] text-slate-300">2 Queen & 1 Queen bed layouts with kitchenette</p>
                         </div>
                     </div>
 
-                    {/* Pool Photo with Overlay */}
+                    {/* Pool Photo */}
                     <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
                         <div 
                             className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                             style={{ backgroundImage: `url(${hotelPool})` }}
                         ></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent"></div>
-                        <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                        <div className="absolute bottom-3 left-3 right-3 text-white">
                             <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
-                                Outdoor Amenity
+                                Courtyard Pool
                             </span>
-                            <h4 className="text-sm font-bold mt-1 text-white">Outdoor Swimming Pool & Fitness Courtyard</h4>
-                            <p className="text-[11px] text-slate-300">Walking distance to The Galleria Mall (Greater Uptown)</p>
+                            <h4 className="text-sm font-bold mt-1 text-white">Outdoor Swimming Pool</h4>
+                            <p className="text-[11px] text-slate-300">On-site recreation courtyard for guests</p>
                         </div>
                     </div>
                 </div>
