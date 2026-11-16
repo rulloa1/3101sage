@@ -34,9 +34,10 @@ A lightweight, enterprise-grade hotel operations management dashboard built spec
 3. **1-Tap Handyman Maintenance Dispatch**:
    - Instantly drafts and sends formatted repair requests via **WhatsApp** or **SMS** with room number, bed category, and reported issue.
 4. **Direct Booking Keycard Sleeve & Wi-Fi Slip Generator**:
-   - Prints a branded card sleeve with Wi-Fi login (`Sage_Guest_Free`), front desk extension, a 10% discount incentive to book directly and bypass 18% OTA commissions, and a credit card chargeback disclaimer (*"Charges will appear as STELLAR STAY / OYO 90631"*).
-5. **Interactive Financial ROI Calculator**:
+   - Prints a branded card sleeve with Wi-Fi login (`Sage_Guest_Free`), front desk extension, a 10% discount incentive to book directly and bypass 18% OTA commissions, and a credit card chargeback disclaimer (*"Charges will appear as PARC HOTEL / STELLAR STAY / OYO 90631"*).
+5. **Interactive Financial ROI Calculator & Verified On-Site Evidence**:
    - Embedded in the Audit tab, demonstrating an estimated **+$29,800+ in annual profit and commission savings** for the property owner.
+   - Includes physical ground arrival photography documenting the **"PARC HOTEL"** garage check-in door alongside the building facade, suites, and courtyard pool to prove the 3-way brand conflict.
 
 ---
 
