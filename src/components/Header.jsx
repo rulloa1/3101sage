@@ -113,6 +113,19 @@ export default function Header({
                         <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                     </a>
 
+                    {/* Portal Link */}
+                    <a 
+                        href="https://oyo.theroyeffect.com/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold px-2.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95"
+                        title="Open OYO Property Operations Portal"
+                    >
+                        <i className="fa-solid fa-globe text-amber-400 text-xs"></i>
+                        <span className="hidden xl:inline">Portal</span>
+                        <i className="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-400"></i>
+                    </a>
+
                     {/* Shift Report Button */}
                     <button 
                         onClick={onOpenShiftReport}

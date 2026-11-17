@@ -18,7 +18,8 @@ TO: Ownership & Management, 3101 Sage Rd, Houston, TX 77056
 FROM: Hospitality Operations Team
 DATE: November 16, 2026
 SUBJECT: Operations Modernization, Brand Consolidation & Revenue Optimization Proposal
-LIVE SYSTEM: https://rulloa1.github.io/3101sage/
+OPERATIONS APP: https://rulloa1.github.io/3101sage/app.html
+PROPERTY PORTAL: https://oyo.theroyeffect.com/
 
 1. EXECUTIVE SUMMARY
 A channel and operations audit of 3101 Sage Rd identifies two key profit leaks:
@@ -115,7 +116,11 @@ Payback Period: Immediate ($0 software or hardware fees).
                         <div><strong>TO:</strong> Ownership & Asset Management, 3101 Sage Rd</div>
                         <div><strong>FROM:</strong> Hospitality Operations Team</div>
                         <div className="sm:col-span-2"><strong>SUBJECT:</strong> Operational Turnover Modernization, Brand Consolidation & Revenue Optimization</div>
-                        <div className="sm:col-span-2"><strong>LIVE DEPLOYMENT:</strong> <a href="https://rulloa1.github.io/3101sage/" className="text-indigo-600 underline font-bold" target="_blank" rel="noreferrer">https://rulloa1.github.io/3101sage/</a></div>
+                        <div className="sm:col-span-2">
+                            <strong>OPERATIONS APP:</strong> <a href="https://rulloa1.github.io/3101sage/app.html" className="text-indigo-600 underline font-bold" target="_blank" rel="noreferrer">https://rulloa1.github.io/3101sage/app.html</a>
+                            <span className="text-slate-400 mx-2">&bull;</span>
+                            <strong>PROPERTY PORTAL:</strong> <a href="https://oyo.theroyeffect.com/" className="text-rose-600 underline font-bold" target="_blank" rel="noreferrer">https://oyo.theroyeffect.com/</a>
+                        </div>
                     </div>
 
                     {/* 1. Executive Summary */}

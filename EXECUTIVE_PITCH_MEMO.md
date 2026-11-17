@@ -4,7 +4,7 @@
 **FROM:** Hospitality Operations Team  
 **DATE:** November 16, 2026  
 **SUBJECT:** Operational Turnover Modernization, Brand Consolidation & Revenue Optimization Proposal  
-**LIVE DEMO SYSTEM:** [RoomSync Pro Operations Suite](https://rulloa1.github.io/3101sage/)
+**LIVE DEMO SUITE:** [RoomSync Pro Operations](https://rulloa1.github.io/3101sage/app.html) &bull; **PROPERTY PORTAL:** [OYO Operations](https://oyo.theroyeffect.com/)
 
 ---
 
