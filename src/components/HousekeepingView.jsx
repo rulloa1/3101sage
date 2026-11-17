@@ -108,7 +108,12 @@ export default function HousekeepingView({
                             <div className="grid grid-cols-2 gap-2 pt-1">
                                 <button
                                     onClick={() => onChangeStatus(room.id, 'cleaning')}
-                                    className="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-amber-50 hover:bg-amber-100 text-amber-800 border-2 border-amber-300 flex items-center justify-center space-x-2 transition shadow-xs active:scale-95"
+                                    disabled={room.status === 'cleaning'}
+                                    className={`cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold border-2 flex items-center justify-center space-x-2 transition shadow-xs active:scale-95 ${
+                                        room.status === 'cleaning'
+                                            ? 'bg-amber-100 text-amber-500 border-amber-200 cursor-not-allowed opacity-60'
+                                            : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-300'
+                                    }`}
                                 >
                                     <i className="fa-solid fa-spinner"></i>
                                     <span>{dict.cleaning}</span>

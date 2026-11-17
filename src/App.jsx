@@ -87,6 +87,11 @@ export default function App() {
     }, []);
 
     // 4. REAL-TIME SYNC & WEBSOCKET SETUP
+    // Use a ref so the SYNC_REQUEST handler always sees the current rooms
+    // without needing to re-subscribe on every room change.
+    const roomsRef = React.useRef(rooms);
+    useEffect(() => { roomsRef.current = rooms; }, [rooms]);
+
     useEffect(() => {
         syncService.init();
 
@@ -98,7 +103,8 @@ export default function App() {
             if (!data) return;
 
             if (data.type === 'SYNC_REQUEST') {
-                syncService.publish({ type: 'FULL_SYNC', rooms });
+                // Reply with current snapshot without stale-closure risk
+                syncService.publish({ type: 'FULL_SYNC', rooms: roomsRef.current });
                 return;
             }
 
@@ -157,12 +163,14 @@ export default function App() {
         };
         window.addEventListener('storage', handleStorage);
 
-        // Escape key to dismiss modals
+        // Escape key to dismiss any open modal
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
                 setIsShiftReportOpen(false);
                 setIsEarlyCheckinOpen(false);
                 setIsKeycardSleeveOpen(false);
+                setIsMemoModalOpen(false);
+                setIsAddRoomOpen(false);
                 setQcModalRoomId(null);
                 setEditModalRoomId(null);
             }
@@ -175,7 +183,8 @@ export default function App() {
             window.removeEventListener('storage', handleStorage);
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [currentLang, rooms, showToast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentLang, showToast]);
 
     // Re-render cleaning timers periodically
     const [, setTick] = useState(0);
@@ -189,8 +198,13 @@ export default function App() {
     // 5. ACTIONS
     const handleForceResync = () => {
         showToast("Syncing with cloud network...", "fa-rotate text-indigo-400");
-        syncService.connectCloud();
-        syncService.publish({ type: 'FULL_SYNC', rooms, senderId: myClientId });
+        // connectCloud will trigger a SYNC_REQUEST in its onopen handler;
+        // only publish immediately if we're already connected.
+        if (syncService.isConnected) {
+            syncService.publish({ type: 'FULL_SYNC', rooms, senderId: myClientId });
+        } else {
+            syncService.connectCloud();
+        }
     };
 
     const handleToggleLanguage = () => {
@@ -420,6 +434,7 @@ export default function App() {
                     onWalkInMatch={handleWalkInMatch}
                     onOpenAddRoom={() => setIsAddRoomOpen(true)}
                     onResetDemo={handleResetDemo}
+                    rooms={rooms}
                 />
             )}
 

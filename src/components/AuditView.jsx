@@ -13,7 +13,7 @@ export default function AuditView({ onOpenMemo }) {
 
     // Dynamic Financial ROI Calculations
     const annualEarly = earlyPerDay * 25 * 365;
-    const annualOtaSaved = Math.round(directPerMonth * 12 * 144 * 0.18);
+    const annualOtaSaved = Math.round(directPerMonth * 12 * 132 * 0.18);
     const annualHoursSaved = Math.round((minsSavedPerRoom * 14 * 365) / 60);
     const annualTotal = annualEarly + annualOtaSaved;
 

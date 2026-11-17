@@ -1,5 +1,4 @@
 import React from 'react';
-
 export default function FilterControls({
     currentFloor,
     setFloor,
@@ -9,15 +8,22 @@ export default function FilterControls({
     setSearchQuery,
     onWalkInMatch,
     onOpenAddRoom,
-    onResetDemo
+    onResetDemo,
+    rooms
 }) {
+    // Derive floor options from actual inventory so floor 4+ rooms are reachable
+    const floors = React.useMemo(() => {
+        if (!rooms || rooms.length === 0) return ['1', '2', '3'];
+        const unique = [...new Set(rooms.map(r => String(r.floor)))].sort((a, b) => Number(a) - Number(b));
+        return unique;
+    }, [rooms]);
     return (
         <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-2.5">
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
                 {/* Floor Filter Buttons */}
                 <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
                     <span className="text-slate-400 font-bold mr-1 uppercase tracking-wider text-[11px]">Floor:</span>
-                    {['ALL', '1', '2', '3'].map((floor) => (
+                    {['ALL', ...floors].map((floor) => (
                         <button
                             key={floor}
                             onClick={() => setFloor(floor)}
