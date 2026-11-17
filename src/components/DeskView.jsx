@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getStatusConfig } from '../constants/i18n';
 
 function getCleaningMinutes(startedAt) {
@@ -12,17 +12,34 @@ export default function DeskView({
     currentLang,
     onChangeStatus,
     onOpenQc,
-    onOpenEdit
+    onOpenEdit,
+    onCheckout
 }) {
+    // Track which room is in "confirm checkout" state
+    const [confirmingCheckoutId, setConfirmingCheckoutId] = useState(null);
+    const [guestName, setGuestName] = useState('');
+
     if (rooms.length === 0) {
         return null;
     }
+
+    const handleCheckoutConfirm = (roomId) => {
+        onCheckout(roomId, guestName.trim());
+        setConfirmingCheckoutId(null);
+        setGuestName('');
+    };
+
+    const handleCheckoutCancel = () => {
+        setConfirmingCheckoutId(null);
+        setGuestName('');
+    };
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {rooms.map((room) => {
                 const cfg = getStatusConfig(room.status, currentLang);
                 const cleaningMins = room.status === 'cleaning' ? getCleaningMinutes(room.cleaningStartedAt) : null;
+                const isConfirming = confirmingCheckoutId === room.id;
 
                 return (
                     <div 
@@ -75,43 +92,82 @@ export default function DeskView({
 
                         {/* Card Footer Actions */}
                         <div className="p-3.5 pt-0">
-                            <div className="flex gap-2 pt-2 border-t border-slate-100">
-                                {room.status === 'dirty' && (
-                                    <button 
-                                        onClick={() => onChangeStatus(room.id, 'cleaning')}
-                                        className="cursor-pointer flex-1 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-amber-200"
-                                    >
-                                        <i className="fa-solid fa-play text-[11px]"></i> <span>Start Clean</span>
-                                    </button>
-                                )}
+                            {/* Checkout confirm inline form */}
+                            {isConfirming ? (
+                                <div className="pt-2 border-t border-slate-100 space-y-2">
+                                    <input
+                                        type="text"
+                                        value={guestName}
+                                        onChange={e => setGuestName(e.target.value)}
+                                        onKeyDown={e => { if (e.key === 'Enter') handleCheckoutConfirm(room.id); if (e.key === 'Escape') handleCheckoutCancel(); }}
+                                        placeholder="Guest name (optional)"
+                                        autoFocus
+                                        className="w-full text-xs font-medium border border-slate-200 rounded-xl px-2.5 py-1.5 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white transition"
+                                    />
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => handleCheckoutConfirm(room.id)}
+                                            className="cursor-pointer flex-1 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm"
+                                        >
+                                            <i className="fa-solid fa-right-from-bracket text-[11px]"></i>
+                                            <span>Confirm Checkout</span>
+                                        </button>
+                                        <button
+                                            onClick={handleCheckoutCancel}
+                                            className="cursor-pointer px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-600 text-xs font-bold py-2 rounded-xl transition border border-slate-200"
+                                        >
+                                            <i className="fa-solid fa-xmark text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex gap-2 pt-2 border-t border-slate-100">
+                                    {room.status === 'dirty' && (
+                                        <button 
+                                            onClick={() => onChangeStatus(room.id, 'cleaning')}
+                                            className="cursor-pointer flex-1 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-amber-200"
+                                        >
+                                            <i className="fa-solid fa-play text-[11px]"></i> <span>Start Clean</span>
+                                        </button>
+                                    )}
 
-                                {room.status === 'cleaning' && (
-                                    <button 
-                                        onClick={() => onOpenQc(room.id)}
-                                        className="cursor-pointer flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-200"
-                                        title="Perform 3-Point QC inspection & mark clean"
-                                    >
-                                        <i className="fa-solid fa-clipboard-check text-xs"></i> <span>QC & Clean</span>
-                                    </button>
-                                )}
+                                    {room.status === 'cleaning' && (
+                                        <button 
+                                            onClick={() => onOpenQc(room.id)}
+                                            className="cursor-pointer flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-200"
+                                            title="Perform 3-Point QC inspection & mark clean"
+                                        >
+                                            <i className="fa-solid fa-clipboard-check text-xs"></i> <span>QC & Clean</span>
+                                        </button>
+                                    )}
 
-                                {room.status !== 'dirty' && room.status !== 'cleaning' && (
-                                    <button 
-                                        onClick={() => onChangeStatus(room.id, 'dirty')}
-                                        className="cursor-pointer flex-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-700 active:scale-95 text-slate-600 text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 border border-slate-200"
-                                    >
-                                        <i className="fa-solid fa-broom text-[11px]"></i> <span>Mark Dirty</span>
-                                    </button>
-                                )}
+                                    {room.status === 'occupied' && (
+                                        <button 
+                                            onClick={() => setConfirmingCheckoutId(room.id)}
+                                            className="cursor-pointer flex-1 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-blue-200"
+                                        >
+                                            <i className="fa-solid fa-right-from-bracket text-[11px]"></i> <span>Check Out</span>
+                                        </button>
+                                    )}
 
-                                <button 
-                                    onClick={() => onOpenEdit(room.id)}
-                                    className="cursor-pointer px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold py-2 rounded-xl transition flex items-center justify-center border border-slate-200"
-                                    title="Edit room details"
-                                >
-                                    <i className="fa-solid fa-sliders text-xs"></i>
-                                </button>
-                            </div>
+                                    {room.status !== 'dirty' && room.status !== 'cleaning' && room.status !== 'occupied' && (
+                                        <button 
+                                            onClick={() => onChangeStatus(room.id, 'dirty')}
+                                            className="cursor-pointer flex-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-700 active:scale-95 text-slate-600 text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 border border-slate-200"
+                                        >
+                                            <i className="fa-solid fa-broom text-[11px]"></i> <span>Mark Dirty</span>
+                                        </button>
+                                    )}
+
+                                    <button 
+                                        onClick={() => onOpenEdit(room.id)}
+                                        className="cursor-pointer px-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold py-2 rounded-xl transition flex items-center justify-center border border-slate-200"
+                                        title="Edit room details"
+                                    >
+                                        <i className="fa-solid fa-sliders text-xs"></i>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 );

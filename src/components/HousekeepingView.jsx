@@ -13,7 +13,8 @@ export default function HousekeepingView({
     currentLang,
     onChangeStatus,
     onOpenQc,
-    onOpenEdit
+    onOpenEdit,
+    onCheckout
 }) {
     const [houseFloor, setHouseFloor] = useState('ALL');
     const dict = i18n[currentLang];
@@ -22,7 +23,7 @@ export default function HousekeepingView({
 
     return (
         <div className="max-w-2xl mx-auto space-y-4">
-            {/* Housekeeping View Header with Luxury Hospitality Suite Backdrop */}
+            {/* Header with hotel suite backdrop */}
             <div className="relative overflow-hidden bg-slate-900 text-white p-4.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-xl border border-slate-700/80">
                 <div 
                     className="absolute inset-0 bg-cover bg-center opacity-25 filter contrast-125"
@@ -44,7 +45,7 @@ export default function HousekeepingView({
                     </div>
                 </div>
 
-                {/* Housekeeping Floor Selector */}
+                {/* Floor selector */}
                 <div className="relative z-10 flex items-center space-x-1 bg-slate-800/90 backdrop-blur-sm p-1 rounded-xl border border-slate-700">
                     <span className="text-[10px] font-bold text-slate-400 px-2 uppercase">
                         {dict.houseFloorSelect}
@@ -65,7 +66,7 @@ export default function HousekeepingView({
                 </div>
             </div>
 
-            {/* Room Turnover Cards */}
+            {/* Room cards */}
             <div className="space-y-3">
                 {filtered.map((room) => {
                     const cfg = getStatusConfig(room.status, currentLang);
@@ -106,26 +107,39 @@ export default function HousekeepingView({
                             )}
 
                             <div className="grid grid-cols-2 gap-2 pt-1">
-                                <button
-                                    onClick={() => onChangeStatus(room.id, 'cleaning')}
-                                    disabled={room.status === 'cleaning'}
-                                    className={`cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold border-2 flex items-center justify-center space-x-2 transition shadow-xs active:scale-95 ${
-                                        room.status === 'cleaning'
-                                            ? 'bg-amber-100 text-amber-500 border-amber-200 cursor-not-allowed opacity-60'
-                                            : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-300'
-                                    }`}
-                                >
-                                    <i className="fa-solid fa-spinner"></i>
-                                    <span>{dict.cleaning}</span>
-                                </button>
-                                <button
-                                    onClick={() => onOpenQc(room.id)}
-                                    className="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center space-x-2 transition active:scale-95"
-                                    title="Verificar estándares de calidad"
-                                >
-                                    <i className="fa-solid fa-clipboard-check text-sm"></i>
-                                    <span>{dict.clean}</span>
-                                </button>
+                                {room.status === 'occupied' ? (
+                                    // Occupied: full-width checkout button
+                                    <button
+                                        onClick={() => onCheckout(room.id, '')}
+                                        className="cursor-pointer tap-target col-span-2 py-3 px-3 rounded-xl text-xs font-extrabold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-200 flex items-center justify-center space-x-2 transition active:scale-95"
+                                    >
+                                        <i className="fa-solid fa-right-from-bracket text-sm"></i>
+                                        <span>{currentLang === 'es' ? 'Check-Out / Marcar Sucia' : 'Check Out & Queue Turnover'}</span>
+                                    </button>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => onChangeStatus(room.id, 'cleaning')}
+                                            disabled={room.status === 'cleaning'}
+                                            className={`cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold border-2 flex items-center justify-center space-x-2 transition shadow-xs active:scale-95 ${
+                                                room.status === 'cleaning'
+                                                    ? 'bg-amber-100 text-amber-500 border-amber-200 cursor-not-allowed opacity-60'
+                                                    : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-300'
+                                            }`}
+                                        >
+                                            <i className="fa-solid fa-spinner"></i>
+                                            <span>{dict.cleaning}</span>
+                                        </button>
+                                        <button
+                                            onClick={() => onOpenQc(room.id)}
+                                            className="cursor-pointer tap-target py-3 px-3 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center space-x-2 transition active:scale-95"
+                                            title="Verificar estándares de calidad"
+                                        >
+                                            <i className="fa-solid fa-clipboard-check text-sm"></i>
+                                            <span>{dict.clean}</span>
+                                        </button>
+                                    </>
+                                )}
                             </div>
 
                             <div className="flex justify-end pt-1">

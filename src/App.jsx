@@ -13,12 +13,14 @@ import KeycardSleeveModal from './components/KeycardSleeveModal';
 import EditRoomModal from './components/EditRoomModal';
 import ExecutiveMemoModal from './components/ExecutiveMemoModal';
 import AddRoomModal from './components/AddRoomModal';
+import CheckoutLog from './components/CheckoutLog';
 import Toast from './components/Toast';
 
 import { initialRooms } from './constants/initialRooms';
 import { getStatusConfig, i18n } from './constants/i18n';
 import { syncService, myClientId } from './services/syncService';
 import { playChime } from './services/soundService';
+import { loadCheckoutLog, appendCheckout, saveCheckoutLog } from './services/checkoutService';
 
 export default function App() {
     // 1. STATE INITIALIZATION
@@ -61,6 +63,9 @@ export default function App() {
             return 0;
         }
     });
+
+    // Checkout log
+    const [checkoutLog, setCheckoutLog] = useState(() => loadCheckoutLog());
 
     // 2. TOAST HELPER
     const showToast = useCallback((message, icon = 'fa-circle-check text-emerald-400') => {
@@ -141,6 +146,11 @@ export default function App() {
                 showToast(`Room ${data.roomId} updated to ${cfg.label}!`, cfg.icon + ' ' + (cfg.text));
                 playChime(587.33, 0.2);
             }
+
+            if (data.type === 'CHECKOUT_LOG_SYNC' && Array.isArray(data.log)) {
+                setCheckoutLog(data.log);
+                saveCheckoutLog(data.log);
+            }
         });
 
         // Cross-window storage listener
@@ -158,6 +168,11 @@ export default function App() {
                         .filter(item => new Date(item.timestamp).toDateString() === todayStr)
                         .reduce((total, item) => total + (item.fee || 0), 0);
                     setTodayEarlyTotal(sum);
+                } catch (err) {}
+            }
+            if (e.key === 'sage_checkout_log' && e.newValue) {
+                try {
+                    setCheckoutLog(JSON.parse(e.newValue));
                 } catch (err) {}
             }
         };
@@ -375,6 +390,57 @@ export default function App() {
         showToast(`Room ${roomId} certified Clean & Ready (3.7★ QC Passed)`, "fa-circle-check text-emerald-400");
     };
 
+    const handleCheckout = (roomId, guestName) => {
+        const target = rooms.find(r => r.id === roomId);
+        if (!target) return;
+
+        // Log the checkout
+        const entry = {
+            id: 'CO_' + Date.now(),
+            roomId: target.id,
+            roomType: target.type,
+            floor: target.floor,
+            guestName: guestName || '',
+            timestamp: Date.now()
+        };
+        const updatedLog = appendCheckout(entry);
+        setCheckoutLog([...updatedLog]);
+
+        // Flip room to dirty and clear notes
+        const updated = rooms.map(r => {
+            if (r.id === roomId) {
+                return { ...r, status: 'dirty', notes: '', cleaningStartedAt: null };
+            }
+            return r;
+        });
+
+        persistRooms(updated, false);
+
+        syncService.publish({
+            type: 'ROOM_UPDATE',
+            roomId: target.id,
+            status: 'dirty',
+            notes: '',
+            cleaningStartedAt: null
+        });
+        syncService.publish({
+            type: 'CHECKOUT_LOG_SYNC',
+            log: updatedLog
+        });
+
+        playChime(523.25, 0.2);
+        showToast(
+            `Room ${roomId} checked out${guestName ? ` — ${guestName}` : ''}. Queued for housekeeping.`,
+            'fa-right-from-bracket text-blue-400'
+        );
+    };
+
+    const handleClearCheckoutLog = () => {
+        saveCheckoutLog([]);
+        setCheckoutLog([]);
+        syncService.publish({ type: 'CHECKOUT_LOG_SYNC', log: [] });
+    };
+
     // 6. FILTER LOGIC
     const filteredRooms = useMemo(() => {
         return rooms.filter(r => {
@@ -442,13 +508,22 @@ export default function App() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex-1 w-full">
                 {activeView === 'desk' && (
                     filteredRooms.length > 0 ? (
-                        <DeskView 
-                            rooms={filteredRooms}
-                            currentLang={currentLang}
-                            onChangeStatus={handleChangeStatusDirect}
-                            onOpenQc={(id) => setQcModalRoomId(id)}
-                            onOpenEdit={(id) => setEditModalRoomId(id)}
-                        />
+                        <>
+                            <DeskView 
+                                rooms={filteredRooms}
+                                currentLang={currentLang}
+                                onChangeStatus={handleChangeStatusDirect}
+                                onOpenQc={(id) => setQcModalRoomId(id)}
+                                onOpenEdit={(id) => setEditModalRoomId(id)}
+                                onCheckout={handleCheckout}
+                            />
+                            <div className="mt-5">
+                                <CheckoutLog
+                                    log={checkoutLog}
+                                    onClear={handleClearCheckoutLog}
+                                />
+                            </div>
+                        </>
                     ) : (
                         <div className="text-center py-16 px-4 bg-white rounded-2xl border border-dashed border-slate-300 my-4">
                             <h3 className="text-base font-bold text-slate-700">No rooms match this criteria</h3>
@@ -469,6 +544,7 @@ export default function App() {
                         onChangeStatus={handleChangeStatusDirect}
                         onOpenQc={(id) => setQcModalRoomId(id)}
                         onOpenEdit={(id) => setEditModalRoomId(id)}
+                        onCheckout={handleCheckout}
                     />
                 )}
 
@@ -490,6 +566,7 @@ export default function App() {
                 isOpen={isShiftReportOpen}
                 onClose={() => setIsShiftReportOpen(false)}
                 rooms={rooms}
+                checkoutLog={checkoutLog}
                 onCopy={showToast}
             />
 
