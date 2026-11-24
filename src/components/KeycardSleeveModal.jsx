@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { OYO_LOGO } from '../constants/brand';
 
 export default function KeycardSleeveModal({
     isOpen,
@@ -11,18 +12,25 @@ export default function KeycardSleeveModal({
 
     if (!isOpen) return null;
 
+    // The modal stays mounted, so an imported room list can remove the room that
+    // was selected last time. Fall back to the first real suite instead of a
+    // blank select/print slip.
+    const activeRoomId = rooms.some(r => String(r.id) === String(selectedRoomId))
+        ? selectedRoomId
+        : (rooms[0]?.id ?? '');
+
     const handlePrint = () => {
         window.print();
     };
 
     return (
-        <div 
-            role="dialog" 
-            aria-modal="true" 
-            className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+        <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
+            <div className="max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl animate-scaleIn">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                     <div className="flex items-center gap-2.5">
                         <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-black shadow-xs">
@@ -33,8 +41,8 @@ export default function KeycardSleeveModal({
                             <p className="text-[11px] text-slate-400 font-semibold">Direct Booking Recapture & Chargeback Defense</p>
                         </div>
                     </div>
-                    <button 
-                        onClick={onClose} 
+                    <button
+                        onClick={onClose}
                         className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
                     >
                         <i className="fa-solid fa-xmark"></i>
@@ -46,8 +54,8 @@ export default function KeycardSleeveModal({
                         <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Room Number
                         </label>
-                        <select 
-                            value={selectedRoomId} 
+                        <select
+                            value={activeRoomId}
                             onChange={(e) => setSelectedRoomId(parseInt(e.target.value, 10))}
                             className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2 bg-slate-50"
                         >
@@ -62,12 +70,12 @@ export default function KeycardSleeveModal({
                         <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Guest Name (Optional)
                         </label>
-                        <input 
-                            type="text" 
-                            value={guestName} 
+                        <input
+                            type="text"
+                            value={guestName}
                             onChange={(e) => setGuestName(e.target.value)}
-                            placeholder="Valued Guest" 
-                            className="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50" 
+                            placeholder="Valued Guest"
+                            className="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50"
                         />
                     </div>
                 </div>
@@ -78,7 +86,7 @@ export default function KeycardSleeveModal({
                         <div>
                             <div className="flex items-center gap-2 mb-1.5">
                                 <span className="bg-white px-2 py-0.5 rounded shadow-xs inline-flex items-center">
-                                    <img src="assets/oyo-logo.png" alt="OYO" className="h-3.5 w-auto object-contain" />
+                                    <img src={OYO_LOGO} alt="OYO" className="h-3.5 w-auto object-contain" />
                                 </span>
                                 <span className="text-[10px] font-mono text-amber-400 font-extrabold uppercase tracking-wide">
                                     Houston Galleria
@@ -89,7 +97,10 @@ export default function KeycardSleeveModal({
                         </div>
                         <div className="text-right">
                             <div className="text-[10px] text-slate-400 font-bold uppercase">Room #</div>
-                            <div className="text-2xl font-black text-amber-300 font-mono">{selectedRoomId}</div>
+                            <div className="text-2xl font-black text-amber-300 font-mono">{activeRoomId}</div>
+                            <div className="mt-0.5 max-w-[140px] truncate text-[10px] font-semibold text-slate-300" title={guestName || 'Valued Guest'}>
+                                {guestName.trim() || 'Valued Guest'}
+                            </div>
                         </div>
                     </div>
 
@@ -125,16 +136,16 @@ export default function KeycardSleeveModal({
                 </div>
 
                 <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
-                    <button 
-                        type="button" 
-                        onClick={onClose} 
+                    <button
+                        type="button"
+                        onClick={onClose}
                         className="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
                     >
                         Close
                     </button>
-                    <button 
-                        type="button" 
-                        onClick={handlePrint} 
+                    <button
+                        type="button"
+                        onClick={handlePrint}
                         className="cursor-pointer px-4.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm transition active:scale-95 flex items-center gap-1.5"
                     >
                         <i className="fa-solid fa-print"></i> <span>Print Keycard Sleeve Slip</span>

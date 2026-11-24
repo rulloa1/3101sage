@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { OYO_LOGO } from '../constants/brand';
 
 export default function AuditView() {
     const [earlyPerDay, setEarlyPerDay] = useState(3);
@@ -8,7 +9,7 @@ export default function AuditView() {
     // Dynamic Financial ROI Calculations
     const annualEarly = earlyPerDay * 25 * 365;
     const annualOtaSaved = Math.round(directPerMonth * 12 * 144 * 0.18);
-    const annualHoursSaved = Math.round((minsSavedPerRoom * 14 * 365) / 60);
+    const annualHoursSaved = Math.round((minsSavedPerRoom * 30 * 365) / 60);
     const annualTotal = annualEarly + annualOtaSaved;
 
     return (
@@ -75,14 +76,14 @@ export default function AuditView() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                         <div className="px-3 py-2 rounded-2xl bg-white border border-rose-200 flex items-center justify-center shadow-md shadow-rose-100">
-                            <img src="assets/oyo-logo.png" alt="OYO" className="h-6 w-auto object-contain" />
+                            <img src={OYO_LOGO} alt="OYO" className="h-6 w-auto object-contain" />
                         </div>
                         <div>
                             <div className="flex items-center gap-2">
                                 <h3 className="text-base font-extrabold text-slate-900">Live OTA Channel Data (Property #90631)</h3>
                                 <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300">Verified</span>
                             </div>
-                            <p className="text-xs text-slate-500">3101 Sage Rd, Houston, TX 77056 • Galleria</p>
+                            <p className="text-xs text-slate-500">3101 Sage Rd, Houston, TX 77056 • Galleria • 30 suites • 2 floors</p>
                         </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
@@ -129,11 +130,11 @@ export default function AuditView() {
                         <div className="text-[11px] font-bold text-slate-600">Checkout: 11:00 AM</div>
                     </div>
                     <div className="bg-white p-3 rounded-xl border border-rose-100 shadow-xs">
-                        <div className="text-[10px] uppercase font-bold text-slate-400">Listed Room Categories</div>
+                        <div className="text-[10px] uppercase font-bold text-slate-400">Suite Mix</div>
                         <ul className="text-[11px] font-bold text-slate-700 mt-1 space-y-0.5 list-disc list-inside">
-                            <li>2 Queen Beds</li>
-                            <li>Queen Bed</li>
-                            <li>Full bed with Twin</li>
+                            <li>1BR Queen Suite</li>
+                            <li>2-Queen Suite</li>
+                            <li>2BR 2-Queen Suite</li>
                         </ul>
                     </div>
                 </div>

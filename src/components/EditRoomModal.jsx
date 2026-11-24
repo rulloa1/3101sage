@@ -53,10 +53,10 @@ export default function EditRoomModal({
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+            <div className="max-h-[90vh] w-full max-w-md space-y-4 overflow-y-auto rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl animate-scaleIn">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                     <div>
                         <h3 className="text-base font-bold text-slate-800">

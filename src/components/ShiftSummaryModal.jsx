@@ -4,6 +4,7 @@ export default function ShiftSummaryModal({
     isOpen,
     onClose,
     rooms,
+    inventory,
     onCopy
 }) {
     if (!isOpen) return null;
@@ -17,10 +18,17 @@ export default function ShiftSummaryModal({
     const readyPct = total > 0 ? Math.round((clean / total) * 100) : 0;
     const flaggedRooms = rooms.filter(r => r.notes && r.notes.trim().length > 0);
 
+    const inventoryLine = inventory?.source === 'imported'
+        ? `Imported list: ${inventory.fileName || 'pasted list'} (${inventory.importedAt ? new Date(inventory.importedAt).toLocaleString() : 'unknown time'})`
+        : 'WORKING MODEL — suite numbers, wing split and bed mix are placeholders';
+
     const report = `===========================================
 ROOMSYNC PRO OPERATIONAL REPORT | 3101 SAGE RD
 Generated: ${new Date().toLocaleString()}
 ===========================================
+INVENTORY SOURCE:
+${inventoryLine}
+-------------------------------------------
 Total Rooms:       ${total}
 Clean & Ready:     ${clean} (${readyPct}%)
 In Progress:       ${inProgress}
@@ -30,25 +38,53 @@ Maintenance / DND: ${maint}
 -------------------------------------------
 FLAGGED ROOMS & SPECIAL NOTES:
 ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.toUpperCase()}): ${r.notes}`).join('\n') : '• None reported'}
-===========================================`;
+===========================================
+${inventory?.source === 'imported' ? 'Inventory: owner room list' : 'NOTE: demo inventory — not the owner\'s key list.'}`;
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(report).then(() => {
+        const succeeded = () => {
             onCopy("Shift report copied to clipboard!", "fa-copy text-amber-400");
             onClose();
-        }).catch(() => {
-            onCopy("Unable to copy automatically", "fa-triangle-exclamation text-rose-400");
-        });
+        };
+        const failed = () => {
+            onCopy("Unable to copy automatically — select the text to copy", "fa-triangle-exclamation text-rose-400");
+        };
+
+        // navigator.clipboard is unavailable on plain http origins, so keep a
+        // textarea fallback for older browsers and non-secure contexts.
+        const fallbackCopy = () => {
+            try {
+                const area = document.createElement('textarea');
+                area.value = report;
+                area.setAttribute('readonly', '');
+                area.style.position = 'fixed';
+                area.style.top = '-1000px';
+                area.style.opacity = '0';
+                document.body.appendChild(area);
+                area.select();
+                const ok = document.execCommand('copy');
+                document.body.removeChild(area);
+                ok ? succeeded() : failed();
+            } catch (e) {
+                failed();
+            }
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(report).then(succeeded).catch(fallbackCopy);
+        } else {
+            fallbackCopy();
+        }
     };
 
     return (
         <div 
             role="dialog" 
             aria-modal="true" 
-            className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
+            <div className="animate-scaleIn w-full max-w-lg space-y-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                     <h3 className="text-base font-bold text-slate-800">Operational Shift Summary (3101 Sage)</h3>
                     <button 

@@ -5,20 +5,25 @@ export const WS_URL = 'wss://ntfy.sh/' + CLOUD_SYNC_TOPIC + '/ws';
 export const POST_URL = 'https://ntfy.sh/' + CLOUD_SYNC_TOPIC;
 
 // Local BroadcastChannel for instant multi-tab sync on same machine
-export const localBroadcast = ('BroadcastChannel' in window) 
-    ? new BroadcastChannel('roomsync_sage_local_v2') 
+export const localBroadcast = ('BroadcastChannel' in window)
+    ? new BroadcastChannel('roomsync_sage_local_v2')
     : null;
 
 class SyncService {
     constructor() {
         this.ws = null;
         this.isConnected = false;
+        this.isInitialized = false;
         this.reconnectTimer = null;
         this.listeners = new Set();
         this.statusListeners = new Set();
     }
 
     init() {
+        // Guards against duplicate sockets when an effect re-runs (React StrictMode,
+        // state changes, hot reload).
+        if (this.isInitialized) return;
+        this.isInitialized = true;
         this.setupLocalBroadcast();
         this.connectCloud();
     }
@@ -33,8 +38,12 @@ class SyncService {
 
     connectCloud() {
         try {
+            clearTimeout(this.reconnectTimer);
             if (this.ws) {
-                try { this.ws.close(); } catch (e) {}
+                try {
+                    this.ws.onclose = null;
+                    this.ws.close();
+                } catch (e) {}
             }
             this.notifyStatus(false, "Connecting...");
             this.ws = new WebSocket(WS_URL);
@@ -42,7 +51,7 @@ class SyncService {
             this.ws.onopen = () => {
                 this.isConnected = true;
                 this.notifyStatus(true, "Cloud Live");
-                this.publish({ type: 'SYNC_REQUEST', senderId: myClientId });
+                this.publish({ type: 'SYNC_REQUEST' });
             };
 
             this.ws.onmessage = (event) => {
@@ -96,6 +105,8 @@ class SyncService {
 
     subscribeStatus(listener) {
         this.statusListeners.add(listener);
+        // Immediately replay the current connection state to new subscribers.
+        listener(this.isConnected, this.isConnected ? 'Cloud Live' : 'Connecting...');
         return () => this.statusListeners.delete(listener);
     }
 

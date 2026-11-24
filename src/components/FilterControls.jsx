@@ -8,15 +8,16 @@ export default function FilterControls({
     searchQuery,
     setSearchQuery,
     onWalkInMatch,
-    onResetDemo
+    onResetDemo,
+    floors = [1, 2]
 }) {
     return (
         <section className="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-2.5">
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
                 {/* Floor Filter Buttons */}
                 <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-                    <span className="text-slate-400 font-bold mr-1 uppercase tracking-wider text-[11px]">Floor:</span>
-                    {['ALL', '1', '2', '3'].map((floor) => (
+                    <span className="mr-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Floor:</span>
+                    {['ALL', ...floors].map((floor) => (
                         <button
                             key={floor}
                             onClick={() => setFloor(floor)}
@@ -60,7 +61,7 @@ export default function FilterControls({
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Room #, King, note..."
+                            placeholder="Room #, Queen, note..."
                             className="w-full pl-8 pr-7 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition"
                         />
                         {searchQuery && (
