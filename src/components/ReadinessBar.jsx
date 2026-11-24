@@ -15,7 +15,14 @@ export default function ReadinessBar({ rooms, currentLang }) {
                     <span className="font-bold text-amber-300">{pct}%</span>
                     <span className="text-slate-500 font-medium">({cleanCount} of {totalCount} rooms ready)</span>
                 </div>
-                <div className="w-full sm:w-64 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700/80">
+                <div
+                    role="progressbar"
+                    aria-label={`${dict.readinessLabel}: ${cleanCount} of ${totalCount} rooms ready`}
+                    aria-valuenow={pct}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    className="w-full sm:w-64 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700/80"
+                >
                     <div 
                         className="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full transition-all duration-500" 
                         style={{ width: `${pct}%` }}

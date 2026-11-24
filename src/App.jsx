@@ -104,6 +104,12 @@ export default function App() {
         writeInventory(inventory);
     }, [inventory]);
 
+    // Keep the document language in step with the UI toggle so screen readers
+    // and browser translation announce Spanish content as Spanish.
+    useEffect(() => {
+        document.documentElement.lang = currentLang;
+    }, [currentLang]);
+
     const persistRooms = useCallback((newRooms, publish = true) => {
         setInventory(prev => ({ ...prev, rooms: newRooms }));
 
@@ -532,6 +538,14 @@ export default function App() {
 
     return (
         <div className="flex min-h-screen flex-col font-sans text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+            {/* Keyboard users skip the sticky header's controls */}
+            <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[70] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-slate-900 focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+                Skip to rooms
+            </a>
+
             {/* Header */}
             <Header
                 activeView={activeView}
@@ -582,7 +596,7 @@ export default function App() {
             )}
 
             {/* MAIN CONTENT AREA */}
-            <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-5 sm:px-6">
+            <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-7xl flex-1 px-4 py-5 outline-none sm:px-6">
                 {activeView === 'desk' && (
                     filteredRooms.length > 0 ? (
                         <>

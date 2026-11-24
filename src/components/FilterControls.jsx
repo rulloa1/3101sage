@@ -26,6 +26,8 @@ export default function FilterControls({
                     {['ALL', ...floors].map((floor) => (
                         <button
                             key={floor}
+                            type="button"
+                            aria-pressed={currentFloor === floor}
                             onClick={() => setFloor(floor)}
                             className={`cursor-pointer px-3.5 py-1.5 text-xs font-bold rounded-xl transition ${
                                 currentFloor === floor
@@ -39,6 +41,7 @@ export default function FilterControls({
 
                     {/* Quick Walk-in Matcher Button */}
                     <button 
+                        type="button"
                         onClick={onWalkInMatch} 
                         className="cursor-pointer ml-1.5 px-3 py-1.5 text-xs font-extrabold rounded-xl bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition flex items-center gap-1.5 shadow-xs active:scale-95"
                     >
@@ -67,7 +70,12 @@ export default function FilterControls({
                         <div className="bg-indigo-50 border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1.5 animate-fadeIn">
                             <span>Filter:</span>
                             <span className="capitalize">{currentStatusFilter}</span>
-                            <button onClick={resetFilters} className="cursor-pointer text-indigo-500 hover:text-indigo-800 ml-0.5">
+                            <button
+                                type="button"
+                                onClick={resetFilters}
+                                aria-label="Clear status filter"
+                                className="cursor-pointer text-indigo-500 hover:text-indigo-800 ml-0.5"
+                            >
                                 <i className="fa-solid fa-xmark text-xs"></i>
                             </button>
                         </div>
@@ -81,11 +89,14 @@ export default function FilterControls({
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Room #, Queen, note..."
+                            aria-label="Search rooms by number, type or note"
                             className="w-full pl-8 pr-7 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition"
                         />
                         {searchQuery && (
                             <button
+                                type="button"
                                 onClick={() => setSearchQuery('')}
+                                aria-label="Clear search"
                                 className="cursor-pointer absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600"
                             >
                                 <i className="fa-solid fa-xmark text-xs"></i>
@@ -95,7 +106,9 @@ export default function FilterControls({
 
                     {/* Reset Demo State Button */}
                     <button
+                        type="button"
                         onClick={onResetDemo}
+                        aria-label="Reset rooms to demo layout"
                         className="cursor-pointer text-slate-400 hover:text-indigo-600 text-xs font-medium px-2 py-1.5 rounded-lg hover:bg-slate-100 transition"
                         title="Reset rooms to demo layout"
                     >
