@@ -1,5 +1,4 @@
 import React from 'react';
-
 export default function FilterControls({
     currentFloor,
     setFloor,
@@ -8,11 +7,18 @@ export default function FilterControls({
     searchQuery,
     setSearchQuery,
     onWalkInMatch,
+    onOpenAddRoom,
     onResetDemo,
-    floors = [1, 2]
+    rooms
 }) {
+    // Derive floor options from actual inventory so floor 4+ rooms are reachable
+    const floors = React.useMemo(() => {
+        if (!rooms || rooms.length === 0) return ['1', '2', '3'];
+        const unique = [...new Set(rooms.map(r => String(r.floor)))].sort((a, b) => Number(a) - Number(b));
+        return unique;
+    }, [rooms]);
     return (
-        <section className="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-2.5">
+        <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-2.5">
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
                 {/* Floor Filter Buttons */}
                 <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
@@ -39,6 +45,19 @@ export default function FilterControls({
                         <i className="fa-solid fa-key text-amber-600 text-xs"></i>
                         <span>Quick Match: Ready for Walk-in</span>
                     </button>
+
+                    {/* Add Room Button */}
+                    {onOpenAddRoom && (
+                        <button 
+                            type="button"
+                            onClick={onOpenAddRoom} 
+                            className="cursor-pointer ml-1 px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition flex items-center gap-1.5 active:scale-95"
+                            title="Add a custom room to inventory"
+                        >
+                            <i className="fa-solid fa-plus text-amber-600"></i>
+                            <span className="hidden sm:inline">Add Room</span>
+                        </button>
+                    )}
                 </div>
 
                 {/* Search & Reset */}

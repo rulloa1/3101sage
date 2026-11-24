@@ -1,10 +1,12 @@
 import React from 'react';
+import { todayCheckouts } from '../services/checkoutService';
 
 export default function ShiftSummaryModal({
     isOpen,
     onClose,
     rooms,
     inventory,
+    checkoutLog,
     onCopy
 }) {
     if (!isOpen) return null;
@@ -22,6 +24,11 @@ export default function ShiftSummaryModal({
         ? `Imported list: ${inventory.fileName || 'pasted list'} (${inventory.importedAt ? new Date(inventory.importedAt).toLocaleString() : 'unknown time'})`
         : 'WORKING MODEL — suite numbers, wing split and bed mix are placeholders';
 
+    const checkouts = todayCheckouts(checkoutLog || []);
+    const checkoutLines = checkouts.length > 0
+        ? checkouts.map(c => `  • Room ${c.roomId} — ${c.guestName || 'Guest'} @ ${new Date(c.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`).join('\n')
+        : '  • None recorded';
+
     const report = `===========================================
 ROOMSYNC PRO OPERATIONAL REPORT | 3101 SAGE RD
 Generated: ${new Date().toLocaleString()}
@@ -35,6 +42,9 @@ In Progress:       ${inProgress}
 Dirty / Vacant:    ${dirty}
 Occupied:          ${occupied}
 Maintenance / DND: ${maint}
+-------------------------------------------
+CHECKOUTS TODAY (${checkouts.length}):
+${checkoutLines}
 -------------------------------------------
 FLAGGED ROOMS & SPECIAL NOTES:
 ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.toUpperCase()}): ${r.notes}`).join('\n') : '• None reported'}

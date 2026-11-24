@@ -13,7 +13,7 @@ export default function ReadinessBar({ rooms, currentLang }) {
                 <div className="flex items-center gap-2">
                     <span className="text-slate-400 font-semibold">{dict.readinessLabel}</span>
                     <span className="font-bold text-amber-300">{pct}%</span>
-                    <span className="text-slate-500 font-medium">({cleanCount} of {totalCount} rooms clean)</span>
+                    <span className="text-slate-500 font-medium">({cleanCount} of {totalCount} rooms ready)</span>
                 </div>
                 <div className="w-full sm:w-64 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700/80">
                     <div 

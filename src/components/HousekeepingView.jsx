@@ -12,7 +12,8 @@ export default function HousekeepingView({
     currentLang,
     onChangeStatus,
     onOpenQc,
-    onOpenEdit
+    onOpenEdit,
+    onCheckout
 }) {
     const [houseFloor, setHouseFloor] = useState('ALL');
     const dict = i18n[currentLang] || i18n.en;
@@ -113,23 +114,41 @@ export default function HousekeepingView({
                             )}
 
                             <div className="grid grid-cols-2 gap-2 pt-1">
-                                <button
-                                    type="button"
-                                    onClick={() => onChangeStatus(room.id, 'cleaning')}
-                                    className="tap-target flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-amber-300 bg-amber-50 px-3 py-3 text-xs font-extrabold text-amber-800 shadow-xs transition hover:bg-amber-100 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                                >
-                                    <i className="fa-solid fa-spinner"></i>
-                                    <span>{dict.cleaning}</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => onOpenQc(room.id)}
-                                    className="tap-target flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 py-3 text-xs font-extrabold text-white shadow-md shadow-emerald-200 transition hover:bg-emerald-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                                    title="Verify quality standards and mark clean"
-                                >
-                                    <i className="fa-solid fa-clipboard-check text-sm"></i>
-                                    <span>QC &amp; Clean</span>
-                                </button>
+                                {room.status === 'occupied' ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => onCheckout(room.id, '')}
+                                        className="tap-target col-span-2 flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 px-3 py-3 text-xs font-extrabold text-white shadow-md shadow-blue-200 transition hover:bg-blue-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                                    >
+                                        <i className="fa-solid fa-right-from-bracket text-sm"></i>
+                                        <span>{currentLang === 'es' ? 'Check-Out / Marcar Sucia' : 'Check Out & Queue Turnover'}</span>
+                                    </button>
+                                ) : (
+                                    <>
+                                        <button
+                                            type="button"
+                                            onClick={() => onChangeStatus(room.id, 'cleaning')}
+                                            disabled={room.status === 'cleaning'}
+                                            className={`tap-target flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 px-3 py-3 text-xs font-extrabold shadow-xs transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+                                                room.status === 'cleaning'
+                                                    ? 'cursor-not-allowed border-amber-200 bg-amber-100 text-amber-500 opacity-60'
+                                                    : 'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100'
+                                            }`}
+                                        >
+                                            <i className="fa-solid fa-spinner"></i>
+                                            <span>{dict.cleaning}</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => onOpenQc(room.id)}
+                                            className="tap-target flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 py-3 text-xs font-extrabold text-white shadow-md shadow-emerald-200 transition hover:bg-emerald-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                                            title="Verify quality standards and mark clean"
+                                        >
+                                            <i className="fa-solid fa-clipboard-check text-sm"></i>
+                                            <span>QC &amp; Clean</span>
+                                        </button>
+                                    </>
+                                )}
                             </div>
 
                             <div className="flex justify-end pt-1">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { OYO_LOGO } from '../constants/brand';
+import hotelHeroBg from '../assets/hotel-hero-bg.jpg';
 
 export default function KeycardSleeveModal({
     isOpen,
@@ -31,7 +32,7 @@ export default function KeycardSleeveModal({
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div className="max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl animate-scaleIn">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div className="screen-only flex justify-between items-center border-b border-slate-100 pb-3">
                     <div className="flex items-center gap-2.5">
                         <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-black shadow-xs">
                             <i className="fa-solid fa-qrcode"></i>
@@ -49,7 +50,7 @@ export default function KeycardSleeveModal({
                     </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="screen-only grid grid-cols-2 gap-3 text-xs">
                     <div>
                         <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Room Number
@@ -81,7 +82,11 @@ export default function KeycardSleeveModal({
                 </div>
 
                 {/* PRINTABLE CARD SLEEVE PREVIEW */}
-                <div id="printableSleeveArea" className="bg-slate-900 text-white p-5 rounded-2xl border-2 border-amber-500/50 shadow-inner space-y-3 font-sans">
+                <div id="printableSleeveArea" className="relative overflow-hidden bg-slate-900 text-white p-5 rounded-2xl border-2 border-amber-500/50 shadow-inner space-y-3 font-sans">
+                    <div 
+                        className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
+                        style={{ backgroundImage: `url(${hotelHeroBg})` }}
+                    ></div>
                     <div className="flex justify-between items-start border-b border-slate-800 pb-2.5">
                         <div>
                             <div className="flex items-center gap-2 mb-1.5">
@@ -92,7 +97,7 @@ export default function KeycardSleeveModal({
                                     Houston Galleria
                                 </span>
                             </div>
-                            <h4 className="text-base font-black text-white leading-tight">STELLAR STAY &bull; OYO GALLERIA</h4>
+                            <h4 className="text-base font-black text-white leading-tight">PARC HOTEL &bull; OYO GALLERIA &bull; STELLAR STAY</h4>
                             <div className="text-[10px] text-slate-400">3101 Sage Rd, Houston, TX 77056</div>
                         </div>
                         <div className="text-right">
@@ -131,11 +136,11 @@ export default function KeycardSleeveModal({
 
                     {/* Chargeback Shield Disclaimer */}
                     <div className="text-[9px] text-slate-400 leading-tight border-t border-slate-800/80 pt-2 font-mono">
-                        *BILLING NOTICE: Credit card charges for your stay at 3101 Sage Rd will appear as <strong>"STELLAR STAY / OYO 90631"</strong>. Verified at check-in.
+                        *BILLING NOTICE: Credit card charges for your stay at 3101 Sage Rd will appear as <strong>"PARC HOTEL / STELLAR STAY / OYO 90631"</strong>. Verified by guest signature at check-in.
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <div className="screen-only flex justify-end gap-2 pt-2 border-t border-slate-100">
                     <button
                         type="button"
                         onClick={onClose}

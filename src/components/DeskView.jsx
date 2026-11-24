@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getStatusConfig } from '../constants/i18n';
 
 function getCleaningMinutes(startedAt) {
@@ -12,11 +12,27 @@ export default function DeskView({
     currentLang,
     onChangeStatus,
     onOpenQc,
-    onOpenEdit
+    onOpenEdit,
+    onCheckout
 }) {
+    // Track which room is in "confirm checkout" state
+    const [confirmingCheckoutId, setConfirmingCheckoutId] = useState(null);
+    const [guestName, setGuestName] = useState('');
+
     if (rooms.length === 0) {
         return null;
     }
+
+    const handleCheckoutConfirm = (roomId) => {
+        onCheckout(roomId, guestName.trim());
+        setConfirmingCheckoutId(null);
+        setGuestName('');
+    };
+
+    const handleCheckoutCancel = () => {
+        setConfirmingCheckoutId(null);
+        setGuestName('');
+    };
 
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
@@ -25,6 +41,7 @@ export default function DeskView({
                 const cleaningMins = room.status === 'cleaning' ? getCleaningMinutes(room.cleaningStartedAt) : null;
                 const isDirty = room.status === 'dirty';
                 const isCleaning = room.status === 'cleaning';
+                const isConfirming = confirmingCheckoutId === room.id;
 
                 return (
                     <article
@@ -95,48 +112,93 @@ export default function DeskView({
 
                         {/* Card Footer Actions */}
                         <div className="px-3.5 pb-3.5">
-                            <div className="flex gap-2 border-t border-slate-100 pt-2.5">
-                                {isDirty && (
+                            {isConfirming ? (
+                                <div className="space-y-2 border-t border-slate-100 pt-2.5">
+                                    <input
+                                        type="text"
+                                        value={guestName}
+                                        onChange={(e) => setGuestName(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') handleCheckoutConfirm(room.id);
+                                            if (e.key === 'Escape') handleCheckoutCancel();
+                                        }}
+                                        placeholder="Guest name (optional)"
+                                        autoFocus
+                                        aria-label={`Guest name for room ${room.id} checkout`}
+                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium transition focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                                    />
+                                    <div className="flex gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => handleCheckoutConfirm(room.id)}
+                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                                        >
+                                            <i className="fa-solid fa-right-from-bracket text-[11px]"></i> <span>Confirm Checkout</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleCheckoutCancel}
+                                            aria-label="Cancel checkout"
+                                            className="cursor-pointer rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-200 active:scale-95"
+                                        >
+                                            <i className="fa-solid fa-xmark text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex gap-2 border-t border-slate-100 pt-2.5">
+                                    {isDirty && (
+                                        <button
+                                            type="button"
+                                            onClick={() => onChangeStatus(room.id, 'cleaning')}
+                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-amber-500 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-amber-200 transition hover:bg-amber-600 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                                        >
+                                            <i className="fa-solid fa-play text-[11px]"></i> <span>Start Clean</span>
+                                        </button>
+                                    )}
+
+                                    {isCleaning && (
+                                        <button
+                                            type="button"
+                                            onClick={() => onOpenQc(room.id)}
+                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-emerald-200 transition hover:bg-emerald-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                                            title="Perform the 3-point QC inspection and mark clean"
+                                        >
+                                            <i className="fa-solid fa-clipboard-check text-xs"></i> <span>QC &amp; Clean</span>
+                                        </button>
+                                    )}
+
+                                    {room.status === 'occupied' && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setConfirmingCheckoutId(room.id)}
+                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                                        >
+                                            <i className="fa-solid fa-right-from-bracket text-[11px]"></i> <span>Check Out</span>
+                                        </button>
+                                    )}
+
+                                    {!isDirty && !isCleaning && room.status !== 'occupied' && (
+                                        <button
+                                            type="button"
+                                            onClick={() => onChangeStatus(room.id, 'dirty')}
+                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100 px-2.5 py-2 text-xs font-bold text-slate-600 transition hover:bg-rose-50 hover:text-rose-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+                                        >
+                                            <i className="fa-solid fa-broom text-[11px]"></i> <span>Mark Dirty</span>
+                                        </button>
+                                    )}
+
                                     <button
                                         type="button"
-                                        onClick={() => onChangeStatus(room.id, 'cleaning')}
-                                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-amber-500 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-amber-200 transition hover:bg-amber-600 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                                        onClick={() => onOpenEdit(room.id)}
+                                        aria-label={`Edit room ${room.id}`}
+                                        className="flex cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                                        title="Edit room details"
                                     >
-                                        <i className="fa-solid fa-play text-[11px]"></i> <span>Start Clean</span>
+                                        <i className="fa-solid fa-sliders text-xs"></i>
                                     </button>
-                                )}
-
-                                {isCleaning && (
-                                    <button
-                                        type="button"
-                                        onClick={() => onOpenQc(room.id)}
-                                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-emerald-200 transition hover:bg-emerald-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                                        title="Perform the 3-point QC inspection and mark clean"
-                                    >
-                                        <i className="fa-solid fa-clipboard-check text-xs"></i> <span>QC &amp; Clean</span>
-                                    </button>
-                                )}
-
-                                {!isDirty && !isCleaning && (
-                                    <button
-                                        type="button"
-                                        onClick={() => onChangeStatus(room.id, 'dirty')}
-                                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100 px-2.5 py-2 text-xs font-bold text-slate-600 transition hover:bg-rose-50 hover:text-rose-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
-                                    >
-                                        <i className="fa-solid fa-broom text-[11px]"></i> <span>Mark Dirty</span>
-                                    </button>
-                                )}
-
-                                <button
-                                    type="button"
-                                    onClick={() => onOpenEdit(room.id)}
-                                    aria-label={`Edit room ${room.id}`}
-                                    className="flex cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-                                    title="Edit room details"
-                                >
-                                    <i className="fa-solid fa-sliders text-xs"></i>
-                                </button>
-                            </div>
+                                </div>
+                            )}
                         </div>
                     </article>
                 );

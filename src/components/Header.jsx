@@ -92,6 +92,18 @@ function ActionButtons({ onOpenEarlyCheckin, onOpenKeycardSleeve, onOpenShiftRep
                 <span className={labelClass}>OYO #90631</span>
                 <i className="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-80"></i>
             </a>
+
+            <a
+                href="https://oyo.theroyeffect.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${actionBase} border-slate-500/30 bg-white/5 text-amber-300 hover:bg-white/10 focus-visible:ring-amber-400`}
+                aria-label="Open OYO property portal"
+                title="Open the OYO property operations portal"
+            >
+                <i className="fa-solid fa-globe"></i>
+                <span className={labelClass}>Portal</span>
+            </a>
         </>
     );
 }

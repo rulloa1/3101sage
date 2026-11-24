@@ -13,6 +13,9 @@ import HousekeepingQcModal from './components/HousekeepingQcModal';
 import KeycardSleeveModal from './components/KeycardSleeveModal';
 import EditRoomModal from './components/EditRoomModal';
 import RoomListModal from './components/RoomListModal';
+import ExecutiveMemoModal from './components/ExecutiveMemoModal';
+import AddRoomModal from './components/AddRoomModal';
+import CheckoutLog from './components/CheckoutLog';
 import Toast from './components/Toast';
 
 import { getStatusConfig } from './constants/i18n';
@@ -27,6 +30,7 @@ import {
 } from './constants/inventory';
 import { syncService, myClientId } from './services/syncService';
 import { playChime } from './services/soundService';
+import { loadCheckoutLog, appendCheckout, saveCheckoutLog } from './services/checkoutService';
 
 function sumTodayFees(history) {
     const todayStr = new Date().toDateString();
@@ -66,6 +70,8 @@ export default function App() {
     const [isEarlyCheckinOpen, setIsEarlyCheckinOpen] = useState(false);
     const [isKeycardSleeveOpen, setIsKeycardSleeveOpen] = useState(false);
     const [isRoomListOpen, setIsRoomListOpen] = useState(false);
+    const [isMemoModalOpen, setIsMemoModalOpen] = useState(false);
+    const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
     const [qcModalRoomId, setQcModalRoomId] = useState(null);
     const [editModalRoomId, setEditModalRoomId] = useState(null);
 
@@ -80,6 +86,9 @@ export default function App() {
     inventoryRef.current = inventory;
     roomsRef.current = rooms;
     langRef.current = currentLang;
+
+    // Checkout log
+    const [checkoutLog, setCheckoutLog] = useState(() => loadCheckoutLog());
 
     // 2. TOAST HELPER
     const showToast = useCallback((message, icon = 'fa-circle-check text-emerald-400') => {
@@ -130,6 +139,7 @@ export default function App() {
             if (!data) return;
 
             if (data.type === 'SYNC_REQUEST') {
+                // Reply with current snapshot without stale-closure risk
                 syncService.publish({
                     type: 'FULL_SYNC',
                     rooms: roomsRef.current,
@@ -179,6 +189,11 @@ export default function App() {
                 addEarlyFee(data.record);
                 showToast(`Early check-in logged for Room ${data.record.roomId}`, "fa-hand-holding-dollar text-emerald-400");
             }
+
+            if (data.type === 'CHECKOUT_LOG_SYNC' && Array.isArray(data.log)) {
+                setCheckoutLog(data.log);
+                saveCheckoutLog(data.log);
+            }
         });
 
         // Cross-window storage listener (the record key carries rooms + provenance)
@@ -192,16 +207,23 @@ export default function App() {
                     if (Array.isArray(feesHistory)) setTodayEarlyTotal(sumTodayFees(feesHistory));
                 } catch (err) {}
             }
+            if (e.key === 'sage_checkout_log' && e.newValue) {
+                try {
+                    setCheckoutLog(JSON.parse(e.newValue));
+                } catch (err) {}
+            }
         };
         window.addEventListener('storage', handleStorage);
 
-        // Escape key to dismiss modals
+        // Escape key to dismiss any open modal
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
                 setIsShiftReportOpen(false);
                 setIsEarlyCheckinOpen(false);
                 setIsKeycardSleeveOpen(false);
                 setIsRoomListOpen(false);
+                setIsMemoModalOpen(false);
+                setIsAddRoomOpen(false);
                 setQcModalRoomId(null);
                 setEditModalRoomId(null);
             }
@@ -227,14 +249,19 @@ export default function App() {
 
     // 5. ACTIONS
     const handleForceResync = () => {
-        showToast("Reconnecting to the cloud network...", "fa-rotate text-indigo-400");
-        syncService.connectCloud();
-        syncService.publish({
-            type: 'FULL_SYNC',
-            rooms: roomsRef.current,
-            meta: inventoryMeta(inventoryRef.current),
-            senderId: myClientId
-        });
+        showToast("Syncing with cloud network...", "fa-rotate text-indigo-400");
+        // connectCloud triggers a SYNC_REQUEST in its onopen handler; publishing
+        // here as well would send the snapshot twice.
+        if (syncService.isConnected) {
+            syncService.publish({
+                type: 'FULL_SYNC',
+                rooms: roomsRef.current,
+                meta: inventoryMeta(inventoryRef.current),
+                senderId: myClientId
+            });
+        } else {
+            syncService.connectCloud();
+        }
     };
 
     const handleToggleLanguage = () => {
@@ -304,6 +331,13 @@ export default function App() {
         applyInventory(createModelInventory());
         setIsRoomListOpen(false);
         showToast('Working-model inventory restored', 'fa-rotate-left text-amber-400');
+    };
+
+    const handleAddRoom = (newRoom) => {
+        const updated = [...rooms, newRoom].sort((a, b) => a.id - b.id);
+        persistRooms(updated, true);
+        playChime(659.25, 0.25);
+        showToast(`Room ${newRoom.id} added to inventory!`, 'fa-circle-plus text-amber-500');
     };
 
     const handleChangeStatusDirect = (roomId, newStatus) => {
@@ -426,6 +460,57 @@ export default function App() {
         showToast(`Room ${roomId} certified Clean & Ready (3.7★ QC Passed)`, "fa-circle-check text-emerald-400");
     };
 
+    const handleCheckout = (roomId, guestName) => {
+        const target = rooms.find(r => r.id === roomId);
+        if (!target) return;
+
+        // Log the checkout
+        const entry = {
+            id: 'CO_' + Date.now(),
+            roomId: target.id,
+            roomType: target.type,
+            floor: target.floor,
+            guestName: guestName || '',
+            timestamp: Date.now()
+        };
+        const updatedLog = appendCheckout(entry);
+        setCheckoutLog([...updatedLog]);
+
+        // Flip room to dirty and clear notes
+        const updated = rooms.map(r => {
+            if (r.id === roomId) {
+                return { ...r, status: 'dirty', notes: '', cleaningStartedAt: null };
+            }
+            return r;
+        });
+
+        persistRooms(updated, false);
+
+        syncService.publish({
+            type: 'ROOM_UPDATE',
+            roomId: target.id,
+            status: 'dirty',
+            notes: '',
+            cleaningStartedAt: null
+        });
+        syncService.publish({
+            type: 'CHECKOUT_LOG_SYNC',
+            log: updatedLog
+        });
+
+        playChime(523.25, 0.2);
+        showToast(
+            `Room ${roomId} checked out${guestName ? ` — ${guestName}` : ''}. Queued for housekeeping.`,
+            'fa-right-from-bracket text-blue-400'
+        );
+    };
+
+    const handleClearCheckoutLog = () => {
+        saveCheckoutLog([]);
+        setCheckoutLog([]);
+        syncService.publish({ type: 'CHECKOUT_LOG_SYNC', log: [] });
+    };
+
     // 6. FILTER LOGIC
     const filteredRooms = useMemo(() => {
         return rooms.filter(r => {
@@ -441,11 +526,6 @@ export default function App() {
             return matchFloor && matchStatus && matchSearch;
         });
     }, [rooms, currentFloor, currentStatusFilter, searchQuery]);
-
-    const availableFloors = useMemo(
-        () => Array.from(new Set(rooms.map(r => r.floor))).sort((a, b) => Number(a) - Number(b)),
-        [rooms]
-    );
 
     const activeQcRoom = useMemo(() => rooms.find(r => r.id === qcModalRoomId), [rooms, qcModalRoomId]);
     const activeEditRoom = useMemo(() => rooms.find(r => r.id === editModalRoomId), [rooms, editModalRoomId]);
@@ -495,8 +575,9 @@ export default function App() {
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                     onWalkInMatch={handleWalkInMatch}
+                    onOpenAddRoom={() => setIsAddRoomOpen(true)}
                     onResetDemo={handleResetToModel}
-                    floors={availableFloors}
+                    rooms={rooms}
                 />
             )}
 
@@ -504,13 +585,22 @@ export default function App() {
             <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-5 sm:px-6">
                 {activeView === 'desk' && (
                     filteredRooms.length > 0 ? (
-                        <DeskView
-                            rooms={filteredRooms}
-                            currentLang={currentLang}
-                            onChangeStatus={handleChangeStatusDirect}
-                            onOpenQc={(id) => setQcModalRoomId(id)}
-                            onOpenEdit={(id) => setEditModalRoomId(id)}
-                        />
+                        <>
+                            <DeskView
+                                rooms={filteredRooms}
+                                currentLang={currentLang}
+                                onChangeStatus={handleChangeStatusDirect}
+                                onOpenQc={(id) => setQcModalRoomId(id)}
+                                onOpenEdit={(id) => setEditModalRoomId(id)}
+                                onCheckout={handleCheckout}
+                            />
+                            <div className="mt-5">
+                                <CheckoutLog
+                                    log={checkoutLog}
+                                    onClear={handleClearCheckoutLog}
+                                />
+                            </div>
+                        </>
                     ) : (
                         <div className="my-4 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-16 text-center shadow-soft">
                             <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
@@ -538,11 +628,12 @@ export default function App() {
                         onChangeStatus={handleChangeStatusDirect}
                         onOpenQc={(id) => setQcModalRoomId(id)}
                         onOpenEdit={(id) => setEditModalRoomId(id)}
+                        onCheckout={handleCheckout}
                     />
                 )}
 
                 {activeView === 'audit' && (
-                    <AuditView />
+                    <AuditView onOpenMemo={() => setIsMemoModalOpen(true)} />
                 )}
             </main>
 
@@ -563,7 +654,13 @@ export default function App() {
                 onClose={() => setIsShiftReportOpen(false)}
                 rooms={rooms}
                 inventory={inventory}
+                checkoutLog={checkoutLog}
                 onCopy={showToast}
+            />
+
+            <ExecutiveMemoModal
+                isOpen={isMemoModalOpen}
+                onClose={() => setIsMemoModalOpen(false)}
             />
 
             <EarlyCheckinModal
@@ -604,6 +701,13 @@ export default function App() {
                 inventory={inventory}
                 onImport={handleImportRoomList}
                 onResetModel={handleResetToModel}
+            />
+
+            <AddRoomModal
+                isOpen={isAddRoomOpen}
+                onClose={() => setIsAddRoomOpen(false)}
+                onAddRoom={handleAddRoom}
+                existingRoomIds={rooms.map(r => r.id)}
             />
 
             {/* FLOATING TOAST NOTIFICATION */}
