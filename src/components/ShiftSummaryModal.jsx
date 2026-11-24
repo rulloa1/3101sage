@@ -7,6 +7,7 @@ export default function ShiftSummaryModal({
     rooms,
     inventory,
     checkoutLog,
+    todayEarlyFees,
     onCopy
 }) {
     if (!isOpen) return null;
@@ -29,6 +30,14 @@ export default function ShiftSummaryModal({
         ? checkouts.map(c => `  • Room ${c.roomId} — ${c.guestName || 'Guest'} @ ${new Date(c.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`).join('\n')
         : '  • None recorded';
 
+    // Early check-in fees are tracked in the app all shift; the handoff report
+    // has to show the money collected, not just the room states.
+    const earlyFees = todayEarlyFees || [];
+    const earlyTotal = earlyFees.reduce((sum, fee) => sum + (Number(fee.fee) || 0), 0);
+    const earlyFeeLines = earlyFees.length > 0
+        ? earlyFees.map(f => `  • Room ${f.roomId} — $${(Number(f.fee) || 0).toFixed(2)} — ${f.guest || 'Guest'} @ ${new Date(f.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`).join('\n')
+        : '  • None collected';
+
     const report = `===========================================
 ROOMSYNC PRO OPERATIONAL REPORT | 3101 SAGE RD
 Generated: ${new Date().toLocaleString()}
@@ -45,6 +54,10 @@ Maintenance / DND: ${maint}
 -------------------------------------------
 CHECKOUTS TODAY (${checkouts.length}):
 ${checkoutLines}
+-------------------------------------------
+EARLY CHECK-IN REVENUE (${earlyFees.length}):
+${earlyFeeLines}
+  TOTAL COLLECTED: $${earlyTotal.toFixed(2)}
 -------------------------------------------
 FLAGGED ROOMS & SPECIAL NOTES:
 ${flaggedRooms.length > 0 ? flaggedRooms.map(r => `• Room ${r.id} (${r.status.toUpperCase()}): ${r.notes}`).join('\n') : '• None reported'}
@@ -91,21 +104,24 @@ ${inventory?.source === 'imported' ? 'Inventory: owner room list' : 'NOTE: demo 
         <div 
             role="dialog" 
             aria-modal="true" 
+            aria-labelledby="shift-summary-title"
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div className="animate-scaleIn w-full max-w-lg space-y-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                    <h3 className="text-base font-bold text-slate-800">Operational Shift Summary (3101 Sage)</h3>
+                    <h3 id="shift-summary-title" className="text-base font-bold text-slate-800">Operational Shift Summary (3101 Sage)</h3>
                     <button 
+                        type="button"
                         onClick={onClose} 
+                        aria-label="Close shift report"
                         className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs text-slate-800 space-y-2 select-all overflow-y-auto max-h-72 whitespace-pre">
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs text-slate-800 space-y-2 select-all overflow-y-auto max-h-72 whitespace-pre-wrap break-words">
                     {report}
                 </div>
 

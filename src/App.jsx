@@ -32,11 +32,13 @@ import { syncService, myClientId } from './services/syncService';
 import { playChime } from './services/soundService';
 import { loadCheckoutLog, appendCheckout, saveCheckoutLog } from './services/checkoutService';
 
-function sumTodayFees(history) {
+function selectTodayFees(history) {
     const todayStr = new Date().toDateString();
-    return history
-        .filter(item => new Date(item.timestamp).toDateString() === todayStr)
-        .reduce((sum, item) => sum + (Number(item.fee) || 0), 0);
+    return history.filter(item => new Date(item.timestamp).toDateString() === todayStr);
+}
+
+function sumTodayFees(history) {
+    return selectTodayFees(history).reduce((sum, item) => sum + (Number(item.fee) || 0), 0);
 }
 
 function readEarlyFees() {
@@ -75,8 +77,11 @@ export default function App() {
     const [qcModalRoomId, setQcModalRoomId] = useState(null);
     const [editModalRoomId, setEditModalRoomId] = useState(null);
 
-    // Today Early Fees
-    const [todayEarlyTotal, setTodayEarlyTotal] = useState(() => sumTodayFees(readEarlyFees()));
+    // Today's early check-in fees, kept as records (not just a total) so the
+    // shift report can itemise the revenue that was actually collected.
+    const [earlyFees, setEarlyFees] = useState(readEarlyFees);
+    const todayEarlyFees = selectTodayFees(earlyFees);
+    const todayEarlyTotal = sumTodayFees(earlyFees);
 
     // Latest-value refs so the sync listeners never need to be rebuilt
     // (rebuilding them used to reconnect the cloud socket on every room change).
@@ -124,13 +129,16 @@ export default function App() {
 
     const addEarlyFee = useCallback((record) => {
         if (!record || !record.id) return;
+        const history = readEarlyFees();
+        if (history.some(item => item.id === record.id)) {
+            setEarlyFees(history);
+            return;
+        }
+        history.push(record);
         try {
-            const history = readEarlyFees();
-            if (history.some(item => item.id === record.id)) return;
-            history.push(record);
             localStorage.setItem('sage_early_fees', JSON.stringify(history));
-            setTodayEarlyTotal(sumTodayFees(history));
         } catch (e) {}
+        setEarlyFees(history);
     }, []);
 
     // 4. REAL-TIME SYNC & WEBSOCKET SETUP (mount once)
@@ -210,7 +218,7 @@ export default function App() {
             if (e.key === 'sage_early_fees') {
                 try {
                     const feesHistory = JSON.parse(e.newValue || '[]');
-                    if (Array.isArray(feesHistory)) setTodayEarlyTotal(sumTodayFees(feesHistory));
+                    if (Array.isArray(feesHistory)) setEarlyFees(feesHistory);
                 } catch (err) {}
             }
             if (e.key === 'sage_checkout_log' && e.newValue) {
@@ -404,7 +412,16 @@ export default function App() {
             cleaningStartedAt
         });
 
-        showToast(`Room ${roomId} updated!`, 'fa-floppy-disk text-indigo-400');
+        // A handyman dispatch is not a plain edit: say what actually happened.
+        const dispatched = newStatus === 'maintenance'
+            && /handyman alerted/i.test(newNotes)
+            && !/handyman alerted/i.test(target.notes || '');
+        const cfg = getStatusConfig(newStatus, currentLang);
+        if (dispatched) {
+            showToast(`Handyman alert sent — Room ${roomId} marked ${cfg.label}`, 'fa-screwdriver-wrench text-amber-400');
+        } else {
+            showToast(`Room ${roomId} updated!`, 'fa-floppy-disk text-indigo-400');
+        }
     };
 
     const handleConfirmEarlyCheckin = (roomId, fee, guestName) => {
@@ -669,6 +686,7 @@ export default function App() {
                 rooms={rooms}
                 inventory={inventory}
                 checkoutLog={checkoutLog}
+                todayEarlyFees={todayEarlyFees}
                 onCopy={showToast}
             />
 
@@ -722,6 +740,7 @@ export default function App() {
                 onClose={() => setIsAddRoomOpen(false)}
                 onAddRoom={handleAddRoom}
                 existingRoomIds={rooms.map(r => r.id)}
+                existingFloors={rooms.map(r => r.floor)}
             />
 
             {/* FLOATING TOAST NOTIFICATION */}

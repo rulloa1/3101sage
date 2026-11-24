@@ -123,14 +123,23 @@ export default function Header({
 }) {
     const [liveTime, setLiveTime] = useState('--:--');
 
+    // The clock only shows hours and minutes, so wake up on the minute boundary
+    // instead of re-rendering the whole header once a second all shift.
     useEffect(() => {
+        let timer;
         const updateClock = () => {
             const now = new Date();
             setLiveTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
         };
+        const scheduleNextMinute = () => {
+            timer = setTimeout(() => {
+                updateClock();
+                scheduleNextMinute();
+            }, 60000 - (Date.now() % 60000));
+        };
         updateClock();
-        const timer = setInterval(updateClock, 1000);
-        return () => clearInterval(timer);
+        scheduleNextMinute();
+        return () => clearTimeout(timer);
     }, []);
 
     const dict = i18n[currentLang] || i18n.en;

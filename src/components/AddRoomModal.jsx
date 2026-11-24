@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
-export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomIds }) {
+const MAX_FLOOR = 60;
+
+// Suites are numbered with the floor leading (101 → 1, 1203 → 12), which is the
+// same convention the room-list importer documents.
+function floorFromSuite(suite) {
+    const text = String(suite);
+    if (text.length < 3) return null;
+    const derived = Number(text.slice(0, -2));
+    return Number.isInteger(derived) && derived >= 1 && derived <= MAX_FLOOR ? derived : null;
+}
+
+export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomIds, existingFloors }) {
     const [roomId, setRoomId] = useState('');
     const [type, setType] = useState('2 Queen Beds');
     const [floor, setFloor] = useState('1');
@@ -8,45 +19,74 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
     const [notes, setNotes] = useState('');
     const [error, setError] = useState('');
 
+    // A closed dialog must not reopen holding last shift's half-typed room.
+    useEffect(() => {
+        if (!isOpen) return;
+        setRoomId('');
+        setType('2 Queen Beds');
+        setFloor('1');
+        setStatus('clean');
+        setNotes('');
+        setError('');
+    }, [isOpen]);
+
+    // Offer every floor the property actually uses (an imported list can run
+    // past floor 4), plus room to grow and the floor the suite number implies.
+    const floorOptions = useMemo(() => {
+        const floors = new Set([1, 2, 3, 4]);
+        (existingFloors || []).forEach((value) => {
+            const parsed = Number(value);
+            if (Number.isInteger(parsed) && parsed >= 1 && parsed <= MAX_FLOOR) floors.add(parsed);
+        });
+        const implied = floorFromSuite(roomId);
+        if (implied) floors.add(implied);
+        const current = Number(floor);
+        if (Number.isInteger(current) && current >= 1 && current <= MAX_FLOOR) floors.add(current);
+        return [...floors].sort((a, b) => a - b);
+    }, [existingFloors, roomId, floor]);
+
     if (!isOpen) return null;
 
     const handleRoomIdChange = (e) => {
         const val = e.target.value.replace(/\D/g, '');
         setRoomId(val);
         setError('');
-        if (val.length >= 3) {
-            const firstDigit = val.charAt(0);
-            if (['1', '2', '3', '4'].includes(firstDigit)) {
-                setFloor(firstDigit);
-            }
-        }
+        const implied = floorFromSuite(val);
+        if (implied) setFloor(String(implied));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const numId = parseInt(roomId, 10);
-        if (!numId || numId < 100 || numId > 999) {
-            setError('Please enter a valid 3-digit room number (e.g. 106, 205, 305).');
+
+        if (!/^\d{1,5}$/.test(roomId)) {
+            setError('Enter the suite number as digits only (e.g. 106, 1203).');
             return;
         }
-        if (existingRoomIds.includes(numId)) {
+        const numId = Number(roomId);
+        if (numId < 1) {
+            setError('Suite number must be greater than zero.');
+            return;
+        }
+        if ((existingRoomIds || []).includes(numId)) {
             setError(`Room ${numId} already exists in inventory.`);
+            return;
+        }
+
+        const numFloor = Number(floor);
+        if (!Number.isInteger(numFloor) || numFloor < 1 || numFloor > MAX_FLOOR) {
+            setError(`Floor must be a whole number between 1 and ${MAX_FLOOR}.`);
             return;
         }
 
         onAddRoom({
             id: numId,
-            floor: parseInt(floor, 10),
+            floor: numFloor,
             type,
             status,
-            notes,
+            notes: notes.trim(),
             cleaningStartedAt: null
         });
 
-        // Reset
-        setRoomId('');
-        setNotes('');
-        setError('');
         onClose();
     };
 
@@ -54,6 +94,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
         <div 
             role="dialog" 
             aria-modal="true" 
+            aria-labelledby="add-room-title"
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
@@ -64,13 +105,14 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                             <i className="fa-solid fa-plus"></i>
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-slate-800">Add Room to Inventory</h3>
+                            <h3 id="add-room-title" className="text-base font-bold text-slate-800">Add Room to Inventory</h3>
                             <p className="text-[11px] text-slate-400 font-semibold">3101 Sage Rd Room Catalog</p>
                         </div>
                     </div>
                     <button 
                         type="button"
                         onClick={onClose} 
+                        aria-label="Close add room dialog"
                         className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center transition"
                     >
                         <i className="fa-solid fa-xmark"></i>
@@ -87,12 +129,14 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
 
                     <div className="grid grid-cols-2 gap-3">
                         <div>
-                            <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                            <label htmlFor="add-room-suite" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                                 Room #
                             </label>
                             <input 
+                                id="add-room-suite"
                                 type="text"
-                                maxLength={3}
+                                inputMode="numeric"
+                                maxLength={5}
                                 placeholder="e.g. 106"
                                 value={roomId}
                                 onChange={handleRoomIdChange}
@@ -101,27 +145,28 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                             />
                         </div>
                         <div>
-                            <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                            <label htmlFor="add-room-floor" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                                 Floor
                             </label>
                             <select 
+                                id="add-room-floor"
                                 value={floor}
                                 onChange={(e) => setFloor(e.target.value)}
                                 className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             >
-                                <option value="1">Floor 1</option>
-                                <option value="2">Floor 2</option>
-                                <option value="3">Floor 3</option>
-                                <option value="4">Floor 4</option>
+                                {floorOptions.map((option) => (
+                                    <option key={option} value={option}>Floor {option}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label htmlFor="add-room-type" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Bed Layout / Room Category
                         </label>
                         <select 
+                            id="add-room-type"
                             value={type}
                             onChange={(e) => setType(e.target.value)}
                             className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -134,10 +179,11 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                     </div>
 
                     <div>
-                        <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label htmlFor="add-room-status" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Initial Turnover Status
                         </label>
                         <select 
+                            id="add-room-status"
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
                             className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -151,10 +197,11 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                     </div>
 
                     <div>
-                        <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label htmlFor="add-room-notes" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Notes / Assigned Handyman (Optional)
                         </label>
                         <input 
+                            id="add-room-notes"
                             type="text"
                             placeholder="e.g. VIP arrival, Extra pillows, etc."
                             value={notes}

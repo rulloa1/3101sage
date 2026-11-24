@@ -34,10 +34,14 @@ export default function EditRoomModal({
 
     const dispatchHandyman = (channel) => {
         const issueText = notes.trim() || room.notes || "Urgent maintenance issue reported";
-        setPendingStatus('maintenance');
-        if (!notes.includes('Handyman Alerted')) {
-            setNotes((prev) => `${prev ? prev + ' ' : ''}(Handyman Alerted)`.trim());
-        }
+        // Save the maintenance status together with the alert. Leaving it as
+        // pending state meant a closed dialog quietly dropped the dispatch, so
+        // the room stayed sellable while the handyman was already on the way.
+        const nextNotes = /handyman alerted/i.test(notes)
+            ? notes
+            : `${notes.trim() ? notes.trim() + ' ' : ''}(Handyman Alerted)`.trim();
+        onSave(room.id, 'maintenance', nextNotes);
+        onClose();
 
         const messageText = `[URGENT REPAIR] 3101 Sage Rd\nRoom: ${room.id} (${room.type}, Floor ${room.floor})\nIssue: ${issueText}\nPlease report to Front Desk upon arrival.`;
         const encoded = encodeURIComponent(messageText);
@@ -53,13 +57,14 @@ export default function EditRoomModal({
         <div 
             role="dialog" 
             aria-modal="true" 
+            aria-labelledby="edit-room-title"
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div className="max-h-[90vh] w-full max-w-md space-y-4 overflow-y-auto rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl animate-scaleIn">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                     <div>
-                        <h3 className="text-base font-bold text-slate-800">
+                        <h3 id="edit-room-title" className="text-base font-bold text-slate-800">
                             Room {room.id} ({room.type})
                         </h3>
                         <p className="text-[11px] text-slate-400 font-semibold">
@@ -67,7 +72,9 @@ export default function EditRoomModal({
                         </p>
                     </div>
                     <button 
+                        type="button"
                         onClick={onClose} 
+                        aria-label="Close room editor"
                         className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
                     >
                         <i className="fa-solid fa-xmark"></i>

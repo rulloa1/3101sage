@@ -28,6 +28,7 @@ export default function KeycardSleeveModal({
         <div
             role="dialog"
             aria-modal="true"
+            aria-labelledby="keycard-sleeve-title"
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
@@ -38,12 +39,14 @@ export default function KeycardSleeveModal({
                             <i className="fa-solid fa-qrcode"></i>
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-slate-800">Keycard Sleeve & Wi-Fi Slip</h3>
+                            <h3 id="keycard-sleeve-title" className="text-base font-bold text-slate-800">Keycard Sleeve & Wi-Fi Slip</h3>
                             <p className="text-[11px] text-slate-400 font-semibold">Direct Booking Recapture & Chargeback Defense</p>
                         </div>
                     </div>
                     <button
+                        type="button"
                         onClick={onClose}
+                        aria-label="Close keycard sleeve"
                         className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
                     >
                         <i className="fa-solid fa-xmark"></i>
@@ -52,10 +55,11 @@ export default function KeycardSleeveModal({
 
                 <div className="screen-only grid grid-cols-2 gap-3 text-xs">
                     <div>
-                        <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label htmlFor="keycard-room" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Room Number
                         </label>
                         <select
+                            id="keycard-room"
                             value={activeRoomId}
                             onChange={(e) => setSelectedRoomId(parseInt(e.target.value, 10))}
                             className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2 bg-slate-50"
@@ -68,10 +72,11 @@ export default function KeycardSleeveModal({
                         </select>
                     </div>
                     <div>
-                        <label className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label htmlFor="keycard-guest" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
                             Guest Name (Optional)
                         </label>
                         <input
+                            id="keycard-guest"
                             type="text"
                             value={guestName}
                             onChange={(e) => setGuestName(e.target.value)}
