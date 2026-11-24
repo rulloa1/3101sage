@@ -237,7 +237,7 @@ export default function RoomListModal({
                                                 <td className="px-2.5 py-1.5">{room.wing || '—'}</td>
                                                 <td className="px-2.5 py-1.5">{room.type}</td>
                                                 <td className="px-2.5 py-1.5">
-                                                    <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold text-white ${cfg.bg}`}>
+                                                    <span className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-semibold ${cfg.softBg} ${cfg.softBorder} ${cfg.softText}`}>
                                                         {cfg.label}
                                                     </span>
                                                 </td>

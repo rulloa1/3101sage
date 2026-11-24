@@ -32,59 +32,50 @@ export default function EditRoomModal({
         onClose();
     };
 
-    const dispatchHandyman = (channel) => {
-        const issueText = notes.trim() || room.notes || "Urgent maintenance issue reported";
-        // Save the maintenance status together with the alert. Leaving it as
-        // pending state meant a closed dialog quietly dropped the dispatch, so
-        // the room stayed sellable while the handyman was already on the way.
+    const issueText = notes.trim() || room.notes || 'Urgent maintenance issue reported';
+    const dispatchMessage = `[URGENT REPAIR] 3101 Sage Rd\nSuite: ${room.id} (${room.type}, Floor ${room.floor})\nIssue: ${issueText}\nPlease report to Front Desk upon arrival.`;
+    const encodedDispatch = encodeURIComponent(dispatchMessage);
+
+    const handleHandymanClick = () => {
         const nextNotes = /handyman alerted/i.test(notes)
             ? notes
             : `${notes.trim() ? notes.trim() + ' ' : ''}(Handyman Alerted)`.trim();
         onSave(room.id, 'maintenance', nextNotes);
         onClose();
-
-        const messageText = `[URGENT REPAIR] 3101 Sage Rd\nRoom: ${room.id} (${room.type}, Floor ${room.floor})\nIssue: ${issueText}\nPlease report to Front Desk upon arrival.`;
-        const encoded = encodeURIComponent(messageText);
-
-        if (channel === 'whatsapp') {
-            window.open(`https://wa.me/?text=${encoded}`, '_blank');
-        } else {
-            window.location.href = `sms:?&body=${encoded}`;
-        }
     };
 
     return (
-        <div 
-            role="dialog" 
-            aria-modal="true" 
+        <div
+            role="dialog"
+            aria-modal="true"
             aria-labelledby="edit-room-title"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="max-h-[90vh] w-full max-w-md space-y-4 overflow-y-auto rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl animate-scaleIn">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+            <div className="animate-scaleIn max-h-[90vh] w-full max-w-md space-y-4 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div>
-                        <h3 id="edit-room-title" className="text-base font-bold text-slate-800">
-                            Room {room.id} ({room.type})
+                        <h3 id="edit-room-title" className="text-base font-bold text-slate-900 tabular-nums">
+                            Suite {room.id} &middot; {room.type}
                         </h3>
-                        <p className="text-[11px] text-slate-400 font-semibold">
-                            Floor {room.floor} • Current: {room.status.toUpperCase()}
+                        <p className="mt-0.5 text-xs text-slate-500">
+                            Floor {room.floor}{room.wing ? ` · ${room.wing}` : ''} &middot; Current: {room.status.toUpperCase()}
                         </p>
                     </div>
-                    <button 
+                    <button
                         type="button"
-                        onClick={onClose} 
-                        aria-label="Close room editor"
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
+                        onClick={onClose}
+                        aria-label="Close suite editor"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                {/* Status Selection Buttons */}
+                {/* Status Selection */}
                 <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
-                        Change Status
+                    <label className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                        Status
                     </label>
                     <div className="grid grid-cols-2 gap-2">
                         {statuses.map((s) => {
@@ -95,13 +86,13 @@ export default function EditRoomModal({
                                     key={s}
                                     type="button"
                                     onClick={() => setPendingStatus(s)}
-                                    className={`cursor-pointer p-2.5 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition ${
-                                        isActive 
-                                            ? `${cfg.bg} text-white border-transparent shadow` 
-                                            : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'
+                                    className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border px-2.5 py-2 text-xs font-semibold transition ${
+                                        isActive
+                                            ? `${cfg.bg} border-transparent text-white`
+                                            : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                                     }`}
                                 >
-                                    <i className={`fa-solid ${cfg.icon}`}></i>
+                                    <i className={`fa-solid ${cfg.icon} text-[11px]`}></i>
                                     <span>{cfg.label}</span>
                                 </button>
                             );
@@ -109,66 +100,78 @@ export default function EditRoomModal({
                     </div>
                 </div>
 
-                {/* Room Notes Input & Chips */}
+                {/* Notes Input & Quick Tags */}
                 <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
-                        Room Notes / Issue
+                    <label htmlFor="edit-room-notes" className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                        Notes / Issue
                     </label>
                     <input
+                        id="edit-room-notes"
                         type="text"
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="e.g. Extra towels, AC check..."
-                        className="w-full text-xs font-medium border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+                        className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-900/10"
                     />
                     <div className="mt-2 flex flex-wrap gap-1.5">
-                        <button type="button" onClick={() => appendNoteChip('Late Checkout 1PM')} className="cursor-pointer text-[11px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg border hover:bg-slate-200 transition">+ Late Checkout</button>
-                        <button type="button" onClick={() => appendNoteChip('Extra Towels Needed')} className="cursor-pointer text-[11px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg border hover:bg-slate-200 transition">+ Towels</button>
-                        <button type="button" onClick={() => appendNoteChip('Check AC Unit')} className="cursor-pointer text-[11px] font-semibold bg-rose-50 text-rose-800 px-2 py-0.5 rounded-lg border border-rose-200 hover:bg-rose-100 transition">+ AC Issue</button>
-                        <button type="button" onClick={() => appendNoteChip('VIP Arrival')} className="cursor-pointer text-[11px] font-semibold bg-amber-50 text-amber-800 px-2 py-0.5 rounded-lg border border-amber-200 hover:bg-amber-100 transition">+ VIP</button>
-                        <button type="button" onClick={() => appendNoteChip('DND on Door')} className="cursor-pointer text-[11px] font-semibold bg-purple-50 text-purple-800 px-2 py-0.5 rounded-lg border border-purple-200 hover:bg-purple-100 transition">+ DND</button>
+                        {['Late Checkout 1PM', 'Extra Towels Needed', 'Check AC Unit', 'VIP Arrival', 'DND on Door'].map((chip) => (
+                            <button
+                                key={chip}
+                                type="button"
+                                onClick={() => appendNoteChip(chip)}
+                                className="cursor-pointer rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                            >
+                                + {chip}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
-                {/* 1-Tap Handyman Maintenance Dispatch */}
-                <div className="bg-amber-50/80 p-3 rounded-2xl border border-amber-200/90 space-y-2">
+                {/* Handyman Maintenance Dispatch */}
+                <div className="space-y-2 rounded-xl border border-amber-200 bg-amber-50/70 p-3.5">
                     <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-amber-900 flex items-center gap-1.5">
+                        <span className="flex items-center gap-1.5 font-bold text-amber-950">
                             <i className="fa-solid fa-screwdriver-wrench text-amber-600"></i>
                             <span>Dispatch Handyman</span>
                         </span>
-                        <span className="text-[10px] text-amber-700 font-semibold bg-amber-100/80 px-2 py-0.5 rounded-md">Instant Alert</span>
+                        <span className="text-[11px] font-medium text-amber-800">
+                            Marks suite Maintenance
+                        </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
-                        <button 
-                            type="button" 
-                            onClick={() => dispatchHandyman('whatsapp')} 
-                            className="cursor-pointer text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95"
+                        <a
+                            href={`https://wa.me/?text=${encodedDispatch}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={handleHandymanClick}
+                            className="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-2.5 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700"
                         >
-                            <i className="fa-brands fa-whatsapp text-sm"></i> <span>WhatsApp Handyman</span>
-                        </button>
-                        <button 
-                            type="button" 
-                            onClick={() => dispatchHandyman('sms')} 
-                            className="cursor-pointer text-xs font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95"
+                            <i className="fa-brands fa-whatsapp text-sm"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a
+                            href={`sms:?&body=${encodedDispatch}`}
+                            onClick={handleHandymanClick}
+                            className="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-50"
                         >
-                            <i className="fa-solid fa-comment-sms text-indigo-600 text-xs"></i> <span>SMS Dispatch</span>
-                        </button>
+                            <i className="fa-solid fa-comment-sms text-slate-600"></i>
+                            <span>SMS Dispatch</span>
+                        </a>
                     </div>
                 </div>
 
-                <div className="flex justify-end space-x-2 pt-3 border-t border-slate-100">
-                    <button 
-                        type="button" 
-                        onClick={onClose} 
-                        className="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                <div className="flex justify-end gap-2 border-t border-slate-100 pt-3">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="cursor-pointer rounded-lg px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
                     >
                         Cancel
                     </button>
-                    <button 
-                        type="button" 
-                        onClick={handleSave} 
-                        className="cursor-pointer px-4.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm transition active:scale-95"
+                    <button
+                        type="button"
+                        onClick={handleSave}
+                        className="cursor-pointer rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
                     >
                         Save Changes
                     </button>

@@ -1,119 +1,184 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { i18n } from '../constants/i18n';
+
 export default function FilterControls({
     currentFloor,
     setFloor,
+    currentWing,
+    setWing,
     currentStatusFilter,
     resetFilters,
     searchQuery,
     setSearchQuery,
+    sortBy,
+    setSortBy,
+    viewLayout,
+    setViewLayout,
     onWalkInMatch,
-    onOpenAddRoom,
-    onResetDemo,
-    rooms
+    rooms,
+    filteredCount,
+    currentLang
 }) {
-    // Derive floor options from actual inventory so floor 4+ rooms are reachable
-    const floors = React.useMemo(() => {
-        if (!rooms || rooms.length === 0) return ['1', '2', '3'];
-        const unique = [...new Set(rooms.map(r => String(r.floor)))].sort((a, b) => Number(a) - Number(b));
-        return unique;
+    const dict = i18n[currentLang] || i18n.en;
+
+    const floors = useMemo(() => {
+        if (!rooms || rooms.length === 0) return ['1', '2'];
+        return [...new Set(rooms.map(r => String(r.floor)))].sort((a, b) => Number(a) - Number(b));
     }, [rooms]);
+
+    const wings = useMemo(() => {
+        if (!rooms || rooms.length === 0) return [];
+        return [...new Set(rooms.map(r => (r.wing || '').trim()).filter(Boolean))].sort();
+    }, [rooms]);
+
+    const hasActiveFilter =
+        currentFloor !== 'ALL' ||
+        currentWing !== 'ALL' ||
+        currentStatusFilter !== 'ALL' ||
+        searchQuery.trim().length > 0;
+
     return (
-        <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-2.5">
-            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
-                {/* Floor Filter Buttons */}
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-                    <span className="mr-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Floor:</span>
-                    {['ALL', ...floors].map((floor) => (
-                        <button
-                            key={floor}
-                            type="button"
-                            aria-pressed={currentFloor === floor}
-                            onClick={() => setFloor(floor)}
-                            className={`cursor-pointer px-3.5 py-1.5 text-xs font-bold rounded-xl transition ${
-                                currentFloor === floor
-                                    ? 'bg-slate-900 text-white shadow-sm'
-                                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                            }`}
-                        >
-                            {floor === 'ALL' ? 'All Floors' : `Floor ${floor}`}
-                        </button>
-                    ))}
+        <section
+            aria-label="Filter suites"
+            className="flex flex-col gap-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 lg:flex-row lg:items-center lg:justify-between"
+        >
+            {/* Left: Floor segments, Wing selector, Walk-In shortcut */}
+            <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center rounded-lg border border-slate-200 bg-slate-100/80 p-0.5">
+                    {['ALL', ...floors].map((floor) => {
+                        const active = currentFloor === floor;
+                        return (
+                            <button
+                                key={floor}
+                                type="button"
+                                aria-pressed={active}
+                                onClick={() => setFloor(floor)}
+                                className={`cursor-pointer whitespace-nowrap rounded-md px-2.5 py-1 text-xs font-semibold transition ${
+                                    active
+                                        ? 'bg-white text-slate-900 shadow-xs'
+                                        : 'text-slate-600 hover:text-slate-900'
+                                }`}
+                            >
+                                {floor === 'ALL' ? dict.allFloors : `${dict.floorLabel} ${floor}`}
+                            </button>
+                        );
+                    })}
+                </div>
 
-                    {/* Quick Walk-in Matcher Button */}
-                    <button 
-                        type="button"
-                        onClick={onWalkInMatch} 
-                        className="cursor-pointer ml-1.5 px-3 py-1.5 text-xs font-extrabold rounded-xl bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition flex items-center gap-1.5 shadow-xs active:scale-95"
+                {wings.length > 0 && (
+                    <select
+                        value={currentWing}
+                        onChange={(e) => setWing(e.target.value)}
+                        aria-label="Filter by wing"
+                        className="cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10"
                     >
-                        <i className="fa-solid fa-key text-amber-600 text-xs"></i>
-                        <span>Quick Match: Ready for Walk-in</span>
-                    </button>
+                        <option value="ALL">{dict.allWings}</option>
+                        {wings.map((wing) => (
+                            <option key={wing} value={wing}>
+                                {wing}
+                            </option>
+                        ))}
+                    </select>
+                )}
 
-                    {/* Add Room Button */}
-                    {onOpenAddRoom && (
-                        <button 
+                <button
+                    type="button"
+                    onClick={onWalkInMatch}
+                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition ${
+                        currentStatusFilter === 'clean'
+                            ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
+                            : 'border-slate-200 bg-white text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-800'
+                    }`}
+                >
+                    <i className="fa-solid fa-key text-[11px] text-emerald-600"></i>
+                    <span>{dict.walkInReady}</span>
+                </button>
+            </div>
+
+            {/* Right: Search, Sort, View Toggle, Result Count */}
+            <div className="flex flex-wrap items-center gap-2">
+                <div className="relative min-w-[180px] flex-1 sm:w-52 sm:flex-none">
+                    <i className="fa-solid fa-magnifying-glass pointer-events-none absolute left-2.5 top-2 text-[11px] text-slate-400"></i>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder={dict.searchPlaceholder}
+                        aria-label="Search suites"
+                        className="w-full rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-7 text-xs font-medium text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-900/10"
+                    />
+                    {searchQuery && (
+                        <button
                             type="button"
-                            onClick={onOpenAddRoom} 
-                            className="cursor-pointer ml-1 px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition flex items-center gap-1.5 active:scale-95"
-                            title="Add a custom room to inventory"
+                            onClick={() => setSearchQuery('')}
+                            aria-label="Clear search"
+                            className="absolute right-2 top-1.5 cursor-pointer text-slate-400 hover:text-slate-700"
                         >
-                            <i className="fa-solid fa-plus text-amber-600"></i>
-                            <span className="hidden sm:inline">Add Room</span>
+                            <i className="fa-solid fa-xmark text-xs"></i>
                         </button>
                     )}
                 </div>
 
-                {/* Search & Reset */}
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                    {/* Active Filter Pill */}
-                    {currentStatusFilter !== 'ALL' && (
-                        <div className="bg-indigo-50 border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1.5 animate-fadeIn">
-                            <span>Filter:</span>
-                            <span className="capitalize">{currentStatusFilter}</span>
-                            <button
-                                type="button"
-                                onClick={resetFilters}
-                                aria-label="Clear status filter"
-                                className="cursor-pointer text-indigo-500 hover:text-indigo-800 ml-0.5"
-                            >
-                                <i className="fa-solid fa-xmark text-xs"></i>
-                            </button>
-                        </div>
-                    )}
+                <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    aria-label="Sort suites"
+                    className="cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-900/10"
+                >
+                    <option value="room">{dict.sortRoom}</option>
+                    <option value="priority">{dict.sortPriority}</option>
+                    <option value="floor">{dict.sortFloor}</option>
+                </select>
 
-                    {/* Search Bar */}
-                    <div className="relative flex-1 sm:w-56">
-                        <i className="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Room #, Queen, note..."
-                            aria-label="Search rooms by number, type or note"
-                            className="w-full pl-8 pr-7 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition"
-                        />
-                        {searchQuery && (
-                            <button
-                                type="button"
-                                onClick={() => setSearchQuery('')}
-                                aria-label="Clear search"
-                                className="cursor-pointer absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600"
-                            >
-                                <i className="fa-solid fa-xmark text-xs"></i>
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Reset Demo State Button */}
+                {/* Cards / Table View Toggle */}
+                <div
+                    role="group"
+                    aria-label="Suite layout"
+                    className="inline-flex items-center rounded-lg border border-slate-200 bg-slate-100/80 p-0.5"
+                >
                     <button
                         type="button"
-                        onClick={onResetDemo}
-                        aria-label="Reset rooms to demo layout"
-                        className="cursor-pointer text-slate-400 hover:text-indigo-600 text-xs font-medium px-2 py-1.5 rounded-lg hover:bg-slate-100 transition"
-                        title="Reset rooms to demo layout"
+                        aria-pressed={viewLayout === 'cards'}
+                        onClick={() => setViewLayout('cards')}
+                        title={dict.cardsView}
+                        className={`cursor-pointer rounded-md px-2 py-1 text-xs font-semibold transition ${
+                            viewLayout === 'cards'
+                                ? 'bg-white text-slate-900 shadow-xs'
+                                : 'text-slate-500 hover:text-slate-900'
+                        }`}
                     >
-                        <i className="fa-solid fa-rotate-left"></i>
+                        <i className="fa-solid fa-grip text-[11px]"></i>
+                        <span className="ml-1 hidden sm:inline">{dict.cardsView}</span>
                     </button>
+                    <button
+                        type="button"
+                        aria-pressed={viewLayout === 'table'}
+                        onClick={() => setViewLayout('table')}
+                        title={dict.tableView}
+                        className={`cursor-pointer rounded-md px-2 py-1 text-xs font-semibold transition ${
+                            viewLayout === 'table'
+                                ? 'bg-white text-slate-900 shadow-xs'
+                                : 'text-slate-500 hover:text-slate-900'
+                        }`}
+                    >
+                        <i className="fa-solid fa-list text-[11px]"></i>
+                        <span className="ml-1 hidden sm:inline">{dict.tableView}</span>
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-2 pl-1 text-xs font-medium text-slate-400 tabular-nums">
+                    <span>
+                        {filteredCount}/{rooms.length}
+                    </span>
+                    {hasActiveFilter && (
+                        <button
+                            type="button"
+                            onClick={resetFilters}
+                            className="cursor-pointer font-semibold text-slate-700 underline decoration-slate-300 underline-offset-2 transition hover:text-slate-950"
+                        >
+                            {dict.clearFilters}
+                        </button>
+                    )}
                 </div>
             </div>
         </section>

@@ -2,8 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 const MAX_FLOOR = 60;
 
-// Suites are numbered with the floor leading (101 → 1, 1203 → 12), which is the
-// same convention the room-list importer documents.
 function floorFromSuite(suite) {
     const text = String(suite);
     if (text.length < 3) return null;
@@ -13,25 +11,24 @@ function floorFromSuite(suite) {
 
 export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomIds, existingFloors }) {
     const [roomId, setRoomId] = useState('');
-    const [type, setType] = useState('2 Queen Beds');
+    const [type, setType] = useState('1BR Queen Suite');
     const [floor, setFloor] = useState('1');
+    const [wing, setWing] = useState('North Wing');
     const [status, setStatus] = useState('clean');
     const [notes, setNotes] = useState('');
     const [error, setError] = useState('');
 
-    // A closed dialog must not reopen holding last shift's half-typed room.
     useEffect(() => {
         if (!isOpen) return;
         setRoomId('');
-        setType('2 Queen Beds');
+        setType('1BR Queen Suite');
         setFloor('1');
+        setWing('North Wing');
         setStatus('clean');
         setNotes('');
         setError('');
     }, [isOpen]);
 
-    // Offer every floor the property actually uses (an imported list can run
-    // past floor 4), plus room to grow and the floor the suite number implies.
     const floorOptions = useMemo(() => {
         const floors = new Set([1, 2, 3, 4]);
         (existingFloors || []).forEach((value) => {
@@ -59,7 +56,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
         e.preventDefault();
 
         if (!/^\d{1,5}$/.test(roomId)) {
-            setError('Enter the suite number as digits only (e.g. 106, 1203).');
+            setError('Enter the suite number as digits only (e.g. 116, 216).');
             return;
         }
         const numId = Number(roomId);
@@ -68,7 +65,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
             return;
         }
         if ((existingRoomIds || []).includes(numId)) {
-            setError(`Room ${numId} already exists in inventory.`);
+            setError(`Suite ${numId} already exists in inventory.`);
             return;
         }
 
@@ -81,6 +78,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
         onAddRoom({
             id: numId,
             floor: numFloor,
+            wing: wing.trim(),
             type,
             status,
             notes: notes.trim(),
@@ -91,29 +89,26 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
     };
 
     return (
-        <div 
-            role="dialog" 
-            aria-modal="true" 
+        <div
+            role="dialog"
+            aria-modal="true"
             aria-labelledby="add-room-title"
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg font-black shadow-xs">
-                            <i className="fa-solid fa-plus"></i>
-                        </div>
-                        <div>
-                            <h3 id="add-room-title" className="text-base font-bold text-slate-800">Add Room to Inventory</h3>
-                            <p className="text-[11px] text-slate-400 font-semibold">3101 Sage Rd Room Catalog</p>
-                        </div>
+            <div className="animate-scaleIn w-full max-w-md space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div>
+                        <h3 id="add-room-title" className="text-base font-bold text-slate-900">
+                            Add Suite to Inventory
+                        </h3>
+                        <p className="mt-0.5 text-xs text-slate-500">3101 Sage Rd Suite Catalog</p>
                     </div>
-                    <button 
+                    <button
                         type="button"
-                        onClick={onClose} 
-                        aria-label="Close add room dialog"
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center transition"
+                        onClick={onClose}
+                        aria-label="Close add suite dialog"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
@@ -121,7 +116,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
 
                 <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
                     {error && (
-                        <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-semibold flex items-center gap-2">
+                        <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 p-2.5 text-xs font-semibold text-rose-700">
                             <i className="fa-solid fa-triangle-exclamation"></i>
                             <span>{error}</span>
                         </div>
@@ -129,30 +124,30 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
 
                     <div className="grid grid-cols-2 gap-3">
                         <div>
-                            <label htmlFor="add-room-suite" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
-                                Room #
+                            <label htmlFor="add-room-suite" className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Suite #
                             </label>
-                            <input 
+                            <input
                                 id="add-room-suite"
                                 type="text"
                                 inputMode="numeric"
                                 maxLength={5}
-                                placeholder="e.g. 106"
+                                placeholder="e.g. 116"
                                 value={roomId}
                                 onChange={handleRoomIdChange}
-                                className="w-full text-sm font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-sm font-bold text-slate-900 outline-none focus:border-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-900/10"
                                 autoFocus
                             />
                         </div>
                         <div>
-                            <label htmlFor="add-room-floor" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                            <label htmlFor="add-room-floor" className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
                                 Floor
                             </label>
-                            <select 
+                            <select
                                 id="add-room-floor"
                                 value={floor}
                                 onChange={(e) => setFloor(e.target.value)}
-                                className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 outline-none focus:border-slate-400 focus:bg-white"
                             >
                                 {floorOptions.map((option) => (
                                     <option key={option} value={option}>Floor {option}</option>
@@ -161,69 +156,91 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                         </div>
                     </div>
 
+                    <div className="grid grid-cols-2 gap-3">
+                        <div>
+                            <label htmlFor="add-room-wing" className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Wing (Optional)
+                            </label>
+                            <input
+                                id="add-room-wing"
+                                type="text"
+                                list="wing-suggestions"
+                                value={wing}
+                                onChange={(e) => setWing(e.target.value)}
+                                placeholder="North Wing"
+                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 outline-none focus:border-slate-400 focus:bg-white"
+                            />
+                            <datalist id="wing-suggestions">
+                                <option value="North Wing" />
+                                <option value="West Wing" />
+                                <option value="South Wing" />
+                            </datalist>
+                        </div>
+                        <div>
+                            <label htmlFor="add-room-status" className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Initial Status
+                            </label>
+                            <select
+                                id="add-room-status"
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 outline-none focus:border-slate-400 focus:bg-white"
+                            >
+                                <option value="clean">Clean / Ready</option>
+                                <option value="dirty">Dirty / Vacant</option>
+                                <option value="occupied">Occupied</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="dnd">Do Not Disturb</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div>
-                        <label htmlFor="add-room-type" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
-                            Bed Layout / Room Category
+                        <label htmlFor="add-room-type" className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                            Suite Category
                         </label>
-                        <select 
+                        <select
                             id="add-room-type"
                             value={type}
                             onChange={(e) => setType(e.target.value)}
-                            className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 outline-none focus:border-slate-400 focus:bg-white"
                         >
-                            <option value="2 Queen Beds">2 Queen Beds (Kitchenette Suite)</option>
-                            <option value="Queen Bed">Queen Bed (Studio Suite)</option>
-                            <option value="Full bed with Twin">Full bed with Twin (Family Suite)</option>
-                            <option value="King Suite">King Suite (Executive)</option>
+                            <option value="1BR Queen Suite">1BR Queen Suite (Full Kitchen)</option>
+                            <option value="2-Queen Suite">2-Queen Suite (Kitchenette)</option>
+                            <option value="2BR 2-Queen Suite">2BR 2-Queen Suite (Family)</option>
+                            <option value="Studio Queen Suite">Studio Queen Suite</option>
+                            <option value="Accessible Queen Suite">Accessible Queen Suite</option>
                         </select>
                     </div>
 
                     <div>
-                        <label htmlFor="add-room-status" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
-                            Initial Turnover Status
+                        <label htmlFor="add-room-notes" className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                            Notes (Optional)
                         </label>
-                        <select 
-                            id="add-room-status"
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
-                            className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                        >
-                            <option value="clean">Clean (Ready for Check-In)</option>
-                            <option value="dirty">Dirty (Turnover Needed)</option>
-                            <option value="occupied">Occupied</option>
-                            <option value="maintenance">Maintenance</option>
-                            <option value="dnd">DND (Do Not Disturb)</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label htmlFor="add-room-notes" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
-                            Notes / Assigned Handyman (Optional)
-                        </label>
-                        <input 
+                        <input
                             id="add-room-notes"
                             type="text"
-                            placeholder="e.g. VIP arrival, Extra pillows, etc."
+                            placeholder="e.g. VIP arrival, extra towels..."
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
-                            className="w-full text-xs border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-800 outline-none focus:border-slate-400 focus:bg-white"
                         />
                     </div>
 
-                    <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
-                        <button 
-                            type="button" 
-                            onClick={onClose} 
-                            className="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                    <div className="flex justify-end gap-2 border-t border-slate-100 pt-3">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="cursor-pointer rounded-lg px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
                         >
                             Cancel
                         </button>
-                        <button 
-                            type="submit" 
-                            className="cursor-pointer px-5 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-sm transition active:scale-95 flex items-center gap-1.5"
+                        <button
+                            type="submit"
+                            className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98]"
                         >
-                            <i className="fa-solid fa-plus"></i>
-                            <span>Add Room</span>
+                            <i className="fa-solid fa-plus text-[11px]"></i>
+                            <span>Add Suite</span>
                         </button>
                     </div>
                 </form>

@@ -2,35 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Executive Dashboard Ambient Canvas */
+/* Refined Architectural Operations Canvas */
 body {
-    background-color: #f1f5f9;
-    background-image:
-        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.10) 0px, transparent 45%),
-        radial-gradient(at 100% 0%, rgba(217, 119, 6, 0.09) 0px, transparent 40%),
-        radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.06) 0px, transparent 50%),
-        radial-gradient(#cbd5e1 1.25px, transparent 1.25px);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
-    background-attachment: fixed;
-}
-
-.glass-header {
-    background: linear-gradient(180deg, rgba(12, 18, 34, 0.97) 0%, rgba(10, 15, 29, 0.94) 100%);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-}
-
-@keyframes subtle-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.05); }
-}
-
-.pulse-live {
-    animation: subtle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    background-color: #f4f6f8;
+    color: #0f172a;
 }
 
 .tap-target {
     min-height: 48px;
+}
+
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -43,8 +26,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
+    height: 7px;
+    width: 7px;
 }
 ::-webkit-scrollbar-track {
     background: transparent;
@@ -57,12 +40,21 @@ body {
     background: #94a3b8;
 }
 
-/* Print Styling for Keycard Sleeve Slip */
+/* Print Styling for Keycard Sleeve Slip & Executive Proposal Memo */
 @media print {
+    body {
+        background: #ffffff !important;
+    }
     body * {
         visibility: hidden !important;
     }
-    #printableSleeveArea, #printableSleeveArea * {
+    .screen-only {
+        display: none !important;
+    }
+    #printableSleeveArea,
+    #printableSleeveArea *,
+    #printableMemoArea,
+    #printableMemoArea * {
         visibility: visible !important;
     }
     #printableSleeveArea {
@@ -81,7 +73,19 @@ body {
         color: #0f172a !important;
         background: transparent !important;
     }
-    #printableSleeveArea h4, #printableSleeveArea code, #printableSleeveArea strong {
+    #printableSleeveArea h4,
+    #printableSleeveArea code,
+    #printableSleeveArea strong {
         color: #000000 !important;
+    }
+    #printableMemoArea {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        padding: 24px !important;
+        overflow: visible !important;
     }
 }

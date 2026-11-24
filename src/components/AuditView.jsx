@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { OYO_LOGO } from '../constants/brand';
+import { OYO_LOGO, OYO_LISTING_URL, OYO_US_PORTAL } from '../constants/brand';
 import hotelHeroBg from '../assets/hotel-hero-bg.jpg';
 import hotelSuite from '../assets/hotel-suite.jpg';
 import hotelPool from '../assets/hotel-pool.jpg';
@@ -11,433 +11,517 @@ export default function AuditView({ onOpenMemo }) {
     const [directPerMonth, setDirectPerMonth] = useState(8);
     const [minsSavedPerRoom, setMinsSavedPerRoom] = useState(12);
 
-    // Dynamic Financial ROI Calculations
     const annualEarly = earlyPerDay * 25 * 365;
     const annualOtaSaved = Math.round(directPerMonth * 12 * 144 * 0.18);
     const annualHoursSaved = Math.round((minsSavedPerRoom * 30 * 365) / 60);
     const annualTotal = annualEarly + annualOtaSaved;
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
-            {/* Header Banner with Real Hotel Architecture Background */}
-            <div className="relative overflow-hidden text-white p-6 sm:p-8 rounded-3xl shadow-2xl border border-amber-500/30">
-                <div 
-                    className="absolute inset-0 bg-cover bg-center filter brightness-90 contrast-110"
+        <div className="mx-auto max-w-5xl space-y-6">
+            {/* Property Audit Hero */}
+            <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 text-white">
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-35"
                     style={{ backgroundImage: `url(${hotelHeroBg})` }}
                 ></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-amber-950/80"></div>
-                <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
-                    <div className="max-w-xl">
-                        <span className="text-xs uppercase font-extrabold tracking-wider bg-black/40 border border-amber-400/40 text-amber-300 px-3 py-1 rounded-full shadow-xs">
-                            Property Operations & Brand Audit
-                        </span>
-                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-white">
-                            3101 Sage Rd — Brand Conflict & Revenue Report
-                        </h2>
-                        <p className="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-                            Executive findings on listing fragmentation, OTA commission leakage, and operations turnover ROI for hotel ownership.
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-900/75"></div>
+
+                <div className="relative z-10 flex flex-col justify-between gap-6 p-6 sm:p-8 lg:flex-row lg:items-end">
+                    <div className="max-w-2xl">
+                        <p className="text-[11px] font-bold uppercase tracking-widest text-amber-400">
+                            Property Operations &amp; Brand Audit &middot; 3101 Sage Rd
                         </p>
-                        
-                        {/* Executive Memo Launcher Button */}
+                        <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                            Brand Conflict &amp; Margin Recovery Report
+                        </h2>
+                        <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
+                            On-site findings documenting listing fragmentation across Parc Hotel, OYO #90631, and
+                            Stellar Stay, alongside turnover efficiency and direct-booking ROI.
+                        </p>
+
                         {onOpenMemo && (
-                            <div className="mt-4">
+                            <div className="mt-5 flex flex-wrap items-center gap-3">
                                 <button
                                     type="button"
                                     onClick={onOpenMemo}
-                                    className="cursor-pointer text-xs font-black bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-amber-950/50 active:scale-95"
+                                    className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-amber-400 px-4 py-2.5 text-xs font-bold text-slate-950 transition hover:bg-amber-300 active:scale-[0.98]"
                                 >
-                                    <i className="fa-solid fa-file-contract text-sm"></i>
-                                    <span>Open Executive Pitch Proposal (Print / PDF)</span>
-                                    <i className="fa-solid fa-arrow-right text-[10px] ml-1"></i>
+                                    <i className="fa-solid fa-file-contract"></i>
+                                    <span>Open Executive Proposal (Print / PDF)</span>
                                 </button>
+                                <a
+                                    href={OYO_LISTING_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 text-xs font-semibold text-white transition hover:bg-white/15"
+                                >
+                                    <span>OYO #90631 Listing</span>
+                                    <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                </a>
                             </div>
                         )}
                     </div>
-                    <div className="bg-slate-950/80 backdrop-blur-md p-4 rounded-2xl border border-amber-500/30 text-center shadow-lg">
-                        <div className="text-xs font-bold text-amber-300">OTA Commission Rate</div>
-                        <div className="text-2xl sm:text-3xl font-black text-rose-400">18% – 22%</div>
-                        <div className="text-[10px] text-slate-400">Lost on 3rd party bookings</div>
+
+                    <div className="flex-shrink-0 rounded-xl border border-white/15 bg-slate-950/75 px-5 py-4 backdrop-blur-sm">
+                        <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                            OTA Commission Leakage
+                        </div>
+                        <div className="mt-1 font-mono text-2xl font-extrabold text-rose-400 tabular-nums sm:text-3xl">
+                            18% &ndash; 22%
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-slate-400">
+                            Paid on third-party repeat stays
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            {/* 3-Way Brand Identity Mismatch Analysis */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-rose-200/90 shadow-soft space-y-2.5">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-rose-600 flex items-center justify-between">
-                        <span>Physical Signage on Door</span>
-                        <i className="fa-solid fa-door-open text-rose-600"></i>
+            {/* 3-Way Brand Mismatch Analysis */}
+            <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                <div className="border-b border-slate-200 px-5 py-3.5">
+                    <h3 className="text-sm font-bold text-slate-900">Three-Way Brand Identity Mismatch</h3>
+                    <p className="mt-0.5 text-xs text-slate-500">
+                        Guests encounter three conflicting property names between booking, arrival, and billing.
+                    </p>
+                </div>
+                <div className="grid grid-cols-1 divide-y divide-slate-200 md:grid-cols-3 md:divide-x md:divide-y-0">
+                    <div className="space-y-2 p-5">
+                        <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-rose-700">
+                            <span>Physical Door Signage</span>
+                            <i className="fa-solid fa-door-open"></i>
+                        </div>
+                        <div className="text-base font-extrabold text-slate-900">&ldquo;PARC HOTEL&rdquo;</div>
+                        <p className="text-xs leading-relaxed text-slate-600">
+                            The garage check-in entrance door is prominently labeled <strong>PARC HOTEL</strong> with
+                            drive-up front desk service windows.
+                        </p>
+                        <p className="pt-1 text-xs font-semibold text-rose-700">
+                            <i className="fa-solid fa-triangle-exclamation mr-1.5 text-[11px]"></i>
+                            OTA guests pull in and believe they reached the wrong property.
+                        </p>
                     </div>
-                    <div className="text-lg font-black text-slate-900">"PARC HOTEL"</div>
-                    <p className="text-xs text-slate-500">The actual garage check-in entrance door is boldly labeled <strong>"PARC HOTEL"</strong> with drive-up front desk windows.</p>
-                    <div className="text-[11px] font-semibold text-rose-800 bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-lg">
-                        ⚠️ OYO & OTA guests pull in and think they have the wrong hotel
+
+                    <div className="space-y-2 p-5">
+                        <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                            <span>Franchise Channel</span>
+                            <i className="fa-solid fa-globe text-rose-600"></i>
+                        </div>
+                        <div className="text-base font-extrabold text-slate-900">&ldquo;OYO Hotel Houston Galleria&rdquo;</div>
+                        <p className="text-xs leading-relaxed text-slate-600">
+                            Listed across the OYO corporate app and Expedia network under official Property #90631.
+                        </p>
+                        <p className="pt-1 text-xs font-semibold text-amber-700">
+                            <i className="fa-solid fa-triangle-exclamation mr-1.5 text-[11px]"></i>
+                            Card disputes arise when billing descriptors do not match signage.
+                        </p>
+                    </div>
+
+                    <div className="space-y-2 p-5">
+                        <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                            <span>OTA &amp; Legacy Listings</span>
+                            <i className="fa-brands fa-google text-blue-600"></i>
+                        </div>
+                        <div className="text-base font-extrabold text-slate-900">&ldquo;Stellar Stay / Galleria Garden&rdquo;</div>
+                        <p className="text-xs leading-relaxed text-slate-600">
+                            Appears on Booking.com and Agoda as Stellar Stay alongside duplicate legacy Google Maps pins.
+                        </p>
+                        <p className="pt-1 text-xs font-semibold text-blue-700">
+                            <i className="fa-solid fa-triangle-exclamation mr-1.5 text-[11px]"></i>
+                            Fragments review volume (3.7★) while incurring 18%&ndash;22% commissions.
+                        </p>
                     </div>
                 </div>
+            </section>
 
-                <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2.5">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
-                        <span>Franchise Network</span>
-                        <i className="fa-solid fa-globe text-rose-500"></i>
-                    </div>
-                    <div className="text-lg font-black text-slate-800">"OYO Hotel Houston Galleria"</div>
-                    <p className="text-xs text-slate-500">Listed on OYO corporate app and Expedia network under official Property #90631.</p>
-                    <div className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-lg">
-                        ⚠️ Credit card chargebacks when bill name doesn't match entrance
-                    </div>
-                </div>
-
-                <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2.5">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
-                        <span>OTA & Legacy Listings</span>
-                        <i className="fa-brands fa-google text-blue-500"></i>
-                    </div>
-                    <div className="text-lg font-black text-slate-800">"Stellar Stay / Galleria Garden"</div>
-                    <p className="text-xs text-slate-500">Listed on Booking.com / Agoda as "Stellar Stay" with legacy Google Maps pins.</p>
-                    <div className="text-[11px] font-semibold text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1.5 rounded-lg">
-                        ⚠️ Splits review volume (3.7★) and pays 18%–22% commission
-                    </div>
-                </div>
-            </div>
-
-            {/* LIVE OYO #90631 OTA METADATA CARD */}
-            <div className="bg-gradient-to-br from-rose-50 via-white to-amber-50 p-6 rounded-3xl border border-rose-200 shadow-soft space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Live OYO #90631 Channel Metrics */}
+            <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                        <div className="px-3 py-2 rounded-2xl bg-white border border-rose-200 flex items-center justify-center shadow-md shadow-rose-100">
-                            <img src={OYO_LOGO} alt="OYO" className="h-6 w-auto object-contain" />
+                        <div className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5">
+                            <img src={OYO_LOGO} alt="OYO" className="h-5 w-auto object-contain" />
                         </div>
                         <div>
-                            <div className="flex items-center gap-2">
-                                <h3 className="text-base font-extrabold text-slate-900">Live OTA Channel Data (Property #90631)</h3>
-                                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300">Verified</span>
-                            </div>
-                            <p className="text-xs text-slate-500">3101 Sage Rd, Houston, TX 77056 • Galleria • 30 suites • 2 floors</p>
+                            <h3 className="text-sm font-bold text-slate-900">
+                                OTA Channel Snapshot &middot; Property #90631
+                            </h3>
+                            <p className="text-xs text-slate-500">
+                                3101 Sage Rd, Houston, TX 77056 &middot; Galleria &middot; 30 suites &middot; 2 floors
+                            </p>
                         </div>
                     </div>
+
                     <div className="flex flex-wrap items-center gap-2">
-                        <a 
-                            href="https://www.oyorooms.com/us/" 
-                            target="_blank" 
+                        <a
+                            href={OYO_US_PORTAL}
+                            target="_blank"
                             rel="noopener noreferrer"
-                            className="cursor-pointer text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 px-3 py-2 rounded-xl shadow-xs transition active:scale-95 flex items-center gap-1.5"
-                            title="Browse OYO US National Portal"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                         >
-                            <i className="fa-solid fa-globe text-rose-500 text-xs"></i>
                             <span>OYO US Portal</span>
-                            <i className="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-400"></i>
+                            <i className="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
                         </a>
-                        <a 
-                            href="https://www.oyorooms.com/us/90631/?latitude=29.73487&longitude=-95.4666&locale=en" 
-                            target="_blank" 
+                        <a
+                            href={OYO_LISTING_URL}
+                            target="_blank"
                             rel="noopener noreferrer"
-                            className="cursor-pointer text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 px-3.5 py-2 rounded-xl shadow-sm transition active:scale-95 flex items-center gap-1.5"
-                            title="Open direct live listing for Property #90631"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-rose-700"
                         >
-                            <span>Open Property #90631</span>
+                            <span>Open Listing #90631</span>
                             <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                         </a>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                    <div className="bg-white p-3 rounded-xl border border-rose-100 shadow-xs">
-                        <div className="text-[10px] uppercase font-bold text-slate-400">OTA Price</div>
-                        <div className="text-base font-black text-rose-700 mt-0.5">$132 <span className="text-[11px] font-medium text-slate-400">/ night</span></div>
-                        <div className="text-[10px] text-slate-500 mt-0.5">$154 after taxes ($188 base)</div>
-                    </div>
-                    <div className="bg-white p-3 rounded-xl border border-rose-100 shadow-xs">
-                        <div className="text-[10px] uppercase font-bold text-slate-400">Guest Rating</div>
-                        <div className="text-base font-black text-amber-600 mt-0.5 flex items-center gap-1">
-                            <i className="fa-solid fa-star text-amber-400 text-xs"></i> 3.7 <span className="text-[11px] font-medium text-slate-400">/ 5.0</span>
+                <div className="grid grid-cols-2 divide-x divide-y divide-slate-200 sm:grid-cols-4 sm:divide-y-0">
+                    <div className="p-4">
+                        <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                            OTA Nightly Rate
                         </div>
-                        <div className="text-[10px] text-slate-500 mt-0.5">17 verified reviews</div>
+                        <div className="mt-1 font-mono text-lg font-extrabold text-slate-900 tabular-nums">
+                            $132 <span className="font-sans text-xs font-medium text-slate-400">/ night</span>
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-slate-500 tabular-nums">
+                            $154 w/ tax ($188 base)
+                        </div>
                     </div>
-                    <div className="bg-white p-3 rounded-xl border border-rose-100 shadow-xs">
-                        <div className="text-[10px] uppercase font-bold text-slate-400">Hours Policy</div>
-                        <div className="text-xs font-black text-slate-800 mt-1">Check-in: 3:00 PM</div>
-                        <div className="text-[11px] font-bold text-slate-600">Checkout: 11:00 AM</div>
+                    <div className="p-4">
+                        <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                            Guest Rating
+                        </div>
+                        <div className="mt-1 flex items-center gap-1.5 font-mono text-lg font-extrabold text-amber-600 tabular-nums">
+                            <i className="fa-solid fa-star text-xs text-amber-500"></i>
+                            <span>3.7</span>
+                            <span className="font-sans text-xs font-medium text-slate-400">/ 5.0</span>
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-slate-500 tabular-nums">17 verified reviews</div>
                     </div>
-                    <div className="bg-white p-3 rounded-xl border border-rose-100 shadow-xs">
-                        <div className="text-[10px] uppercase font-bold text-slate-400">Suite Mix</div>
-                        <ul className="text-[11px] font-bold text-slate-700 mt-1 space-y-0.5 list-disc list-inside">
-                            <li>1BR Queen Suite</li>
-                            <li>2-Queen Suite</li>
-                            <li>2BR 2-Queen Suite</li>
-                        </ul>
+                    <div className="p-4">
+                        <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                            Standard Hours
+                        </div>
+                        <div className="mt-1 text-sm font-bold text-slate-900 tabular-nums">Check-in 3:00 PM</div>
+                        <div className="mt-0.5 text-xs text-slate-500 tabular-nums">Checkout 11:00 AM</div>
+                    </div>
+                    <div className="p-4">
+                        <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                            Suite Configurations
+                        </div>
+                        <div className="mt-1 text-xs font-semibold leading-relaxed text-slate-700">
+                            1BR Queen &middot; 2-Queen &middot; 2BR 2-Queen
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            {/* PROPERTY PHOTO SHOWCASE (ACTUAL 3101 SAGE PHOTOGRAPHY) */}
-            <div className="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/90 shadow-soft space-y-5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
+            {/* On-Site Property Photography Evidence */}
+            <section className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
+                <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-100 pb-3.5">
                     <div>
-                        <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider flex items-center gap-1.5">
-                            <i className="fa-solid fa-camera"></i>
-                            <span>Verified Property Visual Assets</span>
-                        </span>
-                        <h3 className="text-base font-extrabold text-slate-800">Actual 3101 Sage Rd Photography (On-Site & OYO #90631)</h3>
+                        <h3 className="text-sm font-bold text-slate-900">
+                            On-Site Visual Inspection &mdash; 3101 Sage Rd
+                        </h3>
+                        <p className="mt-0.5 text-xs text-slate-500">
+                            Field photography verifying physical garage signage alongside property exterior, suites, and pool.
+                        </p>
                     </div>
-                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
-                        <i className="fa-solid fa-circle-check text-emerald-500"></i>
-                        <span>On-Site Field Inspection & Channel Verified</span>
+                    <span className="text-xs font-semibold text-emerald-700">
+                        <i className="fa-solid fa-circle-check mr-1 text-[11px]"></i>
+                        Field &amp; Channel Verified
                     </span>
                 </div>
 
-                {/* Ground Arrival & Physical Door Signage (The Brand Conflict Proof) */}
-                <div>
-                    <div className="text-xs font-extrabold uppercase tracking-wider text-rose-700 mb-2 flex items-center gap-1.5">
-                        <i className="fa-solid fa-triangle-exclamation"></i>
-                        <span>Physical Arrival Evidence — Garage Front Desk Signage</span>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {/* Parc Hotel Check-in Door */}
-                        <div className="relative group overflow-hidden rounded-2xl h-60 border-2 border-rose-300 shadow-md">
-                            <div 
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                style={{ backgroundImage: `url(${hotelFrontDeskParc})` }}
-                            ></div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent"></div>
-                            <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
-                                <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider shadow-xs flex items-center gap-1 w-max">
-                                    <i className="fa-solid fa-magnifying-glass"></i> Physical Door Evidence
-                                </span>
-                                <h4 className="text-sm sm:text-base font-black mt-1.5 text-white">Garage Front Desk Door ("PARC HOTEL")</h4>
-                                <p className="text-[11px] text-slate-300 leading-snug mt-0.5">
-                                    Physical entrance door is boldly signed <strong>"PARC HOTEL"</strong> alongside drive-up office service windows & red geometric accent wall.
+                {/* Arrival Evidence */}
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <figure className="group overflow-hidden rounded-xl border border-slate-200 bg-slate-950">
+                        <div className="relative aspect-[16/10] overflow-hidden">
+                            <img
+                                src={hotelFrontDeskParc}
+                                alt="Garage front desk check-in door signed PARC HOTEL"
+                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+                            <figcaption className="absolute bottom-3 left-3.5 right-3.5 text-white">
+                                <div className="text-[10px] font-bold uppercase tracking-wider text-rose-300">
+                                    Physical Door Evidence
+                                </div>
+                                <div className="mt-0.5 text-sm font-bold">
+                                    Garage Front Desk Door (&ldquo;PARC HOTEL&rdquo;)
+                                </div>
+                                <p className="mt-0.5 text-[11px] leading-snug text-slate-300">
+                                    Entrance door signed PARC HOTEL next to drive-up check-in windows.
                                 </p>
-                            </div>
+                            </figcaption>
                         </div>
+                    </figure>
 
-                        {/* Covered Garage Entrance */}
-                        <div className="relative group overflow-hidden rounded-2xl h-60 border border-slate-300 shadow-md">
-                            <div 
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                style={{ backgroundImage: `url(${hotelGarageEntrance})` }}
-                            ></div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent"></div>
-                            <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
-                                <span className="bg-indigo-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider shadow-xs w-max">
-                                    Ground Operations
-                                </span>
-                                <h4 className="text-sm sm:text-base font-black mt-1.5 text-white">Covered Garage Drive-In Entrance</h4>
-                                <p className="text-[11px] text-slate-300 leading-snug mt-0.5">
-                                    Driveway entry with speed limit 5 MPH safety lanes leading directly into the covered front desk check-in bay.
+                    <figure className="group overflow-hidden rounded-xl border border-slate-200 bg-slate-950">
+                        <div className="relative aspect-[16/10] overflow-hidden">
+                            <img
+                                src={hotelGarageEntrance}
+                                alt="Covered garage drive-in entrance bay"
+                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+                            <figcaption className="absolute bottom-3 left-3.5 right-3.5 text-white">
+                                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-300">
+                                    Ground Arrival
+                                </div>
+                                <div className="mt-0.5 text-sm font-bold">Covered Garage Drive-In Entry</div>
+                                <p className="mt-0.5 text-[11px] leading-snug text-slate-300">
+                                    5 MPH drive-in lane leading directly to the covered front desk bay.
                                 </p>
-                            </div>
+                            </figcaption>
                         </div>
-                    </div>
+                    </figure>
                 </div>
 
-                {/* Building Architecture & Guest Amenities */}
-                <div className="pt-2">
-                    <div className="text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2 flex items-center gap-1.5">
-                        <i className="fa-solid fa-hotel"></i>
-                        <span>Property Facade & Guest Amenities</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Facade Photo */}
-                        <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
-                            <div 
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                style={{ backgroundImage: `url(${hotelHeroBg})` }}
-                            ></div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
-                            <div className="absolute bottom-3 left-3 right-3 text-white">
-                                <span className="bg-amber-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
-                                    Property Facade
-                                </span>
-                                <h4 className="text-sm font-bold mt-1 text-white">3101 Sage Rd Exterior</h4>
-                                <p className="text-[11px] text-slate-300">Porte-cochère entrance & guest parking</p>
-                            </div>
+                {/* Facade, Suite, Pool */}
+                <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <figure className="group overflow-hidden rounded-xl border border-slate-200 bg-slate-950">
+                        <div className="relative aspect-[16/10] overflow-hidden">
+                            <img
+                                src={hotelHeroBg}
+                                alt="3101 Sage Rd exterior facade"
+                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+                            <figcaption className="absolute bottom-3 left-3.5 right-3.5 text-white">
+                                <div className="text-xs font-bold">3101 Sage Rd Exterior</div>
+                                <div className="text-[11px] text-slate-300">Porte-cochere &amp; guest parking</div>
+                            </figcaption>
                         </div>
+                    </figure>
 
-                        {/* Suite Photo */}
-                        <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
-                            <div 
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                style={{ backgroundImage: `url(${hotelSuite})` }}
-                            ></div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
-                            <div className="absolute bottom-3 left-3 right-3 text-white">
-                                <span className="bg-indigo-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
-                                    Guest Suite
-                                </span>
-                                <h4 className="text-sm font-bold mt-1 text-white">Actual Room Suite Interior</h4>
-                                <p className="text-[11px] text-slate-300">2 Queen & 1 Queen bed layouts with kitchenette</p>
-                            </div>
+                    <figure className="group overflow-hidden rounded-xl border border-slate-200 bg-slate-950">
+                        <div className="relative aspect-[16/10] overflow-hidden">
+                            <img
+                                src={hotelSuite}
+                                alt="Guest suite interior"
+                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+                            <figcaption className="absolute bottom-3 left-3.5 right-3.5 text-white">
+                                <div className="text-xs font-bold">Suite Interior</div>
+                                <div className="text-[11px] text-slate-300">1 &amp; 2 Queen layouts with kitchenette</div>
+                            </figcaption>
                         </div>
+                    </figure>
 
-                        {/* Pool Photo */}
-                        <div className="relative group overflow-hidden rounded-2xl h-52 border border-slate-200 shadow-sm">
-                            <div 
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                style={{ backgroundImage: `url(${hotelPool})` }}
-                            ></div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
-                            <div className="absolute bottom-3 left-3 right-3 text-white">
-                                <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-xs">
-                                    Courtyard Pool
-                                </span>
-                                <h4 className="text-sm font-bold mt-1 text-white">Outdoor Swimming Pool</h4>
-                                <p className="text-[11px] text-slate-300">On-site recreation courtyard for guests</p>
-                            </div>
+                    <figure className="group overflow-hidden rounded-xl border border-slate-200 bg-slate-950">
+                        <div className="relative aspect-[16/10] overflow-hidden">
+                            <img
+                                src={hotelPool}
+                                alt="Outdoor courtyard swimming pool"
+                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+                            <figcaption className="absolute bottom-3 left-3.5 right-3.5 text-white">
+                                <div className="text-xs font-bold">Courtyard Pool</div>
+                                <div className="text-[11px] text-slate-300">Outdoor guest recreation courtyard</div>
+                            </figcaption>
                         </div>
-                    </div>
+                    </figure>
                 </div>
-            </div>
+            </section>
 
-            {/* Action Plan to Hand to Owner */}
-            <div className="bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/90 shadow-soft space-y-4">
-                <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
-                    <i className="fa-solid fa-list-check text-emerald-600"></i> 3-Step Remediation Plan for Ownership
-                </h3>
-                <div className="space-y-3 text-xs sm:text-sm">
-                    <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">1</span>
-                        <div>
-                            <strong className="text-slate-800">Bridge Garage Signage & Consolidate Google Business Profile:</strong>
-                            <p className="text-slate-500 text-xs mt-0.5">Add an OYO brand plaque alongside the physical <em>"PARC HOTEL"</em> garage door, and unify Google Maps into one verified listing: <em>"Parc Hotel & Suites, an OYO Hotel - Houston Galleria"</em>. This unifies all review stars and ends lost arrivals.</p>
-                        </div>
+            {/* 3-Step Remediation Plan */}
+            <section className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
+                    <div>
+                        <h3 className="text-sm font-bold text-slate-900">
+                            Three-Step Remediation Plan for Ownership
+                        </h3>
+                        <p className="mt-0.5 text-xs text-slate-500">
+                            Practical sequence to align guest arrival, billing descriptors, and daily turnover.
+                        </p>
                     </div>
-                    <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">2</span>
-                        <div>
-                            <strong className="text-slate-800">Sync Merchant Billing & OTA Channel Manager:</strong>
-                            <p className="text-slate-500 text-xs mt-0.5">Align Booking.com, Expedia, and credit card merchant terminal descriptors to <em>"PARC HOTEL / OYO 90631"</em> so guest credit card statements match the physical door, stopping chargebacks before they happen.</p>
-                        </div>
-                    </div>
-                    <div className="p-3.5 bg-slate-50/90 rounded-2xl flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">3</span>
-                        <div>
-                            <strong className="text-slate-800">Deploy RoomSync for Turnover:</strong>
-                            <p className="text-slate-500 text-xs mt-0.5">Give housekeepers 1-tap English/Spanish status buttons to eliminate 20+ daily phone calls to the desk.</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Printable Memorandum Action Banner */}
-                {onOpenMemo && (
-                    <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-indigo-50/80 p-4 rounded-2xl border border-indigo-100">
-                        <div>
-                            <h4 className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
-                                <i className="fa-solid fa-file-pdf text-indigo-600"></i>
-                                <span>Presenting to Hotel Ownership?</span>
-                            </h4>
-                            <p className="text-[11px] text-slate-500 mt-0.5">Generate a formal, print-ready 1-page proposal memo with financial ROI tables and photo evidence.</p>
-                        </div>
+                    {onOpenMemo && (
                         <button
                             type="button"
                             onClick={onOpenMemo}
-                            className="cursor-pointer text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95"
+                            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
                         >
-                            <i className="fa-solid fa-print"></i>
-                            <span>View & Print Proposal Memo</span>
+                            <i className="fa-solid fa-print text-[11px]"></i>
+                            <span>Print Proposal Memo</span>
                         </button>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
 
-            {/* INTERACTIVE OWNER ROI & BUSINESS VALUE CALCULATOR */}
-            <div className="relative overflow-hidden text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-6">
-                <div 
-                    className="absolute inset-0 bg-cover bg-center opacity-15 filter blur-xs"
-                    style={{ backgroundImage: `url(${hotelHeroBg})` }}
-                ></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/95"></div>
-
-                <div className="relative z-10 flex items-center justify-between border-b border-slate-800 pb-4">
-                    <div>
-                        <div className="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-extrabold flex items-center gap-1.5">
-                            <i className="fa-solid fa-calculator"></i>
-                            <span>Financial Impact Calculator for 3101 Sage</span>
+                <ol className="mt-4 divide-y divide-slate-100">
+                    <li className="flex items-start gap-3.5 py-3 first:pt-0">
+                        <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-slate-900 font-mono text-xs font-bold text-white">
+                            1
+                        </span>
+                        <div>
+                            <div className="text-xs font-bold text-slate-900 sm:text-sm">
+                                Bridge Garage Signage &amp; Consolidate Google Business Profile
+                            </div>
+                            <p className="mt-0.5 text-xs leading-relaxed text-slate-600">
+                                Add an OYO brand plaque beside the physical <em>PARC HOTEL</em> garage door and merge
+                                duplicate Google Maps pins into one verified listing:{' '}
+                                <em>Parc Hotel &amp; Suites, an OYO Hotel &mdash; Houston Galleria</em>.
+                            </p>
                         </div>
-                        <h3 className="text-xl font-black text-white mt-1">Projected Annual Profit & Savings</h3>
+                    </li>
+                    <li className="flex items-start gap-3.5 py-3">
+                        <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-slate-900 font-mono text-xs font-bold text-white">
+                            2
+                        </span>
+                        <div>
+                            <div className="text-xs font-bold text-slate-900 sm:text-sm">
+                                Align Merchant Billing &amp; OTA Channel Descriptors
+                            </div>
+                            <p className="mt-0.5 text-xs leading-relaxed text-slate-600">
+                                Standardize Booking.com, Expedia, and card terminal descriptors to{' '}
+                                <em>PARC HOTEL / OYO 90631</em> and issue the signed Keycard Sleeve disclosure at
+                                check-in to prevent unrecognized-charge disputes.
+                            </p>
+                        </div>
+                    </li>
+                    <li className="flex items-start gap-3.5 py-3 last:pb-0">
+                        <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-slate-900 font-mono text-xs font-bold text-white">
+                            3
+                        </span>
+                        <div>
+                            <div className="text-xs font-bold text-slate-900 sm:text-sm">
+                                Run Live Bilingual Turnover Across Front Desk &amp; Housekeeping
+                            </div>
+                            <p className="mt-0.5 text-xs leading-relaxed text-slate-600">
+                                Equip housekeepers with 1-tap English/Spanish status updates and 3-point QC checks to
+                                remove phone tag and unlock early check-in inventory faster.
+                            </p>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+
+            {/* Interactive Owner ROI Calculator */}
+            <section className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 p-6 text-white sm:p-8">
+                <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-800 pb-4">
+                    <div>
+                        <p className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">
+                            Financial Impact Calculator &middot; 3101 Sage
+                        </p>
+                        <h3 className="mt-1 text-lg font-extrabold text-white sm:text-xl">
+                            Projected Annual Margin &amp; Labor Recovery
+                        </h3>
                     </div>
-                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold px-3 py-1 rounded-full">
-                        ROI: Immediate
+                    <span className="text-xs font-semibold text-emerald-400">
+                        Zero software licensing cost
                     </span>
                 </div>
 
-                {/* Calculator Controls */}
-                <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/80">
-                        <label className="block text-xs font-bold text-slate-300 mb-1">Early Check-ins Monetized / Day</label>
-                        <div className="flex items-center gap-3">
-                            <input 
-                                type="range" 
-                                min="1" 
-                                max="8" 
-                                value={earlyPerDay} 
+                {/* Sliders */}
+                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4">
+                        <label htmlFor="roi-early" className="block text-xs font-semibold text-slate-300">
+                            Early Check-ins / Day
+                        </label>
+                        <div className="mt-2 flex items-center gap-3">
+                            <input
+                                id="roi-early"
+                                type="range"
+                                min="1"
+                                max="8"
+                                value={earlyPerDay}
                                 onChange={(e) => setEarlyPerDay(parseInt(e.target.value, 10))}
-                                className="w-full accent-amber-500 cursor-pointer" 
+                                className="w-full cursor-pointer accent-amber-400"
                             />
-                            <span className="text-lg font-black text-amber-400 font-mono min-w-[28px] text-right">{earlyPerDay}</span>
+                            <span className="min-w-[28px] text-right font-mono text-base font-extrabold text-amber-300 tabular-nums">
+                                {earlyPerDay}
+                            </span>
                         </div>
-                        <p className="text-[10px] text-slate-400 mt-1">At $25 standard early fee</p>
+                        <p className="mt-1.5 text-[11px] text-slate-400">At $25 standard early fee</p>
                     </div>
 
-                    <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/80">
-                        <label className="block text-xs font-bold text-slate-300 mb-1">Direct Repeat Bookings / Month</label>
-                        <div className="flex items-center gap-3">
-                            <input 
-                                type="range" 
-                                min="2" 
-                                max="25" 
-                                value={directPerMonth} 
+                    <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4">
+                        <label htmlFor="roi-direct" className="block text-xs font-semibold text-slate-300">
+                            Direct Repeat Stays / Month
+                        </label>
+                        <div className="mt-2 flex items-center gap-3">
+                            <input
+                                id="roi-direct"
+                                type="range"
+                                min="2"
+                                max="25"
+                                value={directPerMonth}
                                 onChange={(e) => setDirectPerMonth(parseInt(e.target.value, 10))}
-                                className="w-full accent-indigo-400 cursor-pointer" 
+                                className="w-full cursor-pointer accent-sky-400"
                             />
-                            <span className="text-lg font-black text-indigo-400 font-mono min-w-[28px] text-right">{directPerMonth}</span>
+                            <span className="min-w-[28px] text-right font-mono text-base font-extrabold text-sky-300 tabular-nums">
+                                {directPerMonth}
+                            </span>
                         </div>
-                        <p className="text-[10px] text-slate-400 mt-1">Bypassing 18% OTA commission</p>
+                        <p className="mt-1.5 text-[11px] text-slate-400">Bypassing 18% OTA commission</p>
                     </div>
 
-                    <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/80">
-                        <label className="block text-xs font-bold text-slate-300 mb-1">Minutes Saved per Room Clean</label>
-                        <div className="flex items-center gap-3">
-                            <input 
-                                type="range" 
-                                min="5" 
-                                max="20" 
-                                value={minsSavedPerRoom} 
+                    <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4">
+                        <label htmlFor="roi-mins" className="block text-xs font-semibold text-slate-300">
+                            Minutes Saved / Suite Turn
+                        </label>
+                        <div className="mt-2 flex items-center gap-3">
+                            <input
+                                id="roi-mins"
+                                type="range"
+                                min="5"
+                                max="20"
+                                value={minsSavedPerRoom}
                                 onChange={(e) => setMinsSavedPerRoom(parseInt(e.target.value, 10))}
-                                className="w-full accent-emerald-400 cursor-pointer" 
+                                className="w-full cursor-pointer accent-emerald-400"
                             />
-                            <span className="text-lg font-black text-emerald-400 font-mono min-w-[28px] text-right">{minsSavedPerRoom}m</span>
+                            <span className="min-w-[34px] text-right font-mono text-base font-extrabold text-emerald-300 tabular-nums">
+                                {minsSavedPerRoom}m
+                            </span>
                         </div>
-                        <p className="text-[10px] text-slate-400 mt-1">Reduced phone tag & checks</p>
+                        <p className="mt-1.5 text-[11px] text-slate-400">Eliminates manual phone checks</p>
                     </div>
                 </div>
 
-                {/* Dynamic Results Grid */}
-                <div className="relative z-10 grid grid-cols-1 sm:grid-cols-4 gap-3.5 pt-2">
-                    <div className="bg-slate-950/80 p-4 rounded-2xl border border-amber-500/30">
-                        <div className="text-[10px] uppercase font-bold text-amber-400/80">Annual Early Check-In Revenue</div>
-                        <div className="text-2xl font-black text-amber-300 font-mono mt-1">+${annualEarly.toLocaleString()}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">Pure found profit</div>
+                {/* Output Metrics */}
+                <div className="mt-5 grid grid-cols-1 divide-y divide-slate-800 overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60 sm:grid-cols-2 sm:divide-x lg:grid-cols-4 lg:divide-y-0">
+                    <div className="p-4">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                            Early Check-In Revenue
+                        </div>
+                        <div className="mt-1 font-mono text-xl font-extrabold text-amber-300 tabular-nums">
+                            +${annualEarly.toLocaleString()}
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-slate-400">Annual direct margin</div>
                     </div>
 
-                    <div className="bg-slate-950/80 p-4 rounded-2xl border border-indigo-500/30">
-                        <div className="text-[10px] uppercase font-bold text-indigo-400/80">Annual OTA Commission Saved</div>
-                        <div className="text-2xl font-black text-indigo-300 font-mono mt-1">+${annualOtaSaved.toLocaleString()}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">Kept in property bank</div>
+                    <div className="p-4">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                            OTA Commission Saved
+                        </div>
+                        <div className="mt-1 font-mono text-xl font-extrabold text-sky-300 tabular-nums">
+                            +${annualOtaSaved.toLocaleString()}
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-slate-400">Retained from direct repeats</div>
                     </div>
 
-                    <div className="bg-slate-950/80 p-4 rounded-2xl border border-emerald-500/30">
-                        <div className="text-[10px] uppercase font-bold text-emerald-400/80">Housekeeping Hours Saved</div>
-                        <div className="text-2xl font-black text-emerald-300 font-mono mt-1">{annualHoursSaved.toLocaleString()} hrs</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">Faster 3PM check-in readiness</div>
+                    <div className="p-4">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                            Turnover Time Saved
+                        </div>
+                        <div className="mt-1 font-mono text-xl font-extrabold text-emerald-300 tabular-nums">
+                            {annualHoursSaved.toLocaleString()} hrs
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-slate-400">Faster 3 PM room readiness</div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-amber-500/20 to-emerald-500/20 p-4 rounded-2xl border border-amber-400/50">
-                        <div className="text-[10px] uppercase font-black text-amber-300">Total Net Impact / Year</div>
-                        <div className="text-2xl font-black text-white font-mono mt-1">+${annualTotal.toLocaleString()}</div>
-                        <div className="text-[10px] text-amber-200 mt-0.5 font-bold">Payback period: Instant</div>
+                    <div className="bg-emerald-950/40 p-4">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+                            Total Net Impact / Year
+                        </div>
+                        <div className="mt-1 font-mono text-2xl font-extrabold text-white tabular-nums">
+                            +${annualTotal.toLocaleString()}
+                        </div>
+                        <div className="mt-0.5 text-[11px] font-semibold text-emerald-300">
+                            Immediate payback
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     );
 }

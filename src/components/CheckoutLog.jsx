@@ -1,66 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import { todayCheckouts, formatElapsed } from '../services/checkoutService';
+import { i18n } from '../constants/i18n';
 
-export default function CheckoutLog({ log, onClear }) {
+export default function CheckoutLog({ log, onClear, currentLang = 'en' }) {
     const [open, setOpen] = useState(true);
     const [, setTick] = useState(0);
+    const dict = i18n[currentLang] || i18n.en;
 
-    // Refresh elapsed times every 60 seconds
     useEffect(() => {
         const id = setInterval(() => setTick(t => t + 1), 60000);
         return () => clearInterval(id);
     }, []);
 
-    const entries = todayCheckouts(log).slice().reverse(); // newest first
+    const entries = todayCheckouts(log).slice().reverse();
 
     if (entries.length === 0) return null;
 
     return (
-        <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-soft overflow-hidden">
-            {/* Header row — click to collapse */}
+        <section
+            aria-label={dict.todaysCheckouts}
+            className="overflow-hidden rounded-xl border border-slate-200 bg-white"
+        >
             <button
                 type="button"
                 onClick={() => setOpen(o => !o)}
-                className="cursor-pointer w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50/80 transition"
+                className="flex w-full cursor-pointer items-center justify-between px-4 py-3 transition hover:bg-slate-50"
             >
                 <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                        <i className="fa-solid fa-right-from-bracket text-xs"></i>
-                    </div>
-                    <span className="text-xs font-bold text-slate-800">Today's Checkouts</span>
-                    <span className="bg-blue-100 text-blue-800 text-[10px] font-black px-2 py-0.5 rounded-full border border-blue-200">
-                        {entries.length}
+                    <i className="fa-solid fa-right-from-bracket text-xs text-blue-600"></i>
+                    <span className="text-xs font-bold text-slate-900">{dict.todaysCheckouts}</span>
+                    <span className="font-mono text-xs font-bold text-slate-400 tabular-nums">
+                        ({entries.length})
                     </span>
                 </div>
-                <i className={`fa-solid fa-chevron-${open ? 'up' : 'down'} text-slate-400 text-xs`}></i>
+                <i className={`fa-solid fa-chevron-${open ? 'up' : 'down'} text-xs text-slate-400`}></i>
             </button>
 
             {open && (
-                <div className="border-t border-slate-100">
-                    <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
+                <div className="border-t border-slate-200">
+                    <div className="max-h-64 divide-y divide-slate-100 overflow-y-auto">
                         {entries.map(entry => (
-                            <div key={entry.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-slate-50/60 transition">
-                                <div className="flex items-center gap-3 min-w-0">
-                                    {/* Room badge */}
-                                    <div className="w-9 h-9 rounded-xl bg-slate-900 text-white text-xs font-black flex items-center justify-center flex-shrink-0">
+                            <div
+                                key={entry.id}
+                                className="flex items-center justify-between px-4 py-2.5 transition hover:bg-slate-50/70"
+                            >
+                                <div className="flex min-w-0 items-center gap-3">
+                                    <span className="flex h-8 w-11 flex-shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 font-mono text-xs font-extrabold text-slate-900 tabular-nums">
                                         {entry.roomId}
-                                    </div>
+                                    </span>
                                     <div className="min-w-0">
-                                        <div className="text-xs font-bold text-slate-800 truncate">
+                                        <div className="truncate text-xs font-semibold text-slate-900">
                                             {entry.guestName || 'Guest'}
                                         </div>
-                                        <div className="text-[11px] text-slate-400 font-medium truncate">
-                                            {entry.roomType} &bull; Floor {entry.floor}
+                                        <div className="truncate text-[11px] text-slate-500">
+                                            {entry.roomType} &middot; {dict.floorLabel} {entry.floor}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 flex-shrink-0 ml-3">
-                                    {/* Dirty queued badge */}
-                                    <span className="hidden sm:flex items-center gap-1 text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
-                                        <i className="fa-solid fa-broom text-[9px]"></i>
-                                        <span>Queued</span>
+
+                                <div className="ml-3 flex flex-shrink-0 items-center gap-3">
+                                    <span className="hidden items-center gap-1 text-[11px] font-semibold text-rose-700 sm:inline-flex">
+                                        <i className="fa-solid fa-broom text-[10px]"></i>
+                                        <span>{dict.queuedTurnover}</span>
                                     </span>
-                                    <span className="text-[11px] text-slate-400 font-medium tabular-nums">
+                                    <span className="font-mono text-[11px] font-medium text-slate-400 tabular-nums">
                                         {formatElapsed(entry.timestamp)}
                                     </span>
                                 </div>
@@ -69,19 +72,19 @@ export default function CheckoutLog({ log, onClear }) {
                     </div>
 
                     {onClear && (
-                        <div className="px-4 py-2 border-t border-slate-100 flex justify-end">
+                        <div className="flex justify-end border-t border-slate-100 bg-slate-50/50 px-4 py-2">
                             <button
                                 type="button"
                                 onClick={onClear}
-                                className="cursor-pointer text-[11px] font-semibold text-slate-400 hover:text-rose-600 transition flex items-center gap-1"
+                                className="flex cursor-pointer items-center gap-1.5 text-[11px] font-semibold text-slate-500 transition hover:text-rose-600"
                             >
                                 <i className="fa-solid fa-trash-can text-[10px]"></i>
-                                <span>Clear today's log</span>
+                                <span>{dict.clearLog}</span>
                             </button>
                         </div>
                     )}
                 </div>
             )}
-        </div>
+        </section>
     );
 }
