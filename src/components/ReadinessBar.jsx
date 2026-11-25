@@ -8,23 +8,29 @@ export default function ReadinessBar({ rooms, currentLang }) {
     const dict = i18n[currentLang];
 
     return (
-        <section className="bg-slate-900 text-white px-4 sm:px-6 py-2 border-b border-slate-800">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-                <div className="flex items-center gap-2">
-                    <span className="text-slate-400 font-semibold">{dict.readinessLabel}</span>
-                    <span className="font-bold text-amber-300">{pct}%</span>
-                    <span className="text-slate-500 font-medium">({cleanCount} of {totalCount} rooms ready)</span>
+        <section className="border-b border-ink-900/[0.07] bg-bone-50/80 px-4 py-2.5 backdrop-blur-sm sm:px-6">
+            <div className="mx-auto flex max-w-7xl flex-col gap-2 text-[11px] sm:flex-row sm:items-center sm:gap-5">
+                <div className="flex items-baseline gap-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500">
+                        {dict.readinessLabel}
+                    </span>
+                    <span className="font-display text-[22px] leading-none tabular-nums text-ink-900">{pct}%</span>
+                    <span className="font-medium text-stone-500">
+                        {cleanCount} <span className="text-stone-500">of</span> {totalCount}
+                        <span className="ml-1 text-stone-500">suites ready</span>
+                    </span>
                 </div>
+
                 <div
                     role="progressbar"
-                    aria-label={`${dict.readinessLabel}: ${cleanCount} of ${totalCount} rooms ready`}
+                    aria-label={`${dict.readinessLabel} ${cleanCount} of ${totalCount} rooms ready`}
                     aria-valuenow={pct}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    className="w-full sm:w-64 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700/80"
+                    className="h-[3px] w-full overflow-hidden rounded-full bg-ink-900/10 sm:ml-auto sm:w-56"
                 >
-                    <div 
-                        className="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full transition-all duration-500" 
+                    <div
+                        className="h-full rounded-full bg-gradient-to-r from-brass-500 to-brass-300 transition-all duration-500"
                         style={{ width: `${pct}%` }}
                     ></div>
                 </div>

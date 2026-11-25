@@ -12,6 +12,26 @@ export default {
           900: '#0f172a',
           950: '#020617',
         },
+        ink: {
+          700: '#2b3038',
+          800: '#1c2026',
+          900: '#14171c',
+          950: '#0d0f12',
+        },
+        bone: {
+          50: '#faf9f6',
+          100: '#f5f2ec',
+          200: '#ebe6dc',
+          300: '#dcd4c5',
+        },
+        brass: {
+          200: '#e7d9be',
+          300: '#d4bc94',
+          400: '#c2a578',
+          500: '#ab8a59',
+          600: '#8d6f43',
+          700: '#6d552f',
+        },
         gold: {
           500: '#eab308',
           600: '#ca8a04',
@@ -20,15 +40,17 @@ export default {
       },
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Instrument Serif', 'Iowan Old Style', 'Georgia', 'serif'],
       },
       spacing: {
         '4.5': '1.125rem',
       },
       boxShadow: {
         'xs': '0 1px 2px 0 rgba(15, 23, 42, 0.06)',
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
-        'card-hover': '0 12px 28px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08)',
-        'gold-glow': '0 0 20px -3px rgba(234, 179, 8, 0.25)',
+        'soft': '0 1px 2px rgba(16, 20, 26, 0.04), 0 8px 24px -18px rgba(16, 20, 26, 0.28)',
+        'card-hover': '0 2px 4px rgba(16, 20, 26, 0.04), 0 18px 36px -24px rgba(16, 20, 26, 0.34)',
+        'panel': '0 1px 2px rgba(16, 20, 26, 0.05), 0 24px 48px -32px rgba(16, 20, 26, 0.30)',
+        'gold-glow': '0 0 20px -3px rgba(194, 165, 120, 0.35)',
       },
       blur: {
         'xs': '2px',

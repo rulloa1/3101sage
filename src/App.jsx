@@ -554,7 +554,7 @@ export default function App() {
     const activeEditRoom = useMemo(() => rooms.find(r => r.id === editModalRoomId), [rooms, editModalRoomId]);
 
     return (
-        <div className="flex min-h-screen flex-col font-sans text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+        <div className="app-shell flex min-h-screen flex-col font-sans text-ink-800 antialiased selection:bg-brass-500/25 selection:text-ink-900">
             {/* Keyboard users skip the sticky header's controls */}
             <a
                 href="#main-content"
@@ -613,7 +613,7 @@ export default function App() {
             )}
 
             {/* MAIN CONTENT AREA */}
-            <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-7xl flex-1 px-4 py-5 outline-none sm:px-6">
+            <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 outline-none sm:px-6">
                 {activeView === 'desk' && (
                     filteredRooms.length > 0 ? (
                         <>
@@ -633,20 +633,20 @@ export default function App() {
                             </div>
                         </>
                     ) : (
-                        <div className="my-4 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-16 text-center shadow-soft">
-                            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
-                                <i className="fa-solid fa-magnifying-glass text-lg"></i>
+                        <div className="my-6 rounded-xl border border-dashed border-ink-900/[0.14] bg-white px-6 py-16 text-center shadow-soft">
+                            <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-ink-900/[0.08] text-stone-500">
+                                <i className="fa-solid fa-magnifying-glass text-sm"></i>
                             </div>
-                            <h3 className="text-base font-bold text-slate-700">No rooms match this criteria</h3>
-                            <p className="mx-auto mt-1 max-w-sm text-xs text-slate-500">
+                            <h3 className="font-display text-[21px] leading-tight tracking-tight text-ink-900">No suites match this view</h3>
+                            <p className="mx-auto mt-1.5 max-w-sm text-[11.5px] leading-relaxed text-stone-500">
                                 Try a different floor, status, or search term.
                             </p>
                             <button
                                 type="button"
                                 onClick={handleResetFilters}
-                                className="mt-4 cursor-pointer rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-indigo-700 active:scale-95"
+                                className="mt-4 cursor-pointer rounded-md bg-ink-900 px-4 py-2 text-[11px] font-semibold text-white transition hover:bg-ink-950 active:scale-[0.98]"
                             >
-                                Show All Rooms
+                                Show all suites
                             </button>
                         </div>
                     )
@@ -669,11 +669,11 @@ export default function App() {
             </main>
 
             {/* FOOTER */}
-            <footer className="mt-auto border-t border-slate-200/80 bg-white/80 py-3.5 text-center text-xs font-medium text-slate-500 backdrop-blur-md">
-                <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-1.5 px-4 sm:flex-row">
-                    <span>RoomSync Pro Operational Suite &bull; 3101 Sage Rd</span>
-                    <span className="flex items-center gap-1.5 text-slate-400">
-                        <span className={`h-1.5 w-1.5 rounded-full ${cloudStatus.connected ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+            <footer className="mt-auto border-t border-ink-900/[0.07] bg-bone-50/70 py-3.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500 backdrop-blur-sm">
+                <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-1.5 px-4 sm:flex-row sm:px-6">
+                    <span>RoomSync Pro &middot; Operational Suite &middot; 3101 Sage Rd</span>
+                    <span className="flex items-center gap-2">
+                        <span className={`h-1 w-1 rounded-full ${cloudStatus.connected ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
                         {cloudStatus.connected ? 'Multi-tab & cloud synced' : 'Local mode — reconnecting'}
                     </span>
                 </div>

@@ -95,25 +95,25 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
             role="dialog" 
             aria-modal="true" 
             aria-labelledby="add-room-title"
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+            className="fixed inset-0 bg-ink-950/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+            <div className="w-full max-w-md space-y-4 rounded-xl border border-ink-900/[0.08] bg-white p-6 shadow-panel">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg font-black shadow-xs">
+                        <div className="w-10 h-10 rounded-lg bg-bone-100 text-brass-600 flex items-center justify-center text-lg font-semibold shadow-xs">
                             <i className="fa-solid fa-plus"></i>
                         </div>
                         <div>
-                            <h3 id="add-room-title" className="text-base font-bold text-slate-800">Add Room to Inventory</h3>
-                            <p className="text-[11px] text-slate-400 font-semibold">3101 Sage Rd Room Catalog</p>
+                            <h3 id="add-room-title" className="font-display text-[21px] leading-none text-ink-900">Add Room to Inventory</h3>
+                            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500">3101 Sage Rd Room Catalog</p>
                         </div>
                     </div>
                     <button 
                         type="button"
                         onClick={onClose} 
                         aria-label="Close add room dialog"
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center transition"
+                        className="cursor-pointer w-8 h-8 rounded-lg text-stone-500 hover:text-slate-600 flex items-center justify-center transition"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
@@ -121,7 +121,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
 
                 <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
                     {error && (
-                        <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-semibold flex items-center gap-2">
+                        <div className="p-2.5 bg-rose-50/70 border border-rose-200 text-rose-700 rounded-md text-[11px] font-semibold flex items-center gap-2">
                             <i className="fa-solid fa-triangle-exclamation"></i>
                             <span>{error}</span>
                         </div>
@@ -129,7 +129,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
 
                     <div className="grid grid-cols-2 gap-3">
                         <div>
-                            <label htmlFor="add-room-suite" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                            <label htmlFor="add-room-suite" className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500 mb-1">
                                 Room #
                             </label>
                             <input 
@@ -140,19 +140,19 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                                 placeholder="e.g. 106"
                                 value={roomId}
                                 onChange={handleRoomIdChange}
-                                className="w-full text-sm font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                className="w-full text-sm font-semibold border border-ink-900/[0.12] rounded-md p-2.5 bg-bone-50/60 focus:border-brass-500/40 focus:bg-white focus:ring-2 focus:ring-brass-500/20 focus:outline-none"
                                 autoFocus
                             />
                         </div>
                         <div>
-                            <label htmlFor="add-room-floor" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                            <label htmlFor="add-room-floor" className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500 mb-1">
                                 Floor
                             </label>
                             <select 
                                 id="add-room-floor"
                                 value={floor}
                                 onChange={(e) => setFloor(e.target.value)}
-                                className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                className="w-full text-xs font-semibold border border-ink-900/[0.12] rounded-md p-2.5 bg-bone-50/60 focus:border-brass-500/40 focus:bg-white focus:ring-2 focus:ring-brass-500/20 focus:outline-none"
                             >
                                 {floorOptions.map((option) => (
                                     <option key={option} value={option}>Floor {option}</option>
@@ -162,14 +162,14 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                     </div>
 
                     <div>
-                        <label htmlFor="add-room-type" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label htmlFor="add-room-type" className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500 mb-1">
                             Bed Layout / Room Category
                         </label>
                         <select 
                             id="add-room-type"
                             value={type}
                             onChange={(e) => setType(e.target.value)}
-                            className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                            className="w-full text-xs font-semibold border border-ink-900/[0.12] rounded-md p-2.5 bg-bone-50/60 focus:border-brass-500/40 focus:bg-white focus:ring-2 focus:ring-brass-500/20 focus:outline-none"
                         >
                             <option value="2 Queen Beds">2 Queen Beds (Kitchenette Suite)</option>
                             <option value="Queen Bed">Queen Bed (Studio Suite)</option>
@@ -179,14 +179,14 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                     </div>
 
                     <div>
-                        <label htmlFor="add-room-status" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label htmlFor="add-room-status" className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500 mb-1">
                             Initial Turnover Status
                         </label>
                         <select 
                             id="add-room-status"
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                            className="w-full text-xs font-semibold border border-ink-900/[0.12] rounded-md p-2.5 bg-bone-50/60 focus:border-brass-500/40 focus:bg-white focus:ring-2 focus:ring-brass-500/20 focus:outline-none"
                         >
                             <option value="clean">Clean (Ready for Check-In)</option>
                             <option value="dirty">Dirty (Turnover Needed)</option>
@@ -197,7 +197,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                     </div>
 
                     <div>
-                        <label htmlFor="add-room-notes" className="block font-bold text-slate-600 uppercase tracking-wider mb-1">
+                        <label htmlFor="add-room-notes" className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500 mb-1">
                             Notes / Assigned Handyman (Optional)
                         </label>
                         <input 
@@ -220,7 +220,7 @@ export default function AddRoomModal({ isOpen, onClose, onAddRoom, existingRoomI
                         </button>
                         <button 
                             type="submit" 
-                            className="cursor-pointer px-5 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-sm transition active:scale-95 flex items-center gap-1.5"
+                            className="flex cursor-pointer items-center gap-1.5 rounded-md bg-ink-900 px-5 py-2 text-[11px] font-semibold text-white shadow-sm transition hover:bg-ink-950 active:scale-[0.98]"
                         >
                             <i className="fa-solid fa-plus"></i>
                             <span>Add Room</span>

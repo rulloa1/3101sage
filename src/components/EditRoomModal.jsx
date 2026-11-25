@@ -58,16 +58,16 @@ export default function EditRoomModal({
             role="dialog" 
             aria-modal="true" 
             aria-labelledby="edit-room-title"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="max-h-[90vh] w-full max-w-md space-y-4 overflow-y-auto rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl animate-scaleIn">
+            <div className="max-h-[90vh] w-full max-w-md animate-scaleIn space-y-4 overflow-y-auto rounded-xl border border-ink-900/[0.08] bg-white p-6 shadow-panel">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                     <div>
-                        <h3 id="edit-room-title" className="text-base font-bold text-slate-800">
-                            Room {room.id} ({room.type})
+                        <h3 id="edit-room-title" className="font-display text-[21px] leading-tight text-ink-900">
+                            Room {room.id} <span className="text-stone-500">·</span> {room.type}
                         </h3>
-                        <p className="text-[11px] text-slate-400 font-semibold">
+                        <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-stone-500">
                             Floor {room.floor} • Current: {room.status.toUpperCase()}
                         </p>
                     </div>
@@ -75,7 +75,7 @@ export default function EditRoomModal({
                         type="button"
                         onClick={onClose} 
                         aria-label="Close room editor"
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
+                        className="cursor-pointer w-8 h-8 rounded-lg text-stone-500 hover:text-slate-600 flex items-center justify-center"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
@@ -83,7 +83,7 @@ export default function EditRoomModal({
 
                 {/* Status Selection Buttons */}
                 <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
+                    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500">
                         Change Status
                     </label>
                     <div className="grid grid-cols-2 gap-2">
@@ -111,7 +111,7 @@ export default function EditRoomModal({
 
                 {/* Room Notes Input & Chips */}
                 <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                    <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500">
                         Room Notes / Issue
                     </label>
                     <input
@@ -119,7 +119,7 @@ export default function EditRoomModal({
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="e.g. Extra towels, AC check..."
-                        className="w-full text-xs font-medium border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+                        className="w-full text-xs font-medium border border-ink-900/[0.12] rounded-md p-2.5 focus:border-brass-500/40 focus:ring-2 focus:ring-brass-500/20 outline-none bg-bone-50/60"
                     />
                     <div className="mt-2 flex flex-wrap gap-1.5">
                         <button type="button" onClick={() => appendNoteChip('Late Checkout 1PM')} className="cursor-pointer text-[11px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg border hover:bg-slate-200 transition">+ Late Checkout</button>

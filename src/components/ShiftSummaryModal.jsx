@@ -105,38 +105,41 @@ ${inventory?.source === 'imported' ? 'Inventory: owner room list' : 'NOTE: demo 
             role="dialog" 
             aria-modal="true" 
             aria-labelledby="shift-summary-title"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="animate-scaleIn w-full max-w-lg space-y-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                    <h3 id="shift-summary-title" className="text-base font-bold text-slate-800">Operational Shift Summary (3101 Sage)</h3>
+            <div className="animate-scaleIn w-full max-w-lg space-y-4 rounded-xl border border-ink-900/[0.08] bg-white p-6 shadow-panel">
+                <div className="flex items-center justify-between border-b border-ink-900/[0.06] pb-3">
+                    <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">End of shift</p>
+                        <h3 id="shift-summary-title" className="mt-1 font-display text-[21px] leading-none text-ink-900">Operational Shift Summary</h3>
+                    </div>
                     <button 
                         type="button"
                         onClick={onClose} 
                         aria-label="Close shift report"
-                        className="cursor-pointer w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center"
+                        className="cursor-pointer w-8 h-8 rounded-lg text-stone-500 hover:text-slate-600 flex items-center justify-center"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs text-slate-800 space-y-2 select-all overflow-y-auto max-h-72 whitespace-pre-wrap break-words">
+                <div className="space-y-2 whitespace-pre-wrap break-words select-all overflow-y-auto max-h-72 rounded-lg border border-ink-900/[0.08] bg-bone-50 p-4 font-mono text-[11px] leading-relaxed text-ink-800">
                     {report}
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <div className="flex justify-end gap-2 border-t border-ink-900/[0.06] pt-3">
                     <button 
                         type="button" 
                         onClick={onClose} 
-                        className="cursor-pointer px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                        className="cursor-pointer rounded-md px-3.5 py-2 text-[11px] font-semibold text-stone-500 transition hover:bg-bone-50 hover:text-ink-900"
                     >
                         Close
                     </button>
                     <button 
                         type="button" 
                         onClick={handleCopy} 
-                        className="cursor-pointer px-4 py-2 text-xs font-bold bg-amber-600 text-white rounded-xl hover:bg-amber-700 flex items-center gap-1.5 transition active:scale-95 shadow-sm"
+                        className="flex cursor-pointer items-center gap-1.5 rounded-md bg-ink-900 px-4 py-2 text-[11px] font-semibold text-white shadow-sm transition hover:bg-ink-950 active:scale-[0.98]"
                     >
                         <i className="fa-regular fa-copy"></i> Copy
                     </button>

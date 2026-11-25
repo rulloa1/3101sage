@@ -11,21 +11,21 @@ export default function InventoryNotice({ inventory, onOpenImport, onResetModel 
         return (
             <section
                 aria-label="Inventory source"
-                className="border-b border-emerald-200 bg-emerald-50/80"
+                className="border-b border-ink-900/[0.07] bg-bone-50/80"
             >
                 <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                     <div className="flex items-start gap-2.5">
-                        <i className="fa-solid fa-circle-check mt-0.5 text-sm text-emerald-600"></i>
+                        <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-emerald-500"></span>
                         <div>
                             <div className="flex flex-wrap items-center gap-2">
-                                <span className="rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                                <span className="rounded-sm border border-ink-900/[0.1] bg-white px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-800">
                                     Imported list
                                 </span>
-                                <strong className="text-xs font-bold text-emerald-900">
+                                <strong className="text-[11.5px] font-semibold text-ink-900">
                                     {roomCount} suites from your room list
                                 </strong>
                             </div>
-                            <p className="mt-0.5 text-[11px] font-medium text-emerald-800/80">
+                            <p className="mt-0.5 text-[10.5px] font-medium text-stone-500">
                                 {inventory.fileName || 'Pasted list'}
                                 {importedAt ? ` · loaded ${importedAt}` : ''}
                                 {' '}· suite numbers, wings and bed types are yours.
@@ -37,14 +37,14 @@ export default function InventoryNotice({ inventory, onOpenImport, onResetModel 
                         <button
                             type="button"
                             onClick={onOpenImport}
-                            className="cursor-pointer rounded-lg border border-emerald-300 bg-white px-3 py-1.5 text-[11px] font-bold text-emerald-800 transition hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                            className="cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-3 py-1.5 text-[10.5px] font-semibold text-ink-900 transition hover:bg-bone-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60"
                         >
                             Replace list
                         </button>
                         <button
                             type="button"
                             onClick={onResetModel}
-                            className="cursor-pointer rounded-lg px-2 py-1.5 text-[11px] font-semibold text-emerald-700/80 underline-offset-2 transition hover:text-emerald-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                            className="cursor-pointer text-[10.5px] font-semibold text-stone-500 underline-offset-2 transition hover:text-ink-900 hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60"
                         >
                             Reset to model
                         </button>
@@ -57,21 +57,21 @@ export default function InventoryNotice({ inventory, onOpenImport, onResetModel 
     return (
         <section
             aria-label="Inventory source"
-            className="border-b-2 border-amber-300 bg-amber-50"
+            className="border-b border-brass-300/40 bg-[#fbf7ee]"
         >
             <div className="mx-auto flex max-w-7xl flex-col gap-2.5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                <div className="flex items-start gap-2.5">
-                    <i className="fa-solid fa-triangle-exclamation mt-0.5 text-sm text-amber-600"></i>
+                <div className="flex items-start gap-2.5 sm:items-center">
+                    <i className="fa-solid fa-triangle-exclamation mt-0.5 text-[11px] text-brass-600 sm:mt-0"></i>
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
-                            <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-950">
+                            <span className="rounded-sm border border-brass-400/40 bg-brass-500/[0.14] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-brass-700">
                                 Working model
                             </span>
-                            <strong className="text-xs font-bold text-amber-950">
+                            <strong className="text-[11.5px] font-semibold text-ink-900">
                                 Demo inventory — not the owner's room list
                             </strong>
                         </div>
-                        <p className="mt-1 max-w-3xl text-[11px] font-medium leading-relaxed text-amber-900/85">
+                        <p className="mt-1 max-w-3xl text-[10.5px] font-medium leading-relaxed text-stone-600">
                             Suite numbers (101–115 / 201–215), the wing split and the bed-type mix are
                             placeholders built from public property data. Don't give this to housekeeping
                             as-is — load the owner's real room list first.
@@ -82,9 +82,9 @@ export default function InventoryNotice({ inventory, onOpenImport, onResetModel 
                 <button
                     type="button"
                     onClick={onOpenImport}
-                    className="flex flex-shrink-0 cursor-pointer items-center justify-center gap-1.5 self-start rounded-xl bg-amber-500 px-3.5 py-2 text-[11px] font-extrabold text-slate-950 shadow-sm transition hover:bg-amber-400 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-700 focus-visible:ring-offset-2 sm:self-center"
+                    className="flex flex-shrink-0 cursor-pointer items-center justify-center gap-1.5 self-start rounded-md bg-ink-900 px-3.5 py-2 text-[10.5px] font-semibold text-white transition hover:bg-ink-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60 sm:self-center"
                 >
-                    <i className="fa-solid fa-file-arrow-up"></i>
+                    <i className="fa-solid fa-file-arrow-up text-[10px]"></i>
                     Load real room list
                 </button>
             </div>

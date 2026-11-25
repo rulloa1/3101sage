@@ -17,102 +17,102 @@ export default function FilterControls({
         const unique = [...new Set(rooms.map(r => String(r.floor)))].sort((a, b) => Number(a) - Number(b));
         return unique;
     }, [rooms]);
-    return (
-        <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-2.5">
-            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
-                {/* Floor Filter Buttons */}
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-                    <span className="mr-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Floor:</span>
-                    {['ALL', ...floors].map((floor) => (
-                        <button
-                            key={floor}
-                            type="button"
-                            aria-pressed={currentFloor === floor}
-                            onClick={() => setFloor(floor)}
-                            className={`cursor-pointer px-3.5 py-1.5 text-xs font-bold rounded-xl transition ${
-                                currentFloor === floor
-                                    ? 'bg-slate-900 text-white shadow-sm'
-                                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                            }`}
-                        >
-                            {floor === 'ALL' ? 'All Floors' : `Floor ${floor}`}
-                        </button>
-                    ))}
 
-                    {/* Quick Walk-in Matcher Button */}
-                    <button 
+    return (
+        <section className="border-b border-ink-900/[0.07] bg-white/60 px-4 py-2.5 backdrop-blur-sm sm:px-6">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-2.5 text-xs">
+                {/* Floor segmented control */}
+                <div className="flex min-w-0 items-center gap-2.5 overflow-x-auto pb-0.5 sm:pb-0">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500">Floor</span>
+                    <div className="flex items-center gap-0.5 rounded-lg border border-ink-900/[0.07] bg-bone-100/70 p-0.5">
+                        {['ALL', ...floors].map((floor) => (
+                            <button
+                                key={floor}
+                                type="button"
+                                aria-pressed={currentFloor === floor}
+                                onClick={() => setFloor(floor)}
+                                className={`cursor-pointer whitespace-nowrap rounded-[6px] px-2.5 py-1 text-[11px] font-semibold transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60 ${
+                                    currentFloor === floor
+                                        ? 'bg-white text-ink-900 shadow-[0_1px_2px_rgba(16,20,26,0.10)]'
+                                        : 'text-stone-600 hover:text-ink-900'
+                                }`}
+                            >
+                                {floor === 'ALL' ? 'All' : floor}
+                            </button>
+                        ))}
+                    </div>
+
+                    <span className="h-5 w-px bg-ink-900/[0.08]" aria-hidden="true"></span>
+
+                    <button
                         type="button"
-                        onClick={onWalkInMatch} 
-                        className="cursor-pointer ml-1.5 px-3 py-1.5 text-xs font-extrabold rounded-xl bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition flex items-center gap-1.5 shadow-xs active:scale-95"
+                        onClick={onWalkInMatch}
+                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1.5 text-[11px] font-semibold text-brass-700 transition hover:bg-brass-500/[0.09] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60"
                     >
-                        <i className="fa-solid fa-key text-amber-600 text-xs"></i>
-                        <span>Quick Match: Ready for Walk-in</span>
+                        <i className="fa-solid fa-key text-[10px]"></i>
+                        <span>Ready for walk-in</span>
                     </button>
 
-                    {/* Add Room Button */}
                     {onOpenAddRoom && (
-                        <button 
+                        <button
                             type="button"
-                            onClick={onOpenAddRoom} 
-                            className="cursor-pointer ml-1 px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition flex items-center gap-1.5 active:scale-95"
+                            onClick={onOpenAddRoom}
+                            className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1.5 text-[11px] font-semibold text-stone-500 transition hover:bg-ink-900/[0.04] hover:text-ink-900 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60"
                             title="Add a custom room to inventory"
                         >
-                            <i className="fa-solid fa-plus text-amber-600"></i>
-                            <span className="hidden sm:inline">Add Room</span>
+                            <i className="fa-solid fa-plus text-[10px]"></i>
+                            <span className="hidden sm:inline">Add room</span>
                         </button>
                     )}
                 </div>
 
-                {/* Search & Reset */}
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                    {/* Active Filter Pill */}
+                {/* Search & reset */}
+                <div className="flex w-full items-center gap-2 sm:w-auto">
                     {currentStatusFilter !== 'ALL' && (
-                        <div className="bg-indigo-50 border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1.5 animate-fadeIn">
-                            <span>Filter:</span>
-                            <span className="capitalize">{currentStatusFilter}</span>
+                        <div className="flex animate-fadeIn items-center gap-1.5 rounded-md border border-ink-900/[0.08] bg-bone-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-800">
+                            <span className="text-stone-500">Filter</span>
+                            <span className="normal-case tracking-normal">{currentStatusFilter}</span>
                             <button
                                 type="button"
                                 onClick={resetFilters}
                                 aria-label="Clear status filter"
-                                className="cursor-pointer text-indigo-500 hover:text-indigo-800 ml-0.5"
+                                className="cursor-pointer text-stone-500 transition hover:text-ink-900"
                             >
-                                <i className="fa-solid fa-xmark text-xs"></i>
+                                <i className="fa-solid fa-xmark text-[10px]"></i>
                             </button>
                         </div>
                     )}
 
-                    {/* Search Bar */}
-                    <div className="relative flex-1 sm:w-56">
-                        <i className="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                    <div className="relative flex-1 sm:w-60">
+                        <i className="fa-solid fa-magnifying-glass pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] text-stone-500"></i>
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Room #, Queen, note..."
+                            placeholder="Room, bed type, note…"
                             aria-label="Search rooms by number, type or note"
-                            className="w-full pl-8 pr-7 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition"
+                            className="w-full rounded-lg border border-ink-900/[0.09] bg-white py-1.5 pl-7 pr-7 text-[11px] text-ink-900 placeholder:text-stone-500 focus:border-brass-500/40 focus:outline-none focus:ring-2 focus:ring-brass-500/15"
                         />
                         {searchQuery && (
                             <button
                                 type="button"
                                 onClick={() => setSearchQuery('')}
                                 aria-label="Clear search"
-                                className="cursor-pointer absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-stone-500 transition hover:text-ink-900"
                             >
-                                <i className="fa-solid fa-xmark text-xs"></i>
+                                <i className="fa-solid fa-xmark text-[10px]"></i>
                             </button>
                         )}
                     </div>
 
-                    {/* Reset Demo State Button */}
                     <button
                         type="button"
                         onClick={onResetDemo}
                         aria-label="Reset rooms to demo layout"
-                        className="cursor-pointer text-slate-400 hover:text-indigo-600 text-xs font-medium px-2 py-1.5 rounded-lg hover:bg-slate-100 transition"
+                        className="cursor-pointer rounded-md p-1.5 text-stone-500 transition hover:bg-ink-900/[0.04] hover:text-ink-900"
                         title="Reset rooms to demo layout"
                     >
-                        <i className="fa-solid fa-rotate-left"></i>
+                        <i className="fa-solid fa-rotate-left text-[11px]"></i>
                     </button>
                 </div>
             </div>

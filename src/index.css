@@ -2,22 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Executive Dashboard Ambient Canvas */
+/* Warm editorial canvas — paper, not dashboard chrome */
 body {
-    background-color: #f1f5f9;
+    background-color: #f7f5f1;
     background-image:
-        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.10) 0px, transparent 45%),
-        radial-gradient(at 100% 0%, rgba(217, 119, 6, 0.09) 0px, transparent 40%),
-        radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.06) 0px, transparent 50%),
-        radial-gradient(#cbd5e1 1.25px, transparent 1.25px);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+        radial-gradient(120% 70% at 50% -20%, rgba(171, 138, 89, 0.10) 0%, transparent 60%),
+        radial-gradient(70% 50% at 100% 0%, rgba(28, 32, 38, 0.045) 0%, transparent 55%);
     background-attachment: fixed;
 }
 
 .glass-header {
-    background: linear-gradient(180deg, rgba(12, 18, 34, 0.97) 0%, rgba(10, 15, 29, 0.94) 100%);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    background: rgba(13, 15, 18, 0.96);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
 }
 
 @keyframes subtle-pulse {
@@ -50,11 +47,11 @@ body {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: #d8d2c6;
     border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: #b8b0a1;
 }
 
 /* Print Styling for Keycard Sleeve Slip */
@@ -84,4 +81,68 @@ body {
     #printableSleeveArea h4, #printableSleeveArea code, #printableSleeveArea strong {
         color: #000000 !important;
     }
+
+    /* Executive memorandum: the overlay traps the document inside a fixed,
+       scrollable box, so printing it needs the shell unclamped and the
+       letterhead revealed like the sleeve slip. */
+    .screen-only {
+        display: none !important;
+    }
+    body {
+        background: #ffffff !important;
+        background-image: none !important;
+    }
+    /* Take the app shell out of the print flow so the memorandum starts on page
+       one instead of after a screenful of invisible dashboard. */
+    .app-shell > * {
+        display: none !important;
+    }
+    .app-shell > [role="dialog"] {
+        display: flex !important;
+    }
+    .memo-print-root {
+        position: static !important;
+        padding: 0 !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    .memo-print-panel {
+        max-width: none !important;
+        max-height: none !important;
+        overflow: visible !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    #printableMemoArea,
+    #printableMemoArea * {
+        visibility: visible !important;
+    }
+    #printableMemoArea {
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #14171c !important;
+    }
+    #printableMemoArea .memo-section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    #printableMemoArea .bg-bone-50,
+    #printableMemoArea .bg-bone-100,
+    #printableMemoArea thead {
+        background: #f4f2ee !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    #printableMemoArea a {
+        color: #14171c !important;
+        text-decoration: underline !important;
+    }
+}
+
+@page {
+    margin: 14mm;
 }

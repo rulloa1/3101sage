@@ -41,25 +41,25 @@ export default function EarlyCheckinModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="early-checkin-title"
-            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="animate-scaleIn max-h-[90vh] w-full max-w-md space-y-4 overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl">
+            <div className="animate-scaleIn max-h-[90vh] w-full max-w-md space-y-4 overflow-y-auto rounded-xl border border-ink-900/[0.08] bg-white p-6 shadow-panel">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div className="flex items-center gap-2.5">
                         <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-lg font-black text-emerald-600 shadow-xs">
                             <i className="fa-solid fa-hand-holding-dollar"></i>
                         </div>
                         <div>
-                            <h3 id="early-checkin-title" className="text-base font-bold text-slate-800">Early Check-In Monetizer</h3>
-                            <p className="text-[11px] font-semibold text-slate-400">Immediate non-room profit generator</p>
+                            <h3 id="early-checkin-title" className="font-display text-[21px] leading-none text-ink-900">Early Check-In Monetizer</h3>
+                            <p className="text-[11px] font-semibold text-stone-500">Immediate non-room profit generator</p>
                         </div>
                     </div>
                     <button
                         type="button"
                         onClick={onClose}
                         aria-label="Close early check-in"
-                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-stone-500 transition hover:bg-slate-100 hover:text-slate-600"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
@@ -157,7 +157,7 @@ export default function EarlyCheckinModal({
                         <button
                             type="submit"
                             disabled={cleanRooms.length === 0}
-                            className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-emerald-600 px-4.5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex cursor-pointer items-center gap-1.5 rounded-md bg-ink-900 px-4.5 py-2 text-[11px] font-semibold text-white shadow-sm transition hover:bg-ink-950 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             <i className="fa-solid fa-receipt"></i> <span>Collect ${fee} &amp; Issue Key</span>
                         </button>

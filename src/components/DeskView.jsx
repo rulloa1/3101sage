@@ -7,6 +7,11 @@ function getCleaningMinutes(startedAt) {
     return Math.max(1, Math.floor(elapsedMs / 60000));
 }
 
+const primaryAction =
+    'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-ink-900 px-2.5 py-2 text-[11px] font-semibold text-white transition hover:bg-ink-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60';
+const subtleAction =
+    'flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-ink-900/[0.1] bg-white px-2.5 py-2 text-[11px] font-semibold text-stone-600 transition hover:border-ink-900/[0.18] hover:bg-bone-50 hover:text-ink-900 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60';
+
 export default function DeskView({
     rooms,
     currentLang,
@@ -47,65 +52,61 @@ export default function DeskView({
                     <article
                         key={room.id}
                         style={{ animationDelay: `${Math.min(index, 12) * 25}ms` }}
-                        className={`animate-cardIn group flex flex-col justify-between overflow-hidden rounded-2xl border bg-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover ${cfg.border}`}
+                        className="animate-cardIn group flex flex-col justify-between overflow-hidden rounded-xl border border-ink-900/[0.08] bg-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:border-ink-900/[0.14] hover:shadow-card-hover"
                     >
-                        <span className={`block h-1 w-full ${cfg.bg}`} aria-hidden="true"></span>
+                        <span className={`block h-[2px] w-full ${cfg.accent}`} aria-hidden="true"></span>
 
                         <div>
                             {/* Card Header */}
-                            <div className={`flex items-start justify-between gap-2 border-b p-4 ${cfg.light}`}>
+                            <div className="flex items-start justify-between gap-3 px-4 pb-3 pt-3.5">
                                 <div className="min-w-0">
-                                    <div className="flex items-center gap-1.5 text-2xl font-black tracking-tight text-slate-800">
-                                        <span className="truncate">Room {room.id}</span>
+                                    <h3 className="flex items-baseline gap-2">
+                                        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+                                            Suite
+                                        </span>
+                                        <span className="font-display text-[27px] leading-none tracking-tight text-ink-900">
+                                            {room.id}
+                                        </span>
                                         {isCleaning && (
-                                            <span className="inline-block h-2 w-2 flex-shrink-0 animate-ping rounded-full bg-amber-500"></span>
+                                            <span className="inline-block h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-amber-500"></span>
                                         )}
-                                    </div>
-                                    <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-slate-500">
-                                        <span className="inline-flex items-center gap-1 rounded-md bg-white/70 px-1.5 py-0.5 ring-1 ring-slate-200/80">
-                                            <i className="fa-solid fa-bed text-[10px] text-slate-400"></i>
-                                            {room.type}
-                                        </span>
-                                        <span className="inline-flex items-center gap-1 rounded-md bg-white/70 px-1.5 py-0.5 ring-1 ring-slate-200/80">
-                                            <i className="fa-solid fa-layer-group text-[10px] text-slate-400"></i>
-                                            Floor {room.floor}
-                                        </span>
+                                    </h3>
+                                    <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10.5px] font-medium text-stone-500">
+                                        <span>{room.type}</span>
+                                        <span className="text-stone-300" aria-hidden="true">·</span>
+                                        <span>Floor {room.floor}</span>
                                         {room.wing && (
-                                            <span className="inline-flex items-center gap-1 rounded-md bg-white/70 px-1.5 py-0.5 ring-1 ring-slate-200/80">
-                                                <i className="fa-solid fa-building text-[10px] text-slate-400"></i>
-                                                {room.wing}
-                                            </span>
+                                            <>
+                                                <span className="text-stone-300" aria-hidden="true">·</span>
+                                                <span>{room.wing}</span>
+                                            </>
                                         )}
-                                    </div>
+                                    </p>
                                 </div>
-                                <span className={`inline-flex flex-shrink-0 items-center rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide text-white shadow-sm ${cfg.bg} ${isCleaning ? 'pulse-live' : ''}`}>
-                                    <i className={`fa-solid ${cfg.icon} mr-1.5 text-[10px]`}></i>
+                                <span className={`inline-flex flex-shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${cfg.badge} ${isCleaning ? 'pulse-live' : ''}`}>
+                                    <span className={`h-1 w-1 rounded-full ${cfg.dot}`} aria-hidden="true"></span>
                                     {cfg.label}
                                 </span>
                             </div>
 
                             {/* Card Body */}
-                            <div className="space-y-2 p-3.5">
+                            <div className="space-y-2 border-t border-ink-900/[0.06] px-4 py-3">
                                 {cleaningMins && (
-                                    <div className="flex items-center justify-between rounded-xl border border-amber-200/90 bg-amber-50 px-2.5 py-1.5 text-[11px] font-bold text-amber-800">
-                                        <span className="flex items-center gap-1.5">
-                                            <i className="fa-solid fa-stopwatch fa-spin text-amber-600"></i>
-                                            Active cleaning
+                                    <div className="flex items-center justify-between text-[10.5px] font-medium">
+                                        <span className="flex items-center gap-1.5 text-stone-500">
+                                            <i className="fa-solid fa-stopwatch text-[10px] text-brass-500"></i>
+                                            In progress
                                         </span>
-                                        <span className="font-mono">{cleaningMins} min</span>
+                                        <span className="tabular-nums font-semibold text-ink-800">{cleaningMins} min</span>
                                     </div>
                                 )}
 
                                 {room.notes ? (
-                                    <div className="flex items-start gap-2 rounded-xl border border-amber-200/90 bg-amber-50/90 p-2.5 text-xs shadow-xs">
-                                        <i className="fa-solid fa-triangle-exclamation mt-0.5 text-xs text-amber-600"></i>
-                                        <span className="font-medium leading-relaxed text-amber-900">{room.notes}</span>
+                                    <div className="border-l-2 border-brass-300 py-0.5 pl-2.5">
+                                        <span className="text-[11px] font-medium leading-relaxed text-stone-600">{room.notes}</span>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center gap-1.5 py-1 text-xs italic text-slate-400">
-                                        <i className="fa-regular fa-comment-dots text-slate-300"></i>
-                                        <span>No special notes</span>
-                                    </div>
+                                    <p className="py-0.5 text-[10.5px] italic text-stone-500">No special notes</p>
                                 )}
                             </div>
                         </div>
@@ -113,7 +114,7 @@ export default function DeskView({
                         {/* Card Footer Actions */}
                         <div className="px-3.5 pb-3.5">
                             {isConfirming ? (
-                                <div className="space-y-2 border-t border-slate-100 pt-2.5">
+                                <div className="space-y-2 border-t border-ink-900/[0.06] pt-2.5">
                                     <input
                                         type="text"
                                         value={guestName}
@@ -125,35 +126,27 @@ export default function DeskView({
                                         placeholder="Guest name (optional)"
                                         autoFocus
                                         aria-label={`Guest name for room ${room.id} checkout`}
-                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium transition focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                                        className="w-full rounded-md border border-ink-900/[0.1] bg-white px-2.5 py-1.5 text-[11px] font-medium text-ink-900 placeholder:text-stone-500 transition focus:border-brass-500/40 focus:outline-none focus:ring-2 focus:ring-brass-500/15"
                                     />
                                     <div className="flex gap-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => handleCheckoutConfirm(room.id)}
-                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-                                        >
-                                            <i className="fa-solid fa-right-from-bracket text-[11px]"></i> <span>Confirm Checkout</span>
+                                        <button type="button" onClick={() => handleCheckoutConfirm(room.id)} className={primaryAction}>
+                                            <i className="fa-solid fa-right-from-bracket text-[10px]"></i> <span>Confirm checkout</span>
                                         </button>
                                         <button
                                             type="button"
                                             onClick={handleCheckoutCancel}
                                             aria-label="Cancel checkout"
-                                            className="cursor-pointer rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-200 active:scale-95"
+                                            className="cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-3 py-2 text-[11px] font-semibold text-stone-500 transition hover:bg-bone-50 hover:text-ink-900 active:scale-[0.98]"
                                         >
-                                            <i className="fa-solid fa-xmark text-xs"></i>
+                                            <i className="fa-solid fa-xmark text-[11px]"></i>
                                         </button>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex gap-2 border-t border-slate-100 pt-2.5">
+                                <div className="flex gap-2 border-t border-ink-900/[0.06] pt-2.5">
                                     {isDirty && (
-                                        <button
-                                            type="button"
-                                            onClick={() => onChangeStatus(room.id, 'cleaning')}
-                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-amber-500 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-amber-200 transition hover:bg-amber-600 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                                        >
-                                            <i className="fa-solid fa-play text-[11px]"></i> <span>Start Clean</span>
+                                        <button type="button" onClick={() => onChangeStatus(room.id, 'cleaning')} className={primaryAction}>
+                                            <i className="fa-solid fa-play text-[10px]"></i> <span>Start clean</span>
                                         </button>
                                     )}
 
@@ -161,20 +154,16 @@ export default function DeskView({
                                         <button
                                             type="button"
                                             onClick={() => onOpenQc(room.id)}
-                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-emerald-200 transition hover:bg-emerald-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                                            className={primaryAction}
                                             title="Perform the 3-point QC inspection and mark clean"
                                         >
-                                            <i className="fa-solid fa-clipboard-check text-xs"></i> <span>QC &amp; Clean</span>
+                                            <i className="fa-solid fa-clipboard-check text-[10px]"></i> <span>QC &amp; clean</span>
                                         </button>
                                     )}
 
                                     {room.status === 'occupied' && (
-                                        <button
-                                            type="button"
-                                            onClick={() => setConfirmingCheckoutId(room.id)}
-                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2.5 py-2 text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-                                        >
-                                            <i className="fa-solid fa-right-from-bracket text-[11px]"></i> <span>Check Out</span>
+                                        <button type="button" onClick={() => setConfirmingCheckoutId(room.id)} className={primaryAction}>
+                                            <i className="fa-solid fa-right-from-bracket text-[10px]"></i> <span>Check out</span>
                                         </button>
                                     )}
 
@@ -182,9 +171,9 @@ export default function DeskView({
                                         <button
                                             type="button"
                                             onClick={() => onChangeStatus(room.id, 'dirty')}
-                                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100 px-2.5 py-2 text-xs font-bold text-slate-600 transition hover:bg-rose-50 hover:text-rose-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+                                            className={`${subtleAction} flex-1 hover:border-rose-200 hover:bg-rose-50/60 hover:text-rose-700`}
                                         >
-                                            <i className="fa-solid fa-broom text-[11px]"></i> <span>Mark Dirty</span>
+                                            <i className="fa-solid fa-broom text-[10px]"></i> <span>Mark dirty</span>
                                         </button>
                                     )}
 
@@ -192,10 +181,10 @@ export default function DeskView({
                                         type="button"
                                         onClick={() => onOpenEdit(room.id)}
                                         aria-label={`Edit room ${room.id}`}
-                                        className="flex cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                                        className="flex cursor-pointer items-center justify-center rounded-md border border-ink-900/[0.1] bg-white px-2.5 py-2 text-[11px] font-semibold text-stone-500 transition hover:border-ink-900/[0.18] hover:bg-bone-50 hover:text-ink-900 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60"
                                         title="Edit room details"
                                     >
-                                        <i className="fa-solid fa-sliders text-xs"></i>
+                                        <i className="fa-solid fa-sliders text-[11px]"></i>
                                     </button>
                                 </div>
                             )}

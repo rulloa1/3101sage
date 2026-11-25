@@ -25,44 +25,44 @@ export default function HousekeepingView({
     return (
         <div className="mx-auto max-w-2xl space-y-4">
             {/* Housekeeping View Header with Dedicated Floor Selector */}
-            <div className="rounded-2xl bg-slate-900 p-4 text-white shadow-md">
+            <div className="rounded-xl border border-ink-900/[0.08] bg-white px-5 py-4 shadow-soft">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/15 text-amber-400">
-                            <i className="fa-solid fa-broom text-lg"></i>
-                        </span>
-                        <div>
-                            <h2 className="text-sm font-bold leading-tight">
-                                {currentLang === 'es' ? 'Panel de Camaristas' : 'Housekeeping Turnover'}
-                            </h2>
-                            <p className="text-[11px] text-slate-400">
-                                {currentLang === 'es'
-                                    ? `${pendingCount} habitaciones pendientes en esta selección`
-                                    : `${pendingCount} room${pendingCount === 1 ? '' : 's'} pending in this selection`}
-                            </p>
-                        </div>
+                    <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+                            {currentLang === 'es' ? 'Camaristas' : 'Housekeeping'}
+                        </p>
+                        <h2 className="mt-1 font-display text-[25px] leading-none tracking-tight text-ink-900">
+                            {currentLang === 'es' ? 'Tablero de rotación' : 'Turnover board'}
+                        </h2>
+                        <p className="mt-1.5 text-[11px] font-medium text-stone-500">
+                            {currentLang === 'es'
+                                ? `${pendingCount} habitaciones pendientes en esta selección`
+                                : `${pendingCount} room${pendingCount === 1 ? '' : 's'} pending in this selection`}
+                        </p>
                     </div>
 
                     {/* Housekeeping Floor Selector */}
-                    <div className="flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-800 p-1">
-                        <span className="px-2 text-[10px] font-bold uppercase text-slate-400">
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500">
                             {dict.houseFloorSelect}
                         </span>
-                        {['ALL', ...floors].map((f) => (
-                            <button
-                                key={f}
-                                type="button"
-                                aria-pressed={houseFloor === f}
-                                onClick={() => setHouseFloor(f)}
-                                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
-                                    houseFloor === f
-                                        ? 'bg-white text-slate-900 shadow-sm'
-                                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                                }`}
-                            >
-                                {f === 'ALL' ? (currentLang === 'es' ? 'Todos' : 'All') : f}
-                            </button>
-                        ))}
+                        <div className="flex items-center gap-0.5 rounded-lg border border-ink-900/[0.07] bg-bone-100/70 p-0.5">
+                            {['ALL', ...floors].map((f) => (
+                                <button
+                                    key={f}
+                                    type="button"
+                                    aria-pressed={houseFloor === f}
+                                    onClick={() => setHouseFloor(f)}
+                                    className={`cursor-pointer rounded-[6px] px-2.5 py-1 text-[11px] font-semibold transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60 ${
+                                        houseFloor === f
+                                            ? 'bg-white text-ink-900 shadow-[0_1px_2px_rgba(16,20,26,0.10)]'
+                                            : 'text-stone-600 hover:text-ink-900'
+                                    }`}
+                                >
+                                    {f === 'ALL' ? (currentLang === 'es' ? 'Todos' : 'All') : f}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,104 +77,108 @@ export default function HousekeepingView({
                         <article
                             key={room.id}
                             style={{ animationDelay: `${Math.min(index, 12) * 25}ms` }}
-                            className={`animate-cardIn space-y-3 overflow-hidden rounded-2xl border-2 bg-white p-4 shadow-soft transition hover:shadow-md sm:p-5 ${cfg.border}`}
+                            className="animate-cardIn overflow-hidden rounded-xl border border-ink-900/[0.08] bg-white shadow-soft transition hover:border-ink-900/[0.14] hover:shadow-card-hover"
                         >
-                            <div className="flex items-center justify-between gap-3">
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-3xl font-black tracking-tight text-slate-800">#{room.id}</span>
-                                    <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                                        {currentLang === 'es' ? 'Piso' : 'Floor'} {room.floor}
+                            <span className={`block h-[2px] w-full ${cfg.accent}`} aria-hidden="true"></span>
+
+                            <div className="space-y-3 px-4 py-3.5 sm:px-5">
+                                <div className="flex items-center justify-between gap-3">
+                                    <div className="flex items-baseline gap-2.5">
+                                        <span className="font-display text-[30px] leading-none tracking-tight text-ink-900">#{room.id}</span>
+                                        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500">
+                                            {currentLang === 'es' ? 'Piso' : 'Floor'} {room.floor}
+                                        </span>
+                                        {room.wing && (
+                                            <span className="hidden text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500 sm:inline">
+                                                · {room.wing}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <span className={`flex flex-shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${cfg.badge}`}>
+                                        <span className={`h-1 w-1 rounded-full ${cfg.dot}`} aria-hidden="true"></span>
+                                        <span>{cfg.label}</span>
                                     </span>
-                                    {room.wing && (
-                                        <span className="rounded-md bg-indigo-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-600 ring-1 ring-indigo-100">
-                                            {room.wing}
+                                </div>
+
+                                <div className="flex items-center justify-between border-t border-ink-900/[0.06] pt-2 text-[11px] font-medium text-stone-500">
+                                    <span>{room.type}</span>
+                                    {cleaningMins && (
+                                        <span className="flex items-center gap-1.5 text-brass-700">
+                                            <i className="fa-solid fa-stopwatch text-[10px]"></i>
+                                            <span className="tabular-nums font-semibold">{cleaningMins} min</span>
                                         </span>
                                     )}
                                 </div>
-                                <span className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold text-white shadow-sm ${cfg.bg}`}>
-                                    <i className={`fa-solid ${cfg.icon} text-xs`}></i>
-                                    <span>{cfg.label}</span>
-                                </span>
-                            </div>
 
-                            <div className="flex items-center justify-between text-xs font-medium text-slate-500">
-                                <span><i className="fa-solid fa-bed mr-1 text-slate-400"></i> {room.type}</span>
-                                {cleaningMins && (
-                                    <span className="rounded border border-amber-200 bg-amber-50 px-2 py-0.5 font-bold text-amber-700">
-                                        <i className="fa-solid fa-stopwatch mr-1"></i>{cleaningMins}m
-                                    </span>
+                                {room.notes && (
+                                    <div className="border-l-2 border-brass-300 py-0.5 pl-2.5">
+                                        <span className="text-[11px] font-medium leading-relaxed text-stone-600">{room.notes}</span>
+                                    </div>
                                 )}
-                            </div>
 
-                            {room.notes && (
-                                <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs font-medium text-amber-900">
-                                    <i className="fa-solid fa-note-sticky mt-0.5 text-amber-600"></i>
-                                    <span>{room.notes}</span>
+                                <div className="grid grid-cols-2 gap-2 pt-0.5">
+                                    {room.status === 'occupied' ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => onCheckout(room.id, '')}
+                                            className="tap-target col-span-2 flex cursor-pointer items-center justify-center gap-2 rounded-md bg-ink-900 px-3 py-3 text-[11px] font-semibold text-white transition hover:bg-ink-950 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60"
+                                        >
+                                            <i className="fa-solid fa-right-from-bracket text-[11px]"></i>
+                                            <span>{currentLang === 'es' ? 'Check-out / marcar sucia' : 'Check out & queue turnover'}</span>
+                                        </button>
+                                    ) : (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => onChangeStatus(room.id, 'cleaning')}
+                                                disabled={room.status === 'cleaning'}
+                                                className={`tap-target flex cursor-pointer items-center justify-center gap-2 rounded-md border px-3 py-3 text-[11px] font-semibold transition active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60 ${
+                                                    room.status === 'cleaning'
+                                                        ? 'cursor-not-allowed border-ink-900/[0.06] bg-bone-100 text-stone-500'
+                                                        : 'border-ink-900/[0.1] bg-white text-stone-600 hover:border-ink-900/[0.18] hover:bg-bone-50 hover:text-ink-900'
+                                                }`}
+                                            >
+                                                <i className="fa-solid fa-spinner text-[11px]"></i>
+                                                <span>{dict.cleaning}</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => onOpenQc(room.id)}
+                                                className="tap-target flex cursor-pointer items-center justify-center gap-2 rounded-md bg-ink-900 px-3 py-3 text-[11px] font-semibold text-white transition hover:bg-ink-950 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60"
+                                                title="Verify quality standards and mark clean"
+                                            >
+                                                <i className="fa-solid fa-clipboard-check text-[11px]"></i>
+                                                <span>QC &amp; clean</span>
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
-                            )}
 
-                            <div className="grid grid-cols-2 gap-2 pt-1">
-                                {room.status === 'occupied' ? (
+                                <div className="flex justify-end">
                                     <button
                                         type="button"
-                                        onClick={() => onCheckout(room.id, '')}
-                                        className="tap-target col-span-2 flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 px-3 py-3 text-xs font-extrabold text-white shadow-md shadow-blue-200 transition hover:bg-blue-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                                        onClick={() => onOpenEdit(room.id)}
+                                        className="flex cursor-pointer items-center gap-1.5 rounded-md px-1.5 py-1 text-[10.5px] font-semibold text-stone-500 transition hover:text-ink-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-400/60"
                                     >
-                                        <i className="fa-solid fa-right-from-bracket text-sm"></i>
-                                        <span>{currentLang === 'es' ? 'Check-Out / Marcar Sucia' : 'Check Out & Queue Turnover'}</span>
+                                        <i className="fa-solid fa-sliders text-[10px]"></i>
+                                        <span>{currentLang === 'es' ? 'Editar notas / otro estado' : 'Edit notes / custom status'}</span>
                                     </button>
-                                ) : (
-                                    <>
-                                        <button
-                                            type="button"
-                                            onClick={() => onChangeStatus(room.id, 'cleaning')}
-                                            disabled={room.status === 'cleaning'}
-                                            className={`tap-target flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 px-3 py-3 text-xs font-extrabold shadow-xs transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
-                                                room.status === 'cleaning'
-                                                    ? 'cursor-not-allowed border-amber-200 bg-amber-100 text-amber-500 opacity-60'
-                                                    : 'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100'
-                                            }`}
-                                        >
-                                            <i className="fa-solid fa-spinner"></i>
-                                            <span>{dict.cleaning}</span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => onOpenQc(room.id)}
-                                            className="tap-target flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 py-3 text-xs font-extrabold text-white shadow-md shadow-emerald-200 transition hover:bg-emerald-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                                            title="Verify quality standards and mark clean"
-                                        >
-                                            <i className="fa-solid fa-clipboard-check text-sm"></i>
-                                            <span>QC &amp; Clean</span>
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-
-                            <div className="flex justify-end pt-1">
-                                <button
-                                    type="button"
-                                    onClick={() => onOpenEdit(room.id)}
-                                    className="flex cursor-pointer items-center gap-1.5 rounded px-2 py-1 text-xs font-bold text-slate-500 transition hover:bg-slate-50 hover:text-indigo-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-                                >
-                                    <i className="fa-solid fa-sliders text-xs"></i>
-                                    <span>{currentLang === 'es' ? 'Editar notas / otro estado' : 'Edit notes / custom status'}</span>
-                                </button>
+                                </div>
                             </div>
                         </article>
                     );
                 })}
 
                 {filtered.length === 0 && (
-                    <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-                        <i className="fa-solid fa-broom mb-2 text-2xl text-slate-300"></i>
-                        <p className="text-sm font-bold text-slate-600">
+                    <div className="rounded-xl border border-dashed border-ink-900/[0.14] bg-white p-10 text-center">
+                        <i className="fa-solid fa-broom mb-2 text-xl text-stone-300"></i>
+                        <p className="text-[12px] font-semibold text-stone-600">
                             {currentLang === 'es' ? 'No hay habitaciones en este piso' : 'No rooms on this floor'}
                         </p>
                         <button
                             type="button"
                             onClick={() => setHouseFloor('ALL')}
-                            className="mt-3 cursor-pointer rounded-xl bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-200"
+                            className="mt-3 cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-4 py-2 text-[11px] font-semibold text-ink-900 transition hover:bg-bone-50"
                         >
                             {currentLang === 'es' ? 'Ver todos los pisos' : 'Show all floors'}
                         </button>
