@@ -60,7 +60,20 @@ export const i18n = {
         importedInventoryLabel: "Imported list",
         loadRoomList: "Load room list",
         replaceList: "Replace list",
-        resetModel: "Reset to model"
+        resetModel: "Reset to model",
+        resetDialogEyebrow: "Inventory · syncs to every device",
+        resetDialogTitle: "Restore working model?",
+        resetDialogDescImported: "This replaces your imported suite list with the working model, on every synced device.",
+        resetDialogDescModel: "This resets all suite statuses and notes back to the working model, on every synced device.",
+        resetDialogClose: "Close reset confirmation",
+        resetDialogCancel: "Cancel",
+        resetDialogConfirm: "Restore model",
+        toastModelRestored: "Working-model inventory restored",
+        queueFilterLabel: "Turnover queue filter",
+        queueEmptyAction: "Nothing pending turnover in this selection",
+        queueEmptyAll: "No rooms on this floor",
+        queueShowAllRooms: "Show all rooms",
+        queueShowAllFloors: "Show all floors"
     },
     es: {
         allSuites: "Todas",
@@ -123,7 +136,20 @@ export const i18n = {
         importedInventoryLabel: "Lista importada",
         loadRoomList: "Cargar lista real",
         replaceList: "Reemplazar lista",
-        resetModel: "Restaurar modelo"
+        resetModel: "Restaurar modelo",
+        resetDialogEyebrow: "Inventario · se sincroniza en cada dispositivo",
+        resetDialogTitle: "¿Restaurar el modelo de trabajo?",
+        resetDialogDescImported: "Esto reemplaza tu lista importada de suites con el modelo de trabajo, en cada dispositivo sincronizado.",
+        resetDialogDescModel: "Esto restablece todos los estados y notas de las suites al modelo de trabajo, en cada dispositivo sincronizado.",
+        resetDialogClose: "Cerrar confirmación de restablecimiento",
+        resetDialogCancel: "Cancelar",
+        resetDialogConfirm: "Restaurar modelo",
+        toastModelRestored: "Inventario del modelo restaurado",
+        queueFilterLabel: "Filtro de cola de rotación",
+        queueEmptyAction: "Sin habitaciones pendientes en esta selección",
+        queueEmptyAll: "No hay habitaciones en este piso",
+        queueShowAllRooms: "Ver todas las habitaciones",
+        queueShowAllFloors: "Ver todos los pisos"
     }
 };
 

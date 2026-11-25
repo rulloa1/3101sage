@@ -18,7 +18,7 @@ import AddRoomModal from './components/AddRoomModal';
 import CheckoutLog from './components/CheckoutLog';
 import Toast from './components/Toast';
 
-import { getStatusConfig } from './constants/i18n';
+import { getStatusConfig, i18n } from './constants/i18n';
 import {
     INVENTORY_SCHEMA,
     INVENTORY_STORAGE_KEY,
@@ -74,6 +74,7 @@ export default function App() {
     const [isRoomListOpen, setIsRoomListOpen] = useState(false);
     const [isMemoModalOpen, setIsMemoModalOpen] = useState(false);
     const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
+    const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
     const [qcModalRoomId, setQcModalRoomId] = useState(null);
     const [editModalRoomId, setEditModalRoomId] = useState(null);
 
@@ -91,6 +92,7 @@ export default function App() {
     inventoryRef.current = inventory;
     roomsRef.current = rooms;
     langRef.current = currentLang;
+    const dict = i18n[currentLang] || i18n.en;
 
     // Checkout log
     const [checkoutLog, setCheckoutLog] = useState(() => loadCheckoutLog());
@@ -236,6 +238,7 @@ export default function App() {
                 setIsEarlyCheckinOpen(false);
                 setIsKeycardSleeveOpen(false);
                 setIsRoomListOpen(false);
+                setIsResetConfirmOpen(false);
                 setIsMemoModalOpen(false);
                 setIsAddRoomOpen(false);
                 setQcModalRoomId(null);
@@ -334,17 +337,15 @@ export default function App() {
         showToast(`Loaded ${importedRooms.length} suites from ${sourceName}`, 'fa-file-import text-emerald-400');
     };
 
-    const handleResetToModel = () => {
-        const imported = inventoryRef.current.source === 'imported';
-        const message = imported
-            ? 'Reset to the working-model demo inventory? This replaces the imported room list on every synced screen.'
-            : 'Reset the demo rooms to the working-model layout on every screen?';
+    // Native window.confirm is blocked in some embedded and kiosk browsers, and
+    // it is the one destructive action here, so it gets a real dialog.
+    const openResetConfirm = () => setIsResetConfirmOpen(true);
 
-        if (!window.confirm(message)) return;
-
+    const handleConfirmResetModel = () => {
         applyInventory(createModelInventory());
         setIsRoomListOpen(false);
-        showToast('Working-model inventory restored', 'fa-rotate-left text-amber-400');
+        setIsResetConfirmOpen(false);
+        showToast(dict.toastModelRestored, 'fa-rotate-left text-amber-400');
     };
 
     const handleAddRoom = (newRoom) => {
@@ -591,7 +592,7 @@ export default function App() {
                     <InventoryNotice
                         inventory={inventory}
                         onOpenImport={() => setIsRoomListOpen(true)}
-                        onResetModel={handleResetToModel}
+                        onResetModel={openResetConfirm}
                     />
                 </>
             )}
@@ -607,7 +608,7 @@ export default function App() {
                     setSearchQuery={setSearchQuery}
                     onWalkInMatch={handleWalkInMatch}
                     onOpenAddRoom={() => setIsAddRoomOpen(true)}
-                    onResetDemo={handleResetToModel}
+                    onResetDemo={openResetConfirm}
                     rooms={rooms}
                 />
             )}
@@ -732,7 +733,7 @@ export default function App() {
                 onClose={() => setIsRoomListOpen(false)}
                 inventory={inventory}
                 onImport={handleImportRoomList}
-                onResetModel={handleResetToModel}
+                onResetModel={openResetConfirm}
             />
 
             <AddRoomModal
@@ -742,6 +743,69 @@ export default function App() {
                 existingRoomIds={rooms.map(r => r.id)}
                 existingFloors={rooms.map(r => r.floor)}
             />
+
+            {isResetConfirmOpen && (
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="reset-confirm-title"
+                    aria-describedby="reset-confirm-description"
+                    className="animate-fadeIn fixed inset-0 z-[60] flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm"
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsResetConfirmOpen(false); }}
+                >
+                    <div className="animate-scaleIn w-full max-w-md overflow-hidden rounded-xl border border-ink-900/[0.08] bg-white shadow-panel">
+                        <div className="flex items-start justify-between gap-3 border-b border-ink-900/[0.07] px-6 pb-4 pt-5">
+                            <div className="flex items-start gap-3">
+                                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-bone-100 text-lg text-brass-600">
+                                    <i className="fa-solid fa-rotate-left"></i>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+                                        {dict.resetDialogEyebrow}
+                                    </p>
+                                    <h3 id="reset-confirm-title" className="mt-1 font-display text-[21px] leading-none text-ink-900">
+                                        {dict.resetDialogTitle}
+                                    </h3>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setIsResetConfirmOpen(false)}
+                                aria-label={dict.resetDialogClose}
+                                className="flex-shrink-0 cursor-pointer rounded-md p-1.5 text-stone-500 transition hover:bg-ink-900/[0.04] hover:text-ink-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60"
+                            >
+                                <i className="fa-solid fa-xmark text-[13px]"></i>
+                            </button>
+                        </div>
+
+                        <div className="px-6 py-4">
+                            <p id="reset-confirm-description" className="text-[12px] leading-relaxed text-stone-600">
+                                {inventory.source === 'imported'
+                                    ? dict.resetDialogDescImported
+                                    : dict.resetDialogDescModel}
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-2 border-t border-ink-900/[0.07] bg-bone-50 px-6 py-3">
+                            <button
+                                type="button"
+                                autoFocus
+                                onClick={() => setIsResetConfirmOpen(false)}
+                                className="cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-4 py-2 text-[11px] font-semibold text-stone-600 transition hover:border-ink-900/[0.18] hover:bg-bone-100 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60"
+                            >
+                                {dict.resetDialogCancel}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleConfirmResetModel}
+                                className="cursor-pointer rounded-md bg-ink-900 px-4 py-2 text-[11px] font-semibold text-white transition hover:bg-ink-950 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60"
+                            >
+                                {dict.resetDialogConfirm}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* FLOATING TOAST NOTIFICATION */}
             <Toast toast={toast} />

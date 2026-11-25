@@ -7,6 +7,15 @@ function getCleaningMinutes(startedAt) {
     return Math.max(1, Math.floor(elapsedMs / 60000));
 }
 
+const PRIORITY_RANK = {
+    cleaning: 0,
+    dirty: 1,
+    maintenance: 2,
+    dnd: 3,
+    occupied: 4,
+    clean: 5
+};
+
 export default function HousekeepingView({
     rooms,
     currentLang,
@@ -16,11 +25,21 @@ export default function HousekeepingView({
     onCheckout
 }) {
     const [houseFloor, setHouseFloor] = useState('ALL');
+    // Housekeepers work the queue in urgency order; the full roster is one tap away.
+    const [queueMode, setQueueMode] = useState('action');
     const dict = i18n[currentLang] || i18n.en;
 
     const floors = Array.from(new Set(rooms.map(r => String(r.floor)))).sort((a, b) => Number(a) - Number(b));
-    const filtered = rooms.filter(r => houseFloor === 'ALL' || String(r.floor) === String(houseFloor));
-    const pendingCount = filtered.filter(r => r.status === 'dirty' || r.status === 'cleaning').length;
+    const floorRooms = rooms.filter(r => houseFloor === 'ALL' || String(r.floor) === String(houseFloor));
+    const pendingCount = floorRooms.filter(r => r.status === 'dirty' || r.status === 'cleaning').length;
+
+    const queueRooms = queueMode === 'action'
+        ? floorRooms.filter(r => r.status === 'dirty' || r.status === 'cleaning')
+        : floorRooms;
+    const visibleRooms = [...queueRooms].sort((a, b) => {
+        const rankDiff = (PRIORITY_RANK[a.status] ?? 9) - (PRIORITY_RANK[b.status] ?? 9);
+        return rankDiff !== 0 ? rankDiff : a.id - b.id;
+    });
 
     return (
         <div className="mx-auto max-w-2xl space-y-4">
@@ -41,8 +60,39 @@ export default function HousekeepingView({
                         </p>
                     </div>
 
-                    {/* Housekeeping Floor Selector */}
-                    <div className="flex items-center gap-2">
+                    {/* Queue + Housekeeping Floor Selectors */}
+                    <div className="flex flex-wrap items-center gap-2">
+                        <div
+                            role="group"
+                            aria-label={dict.queueFilterLabel}
+                            className="flex items-center gap-0.5 rounded-lg border border-ink-900/[0.07] bg-bone-100/70 p-0.5"
+                        >
+                            <button
+                                type="button"
+                                aria-pressed={queueMode === 'action'}
+                                onClick={() => setQueueMode('action')}
+                                className={`cursor-pointer whitespace-nowrap rounded-[6px] px-2.5 py-1 text-[11px] font-semibold transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60 ${
+                                    queueMode === 'action'
+                                        ? 'bg-white text-ink-900 shadow-[0_1px_2px_rgba(16,20,26,0.10)]'
+                                        : 'text-stone-600 hover:text-ink-900'
+                                }`}
+                            >
+                                {dict.actionNeeded} <span className="tabular-nums text-stone-500">{pendingCount}</span>
+                            </button>
+                            <button
+                                type="button"
+                                aria-pressed={queueMode === 'all'}
+                                onClick={() => setQueueMode('all')}
+                                className={`cursor-pointer whitespace-nowrap rounded-[6px] px-2.5 py-1 text-[11px] font-semibold transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60 ${
+                                    queueMode === 'all'
+                                        ? 'bg-white text-ink-900 shadow-[0_1px_2px_rgba(16,20,26,0.10)]'
+                                        : 'text-stone-600 hover:text-ink-900'
+                                }`}
+                            >
+                                {dict.allRoomsFilter} <span className="tabular-nums text-stone-500">{floorRooms.length}</span>
+                            </button>
+                        </div>
+
                         <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500">
                             {dict.houseFloorSelect}
                         </span>
@@ -69,7 +119,7 @@ export default function HousekeepingView({
 
             {/* Room Turnover Cards */}
             <div className="space-y-3">
-                {filtered.map((room, index) => {
+                {visibleRooms.map((room, index) => {
                     const cfg = getStatusConfig(room.status, currentLang);
                     const cleaningMins = room.status === 'cleaning' ? getCleaningMinutes(room.cleaningStartedAt) : null;
 
@@ -169,19 +219,32 @@ export default function HousekeepingView({
                     );
                 })}
 
-                {filtered.length === 0 && (
+                {visibleRooms.length === 0 && (
                     <div className="rounded-xl border border-dashed border-ink-900/[0.14] bg-white p-10 text-center">
-                        <i className="fa-solid fa-broom mb-2 text-xl text-stone-300"></i>
+                        <i className={`fa-solid mb-2 text-xl ${queueMode === 'action' ? 'fa-circle-check text-brass-600' : 'fa-broom text-stone-300'}`}></i>
                         <p className="text-[12px] font-semibold text-stone-600">
-                            {currentLang === 'es' ? 'No hay habitaciones en este piso' : 'No rooms on this floor'}
+                            {queueMode === 'action' ? dict.queueEmptyAction : dict.queueEmptyAll}
                         </p>
-                        <button
-                            type="button"
-                            onClick={() => setHouseFloor('ALL')}
-                            className="mt-3 cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-4 py-2 text-[11px] font-semibold text-ink-900 transition hover:bg-bone-50"
-                        >
-                            {currentLang === 'es' ? 'Ver todos los pisos' : 'Show all floors'}
-                        </button>
+                        <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+                            {queueMode === 'action' && (
+                                <button
+                                    type="button"
+                                    onClick={() => setQueueMode('all')}
+                                    className="cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-4 py-2 text-[11px] font-semibold text-ink-900 transition hover:bg-bone-50"
+                                >
+                                    {dict.queueShowAllRooms}
+                                </button>
+                            )}
+                            {houseFloor !== 'ALL' && (
+                                <button
+                                    type="button"
+                                    onClick={() => setHouseFloor('ALL')}
+                                    className="cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-4 py-2 text-[11px] font-semibold text-ink-900 transition hover:bg-bone-50"
+                                >
+                                    {dict.queueShowAllFloors}
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>
