@@ -555,7 +555,7 @@ export default function App() {
     const activeEditRoom = useMemo(() => rooms.find(r => r.id === editModalRoomId), [rooms, editModalRoomId]);
 
     return (
-        <div className="app-shell flex min-h-screen flex-col font-sans text-ink-800 antialiased selection:bg-brass-500/25 selection:text-ink-900">
+        <div className={`app-shell flex min-h-screen flex-col font-sans antialiased selection:bg-brass-500/25 ${activeView === 'housekeeping' ? 'bg-[#0a0d14]' : 'text-ink-800'}`}>
             {/* Keyboard users skip the sticky header's controls */}
             <a
                 href="#main-content"
@@ -579,8 +579,8 @@ export default function App() {
                 onOpenRoomList={() => setIsRoomListOpen(true)}
             />
 
-            {/* Sub-header Progress & Stats (Desk & Housekeeping views) */}
-            {activeView !== 'audit' && (
+            {/* Sub-header Progress & Stats (Desk view only) */}
+            {activeView === 'desk' && (
                 <>
                     <ReadinessBar rooms={rooms} currentLang={currentLang} />
                     <StatsBar
@@ -614,7 +614,7 @@ export default function App() {
             )}
 
             {/* MAIN CONTENT AREA */}
-            <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 outline-none sm:px-6">
+            <main id="main-content" tabIndex={-1} className={`mx-auto w-full flex-1 outline-none ${activeView === 'housekeeping' ? 'max-w-[1550px] px-3 sm:px-6 py-5' : 'max-w-7xl px-4 py-6 sm:px-6'}`}>
                 {activeView === 'desk' && (
                     filteredRooms.length > 0 ? (
                         <>
