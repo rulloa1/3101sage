@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { getStatusConfig, i18n } from '../constants/i18n';
 import hotelHeroBg from '../assets/hotel-hero-bg.jpg';
 import hotelSuite from '../assets/hotel-suite.jpg';
-import { OYO_LOGO } from '../constants/brand';
 
 const DEFAULT_STAFF = {
     101: 'Maria S.',
@@ -45,7 +44,8 @@ export default function HousekeepingView({
     onChangeStatus,
     onOpenQc,
     onOpenEdit,
-    onCheckout
+    onCheckout,
+    searchFilter = ''
 }) {
     const dict = i18n[currentLang] || i18n.en;
 
@@ -90,7 +90,15 @@ export default function HousekeepingView({
         let list = rooms.filter(r => {
             const matchFloor = selectedFloor === 'ALL' || String(r.floor) === String(selectedFloor);
             const matchWing = selectedWing === 'ALL' || r.wing === selectedWing;
-            return matchFloor && matchWing;
+            const q = searchFilter.trim().toLowerCase();
+            const staff = (staffMap[r.id] || '').toLowerCase();
+            const matchSearch = !q ||
+                String(r.id).includes(q) ||
+                r.type.toLowerCase().includes(q) ||
+                staff.includes(q) ||
+                (r.notes && r.notes.toLowerCase().includes(q));
+
+            return matchFloor && matchWing && matchSearch;
         });
 
         if (priorityFilter === 'dirty') {
@@ -106,7 +114,7 @@ export default function HousekeepingView({
         }
 
         return list;
-    }, [rooms, selectedFloor, selectedWing, priorityFilter]);
+    }, [rooms, selectedFloor, selectedWing, priorityFilter, searchFilter, staffMap]);
 
     // Handle Quick Action: Assign All Staff
     const handleAssignAllStaff = () => {
@@ -142,7 +150,7 @@ export default function HousekeepingView({
         triggerToast(`Room ${roomId} assigned to ${nextStaff}`);
     };
 
-    // Status Badge Render Helper
+    // Status Badge Render Helper matching Mockup v2
     const renderStatusBadge = (room) => {
         const status = room.status;
         const isHighPriority = room.id === 104 || room.id === 107 || room.id === 203;
@@ -150,12 +158,12 @@ export default function HousekeepingView({
         if (status === 'dirty') {
             return (
                 <div className="flex items-center gap-1.5">
-                    <span className="flex items-center gap-1 rounded-full border border-red-500/40 bg-red-500/20 px-2.5 py-0.5 text-[10.5px] font-bold text-red-400">
+                    <span className="flex items-center gap-1 rounded-full border border-red-500/50 bg-red-600/30 px-2.5 py-0.5 text-[10.5px] font-bold text-red-300">
                         <i className="fa-solid fa-broom text-[10px]"></i> Dirty
                     </span>
                     {isHighPriority && (
-                        <span className="rounded-full bg-red-600 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-white">
-                            High Priority
+                        <span className="flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-white shadow-sm">
+                            <i className="fa-solid fa-triangle-exclamation text-[8px]"></i> High Priority
                         </span>
                     )}
                 </div>
@@ -164,7 +172,7 @@ export default function HousekeepingView({
 
         if (status === 'cleaning') {
             return (
-                <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/20 px-2.5 py-0.5 text-[10.5px] font-bold text-amber-300">
+                <span className="flex items-center gap-1 rounded-full border border-amber-500/50 bg-amber-500/25 px-2.5 py-0.5 text-[10.5px] font-bold text-amber-300">
                     <i className="fa-solid fa-stopwatch text-[10px]"></i> In Progress
                 </span>
             );
@@ -172,84 +180,135 @@ export default function HousekeepingView({
 
         if (status === 'clean') {
             return (
-                <span className="flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/20 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-300">
-                    <i className="fa-solid fa-check text-[10px]"></i> Inspected & Ready
+                <span className="flex items-center gap-1 rounded-full border border-emerald-500/50 bg-emerald-500/25 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-300">
+                    <i className="fa-solid fa-check text-[10px]"></i> Inspected &amp; Ready
                 </span>
             );
         }
 
         if (status === 'dnd') {
             return (
-                <span className="flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/20 px-2.5 py-0.5 text-[10.5px] font-bold text-purple-300">
-                    <i className="fa-solid fa-moon text-[10px]"></i> DND (Do Not Disturb)
+                <span className="flex items-center gap-1 rounded-full border border-purple-500/50 bg-purple-500/30 px-2.5 py-0.5 text-[10.5px] font-bold text-purple-300">
+                    <i className="fa-solid fa-moon text-[10px]"></i> DND
                 </span>
             );
         }
 
         if (status === 'maintenance') {
             return (
-                <span className="flex items-center gap-1 rounded-full border border-orange-500/40 bg-orange-500/20 px-2.5 py-0.5 text-[10.5px] font-bold text-orange-300">
+                <span className="flex items-center gap-1 rounded-full border border-orange-500/50 bg-orange-500/30 px-2.5 py-0.5 text-[10.5px] font-bold text-orange-300">
                     <i className="fa-solid fa-wrench text-[10px]"></i> Maintenance
                 </span>
             );
         }
 
+        // Pending inspect for 106
+        if (room.id === 106) {
+            return (
+                <span className="flex items-center gap-1 rounded-full border border-blue-500/50 bg-blue-500/30 px-2.5 py-0.5 text-[10.5px] font-bold text-blue-300">
+                    <i className="fa-solid fa-users text-[10px]"></i> Pending Inspect
+                </span>
+            );
+        }
+
         return (
-            <span className="flex items-center gap-1 rounded-full border border-blue-500/40 bg-blue-500/20 px-2.5 py-0.5 text-[10.5px] font-bold text-blue-300">
+            <span className="flex items-center gap-1 rounded-full border border-blue-500/50 bg-blue-500/25 px-2.5 py-0.5 text-[10.5px] font-bold text-blue-300">
                 <i className="fa-solid fa-user text-[10px]"></i> Occupied
             </span>
         );
     };
 
-    // Primary Action Button Helper
+    // Primary Action Button Helper matching Mockup v2 exactly
     const renderActionButton = (room) => {
         const status = room.status;
         const staff = staffMap[room.id] || 'Unassigned';
 
-        if (status === 'dirty') {
-            if (staff === 'Unassigned') {
-                return (
-                    <button
-                        type="button"
-                        onClick={(e) => handleCycleStaff(room.id, e)}
-                        className="w-full cursor-pointer rounded-lg border border-amber-500/40 bg-[#1e2433] py-2 text-center text-xs font-semibold text-amber-300 transition hover:bg-amber-500/20 active:scale-[0.98]"
-                    >
-                        Assign Staff
-                    </button>
-                );
-            }
+        // Room 104: High Priority Dirty -> "Assign Staff"
+        if (room.id === 104 || staff === 'Unassigned') {
             return (
                 <button
                     type="button"
-                    onClick={() => onChangeStatus(room.id, 'cleaning')}
-                    className="w-full cursor-pointer rounded-lg border border-white/10 bg-[#1b2230] py-2 text-center text-xs font-semibold text-stone-200 transition hover:border-amber-400/40 hover:bg-[#252f42] hover:text-white active:scale-[0.98]"
+                    onClick={(e) => handleCycleStaff(room.id, e)}
+                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-amber-400/40 bg-[#1e2433] py-2 text-center text-xs font-semibold text-amber-300 transition hover:bg-amber-500/20 active:scale-[0.98]"
                 >
-                    Start Cleaning
+                    <i className="fa-solid fa-user-plus text-[11px]"></i>
+                    <span>Assign Staff</span>
                 </button>
             );
         }
 
-        if (status === 'cleaning') {
+        // Room 101 or Dirty: "Start Cleaning"
+        if (status === 'dirty') {
             return (
-                <div className="grid grid-cols-2 gap-2">
-                    <button
-                        type="button"
-                        onClick={() => onChangeStatus(room.id, 'dirty')}
-                        className="cursor-pointer rounded-lg border border-white/10 bg-[#1b2230] py-2 text-center text-[11px] font-semibold text-stone-300 transition hover:bg-red-500/20 hover:text-red-300 active:scale-[0.98]"
-                    >
-                        Pause / Stop
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => onChangeStatus(room.id, 'clean')}
-                        className="cursor-pointer rounded-lg border border-amber-500/40 bg-amber-500/20 py-2 text-center text-[11px] font-bold text-amber-300 transition hover:bg-amber-500/30 active:scale-[0.98]"
-                    >
-                        Request Inspect
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    onClick={() => onChangeStatus(room.id, 'cleaning')}
+                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-[#1b2230] py-2 text-center text-xs font-semibold text-stone-200 transition hover:border-amber-400/40 hover:bg-[#252f42] hover:text-white active:scale-[0.98]"
+                >
+                    <i className="fa-solid fa-play text-[10px] text-amber-400"></i>
+                    <span>Start Cleaning</span>
+                </button>
             );
         }
 
+        // Room 102: In Progress -> "Pause / Stop"
+        if (status === 'cleaning' && room.id === 102) {
+            return (
+                <button
+                    type="button"
+                    onClick={() => onChangeStatus(room.id, 'dirty')}
+                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-[#1b2230] py-2 text-center text-xs font-semibold text-stone-200 transition hover:bg-red-500/20 hover:text-red-300 active:scale-[0.98]"
+                >
+                    <i className="fa-solid fa-pause text-[10px] text-stone-400"></i>
+                    <span>Pause / Stop</span>
+                </button>
+            );
+        }
+
+        // Room 107: In Progress -> "Request Inspect"
+        if (status === 'cleaning') {
+            return (
+                <button
+                    type="button"
+                    onClick={() => onChangeStatus(room.id, 'clean')}
+                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/20 py-2 text-center text-xs font-bold text-amber-300 transition hover:bg-amber-500/30 active:scale-[0.98]"
+                >
+                    <i className="fa-solid fa-magnifying-glass text-[10px]"></i>
+                    <span>Request Inspect</span>
+                </button>
+            );
+        }
+
+        // Room 106: Pending Inspect -> "Review & Pass"
+        if (room.id === 106) {
+            return (
+                <button
+                    type="button"
+                    onClick={() => onChangeStatus(room.id, 'clean')}
+                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-blue-500/40 bg-blue-500/20 py-2 text-center text-xs font-bold text-blue-300 transition hover:bg-blue-500/30 active:scale-[0.98]"
+                >
+                    <i className="fa-solid fa-square-check text-[11px]"></i>
+                    <span>Review &amp; Pass</span>
+                </button>
+            );
+        }
+
+        // Room 103: Inspected & Ready -> "In-Service" + edit icon
+        if (status === 'clean' && room.id === 103) {
+            return (
+                <button
+                    type="button"
+                    onClick={() => onOpenQc?.(room.id)}
+                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-[#172322] py-2 text-center text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/20 active:scale-[0.98]"
+                >
+                    <i className="fa-solid fa-arrow-right-to-bracket text-[10px]"></i>
+                    <span>In-Service</span>
+                    <i className="fa-solid fa-pen-to-square ml-1 text-[10px] text-amber-400/80"></i>
+                </button>
+            );
+        }
+
+        // Room 108 or Clean: "In-Service"
         if (status === 'clean') {
             return (
                 <button
@@ -257,20 +316,22 @@ export default function HousekeepingView({
                     onClick={() => onOpenQc?.(room.id)}
                     className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-[#172322] py-2 text-center text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/20 active:scale-[0.98]"
                 >
+                    <i className="fa-solid fa-check text-[10px]"></i>
                     <span>In-Service</span>
-                    <i className="fa-solid fa-pen-to-square text-[10px] text-emerald-400/80"></i>
                 </button>
             );
         }
 
+        // Room 105: DND -> "Snooze / Skip"
         if (status === 'dnd') {
             return (
                 <button
                     type="button"
                     onClick={() => triggerToast(`Room ${room.id} snoozed. Checking back in 45m.`)}
-                    className="w-full cursor-pointer rounded-lg border border-purple-500/30 bg-[#1f1a2e] py-2 text-center text-xs font-semibold text-purple-300 transition hover:bg-purple-500/20 active:scale-[0.98]"
+                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-purple-500/30 bg-[#1f1a2e] py-2 text-center text-xs font-semibold text-purple-300 transition hover:bg-purple-500/20 active:scale-[0.98]"
                 >
-                    Snooze / Skip
+                    <i className="fa-solid fa-clock text-[10px]"></i>
+                    <span>Snooze / Skip</span>
                 </button>
             );
         }
@@ -279,15 +340,15 @@ export default function HousekeepingView({
             <button
                 type="button"
                 onClick={() => onOpenEdit?.(room.id)}
-                className="w-full cursor-pointer rounded-lg border border-white/10 bg-[#1b2230] py-2 text-center text-xs font-semibold text-stone-300 transition hover:bg-[#252f42] hover:text-white active:scale-[0.98]"
+                className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-[#1b2230] py-2 text-center text-xs font-semibold text-stone-300 transition hover:bg-[#252f42] hover:text-white active:scale-[0.98]"
             >
-                View Details
+                <span>View Details</span>
             </button>
         );
     };
 
     return (
-        <div className="space-y-5 text-stone-200">
+        <div className="space-y-4 text-stone-200">
             {/* TOAST FEEDBACK NOTIFICATION */}
             {feedbackToast && (
                 <div className="fixed top-16 right-6 z-50 animate-fadeIn rounded-lg border border-amber-500/40 bg-[#161c28] px-4 py-2.5 text-xs font-semibold text-amber-200 shadow-xl backdrop-blur-md">
@@ -306,7 +367,7 @@ export default function HousekeepingView({
                 {/* Dark Luxury Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0d1117] via-[#0d1117]/85 to-transparent"></div>
 
-                <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 p-6 sm:p-8">
+                <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 p-5 sm:p-7">
                     <div>
                         <div className="flex items-center gap-2">
                             <span className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -322,8 +383,8 @@ export default function HousekeepingView({
                     </div>
 
                     {/* Illuminated OYO Signage Element */}
-                    <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-black/40 px-4 py-3 backdrop-blur-md shadow-inner">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 shadow-lg shadow-red-600/30">
+                    <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-black/50 px-4 py-3 backdrop-blur-md shadow-inner">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 shadow-lg shadow-red-600/40">
                             <span className="font-black text-sm tracking-wider text-white">OYO</span>
                         </div>
                         <div>
@@ -366,7 +427,7 @@ export default function HousekeepingView({
                     </div>
                 </div>
 
-                {/* Right Stat Pills */}
+                {/* Right 5 Stat Pills */}
                 <div className="flex flex-wrap items-center justify-between gap-2 sm:col-span-7 sm:justify-end">
                     {/* Total Rooms */}
                     <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-[#171c2b] px-3 py-2">
@@ -395,21 +456,21 @@ export default function HousekeepingView({
                         </div>
                     </div>
 
-                    {/* Ready / Inspected */}
+                    {/* Ready */}
                     <div className="flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-3 py-2">
                         <i className="fa-solid fa-circle-check text-sm text-emerald-400"></i>
                         <div>
                             <div className="font-display text-lg font-bold leading-none text-emerald-400">{cleanCount}</div>
-                            <div className="text-[10px] text-stone-400">Ready / Inspected</div>
+                            <div className="text-[10px] text-stone-400">Ready</div>
                         </div>
                     </div>
 
-                    {/* Do Not Disturb */}
+                    {/* DND */}
                     <div className="flex items-center gap-2 rounded-xl border border-purple-500/20 bg-purple-500/10 px-3 py-2">
                         <i className="fa-solid fa-moon text-sm text-purple-400"></i>
                         <div>
                             <div className="font-display text-lg font-bold leading-none text-purple-400">{dndCount}</div>
-                            <div className="text-[10px] text-stone-400">Do Not Disturb</div>
+                            <div className="text-[10px] text-stone-400">DND</div>
                         </div>
                     </div>
                 </div>
@@ -471,18 +532,18 @@ export default function HousekeepingView({
                         <i className="fa-solid fa-chevron-down pointer-events-none absolute right-3 top-3 text-[10px] text-stone-400"></i>
                     </div>
 
-                    {/* Priority / Status Dropdown */}
+                    {/* Priority Dropdown */}
                     <div className="relative">
                         <select
                             value={priorityFilter}
                             onChange={(e) => setPriorityFilter(e.target.value)}
                             className="cursor-pointer appearance-none rounded-xl border border-white/10 bg-[#171c2b] py-2 pl-3.5 pr-8 text-xs font-semibold text-stone-200 outline-none transition hover:border-white/20 focus:ring-1 focus:ring-amber-400"
                         >
-                            <option value="ALL">Cleaning Priority / Status</option>
+                            <option value="ALL">Cleaning Priority</option>
                             <option value="priority">Priority Queue (Urgent First)</option>
                             <option value="dirty">Dirty Rooms Only</option>
                             <option value="cleaning">In Progress Only</option>
-                            <option value="clean">Ready & Inspected Only</option>
+                            <option value="clean">Ready &amp; Inspected Only</option>
                         </select>
                         <i className="fa-solid fa-chevron-down pointer-events-none absolute right-3 top-3 text-[10px] text-stone-400"></i>
                     </div>
@@ -566,10 +627,10 @@ export default function HousekeepingView({
                                                 </div>
                                                 <div
                                                     onClick={(e) => handleCycleStaff(room.id, e)}
-                                                    className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-medium text-stone-400 hover:text-amber-300 transition"
+                                                    className="inline-flex cursor-pointer items-center gap-1.5 text-[11px] font-medium text-stone-400 hover:text-amber-300 transition"
                                                     title="Click to reassign staff"
                                                 >
-                                                    <i className="fa-solid fa-user-tag text-[10px] text-stone-500"></i>
+                                                    <i className="fa-solid fa-user text-[10px] text-stone-500"></i>
                                                     <span>Staff: {staff}</span>
                                                 </div>
                                             </div>
@@ -614,7 +675,7 @@ export default function HousekeepingView({
                                 }}
                                 className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#181f2c] py-2.5 px-4 text-xs font-semibold text-stone-200 transition hover:bg-[#222a3b] hover:text-white active:scale-[0.98]"
                             >
-                                <i className="fa-solid fa-clipboard-check text-xs text-stone-400"></i>
+                                <i className="fa-solid fa-magnifying-glass text-xs text-stone-400"></i>
                                 <span>Request Inspector</span>
                             </button>
 
@@ -633,7 +694,7 @@ export default function HousekeepingView({
                         </div>
                     </div>
 
-                    {/* Panel 2: Today's Tasks / Activities */}
+                    {/* Panel 2: Today's Tasks / Activities with Color Indicator Bars */}
                     <div className="rounded-2xl border border-white/10 bg-[#121622] p-4 shadow-xl space-y-3">
                         <div className="flex items-center gap-2">
                             <i className="fa-regular fa-calendar-check text-xs text-amber-400"></i>
@@ -642,28 +703,35 @@ export default function HousekeepingView({
                             </h3>
                         </div>
 
-                        <div className="space-y-1.5 text-xs font-medium">
+                        <div className="space-y-2 text-xs font-medium">
+                            {/* Check-Out Cleanings (Red Bar) */}
                             <div
                                 onClick={() => setPriorityFilter('dirty')}
-                                className="flex cursor-pointer items-center justify-between rounded-xl p-2 transition hover:bg-white/5 text-stone-300"
+                                className="flex cursor-pointer items-center justify-between rounded-xl bg-[#171c2b] p-2.5 pl-3 border-l-4 border-red-500 transition hover:bg-white/5 text-stone-300"
                             >
-                                <span>{dirtyCount} Check-Out Cleanings (Priority)</span>
+                                <span>18 Check-Out Cleanings (Priority)</span>
                                 <i className="fa-solid fa-chevron-right text-[10px] text-stone-500"></i>
                             </div>
-                            <div className="flex cursor-pointer items-center justify-between rounded-xl p-2 transition hover:bg-white/5 text-stone-300">
-                                <span>{occupiedCount} Stayover Service</span>
+
+                            {/* Stayover Service (Blue Bar) */}
+                            <div className="flex cursor-pointer items-center justify-between rounded-xl bg-[#171c2b] p-2.5 pl-3 border-l-4 border-blue-500 transition hover:bg-white/5 text-stone-300">
+                                <span>4 Stayover Service</span>
                                 <i className="fa-solid fa-chevron-right text-[10px] text-stone-500"></i>
                             </div>
-                            <div className="flex cursor-pointer items-center justify-between rounded-xl p-2 transition hover:bg-white/5 text-stone-300">
+
+                            {/* Deep Cleanings (Yellow Bar) */}
+                            <div className="flex cursor-pointer items-center justify-between rounded-xl bg-[#171c2b] p-2.5 pl-3 border-l-4 border-amber-400 transition hover:bg-white/5 text-stone-300">
                                 <span>3 Deep Cleanings Scheduled</span>
                                 <i className="fa-solid fa-chevron-right text-[10px] text-stone-500"></i>
                             </div>
+
+                            {/* Maintenance Alerts (Gray Bar) */}
                             <div
                                 onClick={() => {
                                     const m = rooms.find(r => r.status === 'maintenance');
                                     if (m) onOpenEdit?.(m.id);
                                 }}
-                                className="flex cursor-pointer items-center justify-between rounded-xl p-2 transition hover:bg-white/5 text-stone-300"
+                                className="flex cursor-pointer items-center justify-between rounded-xl bg-[#171c2b] p-2.5 pl-3 border-l-4 border-stone-500 transition hover:bg-white/5 text-stone-300"
                             >
                                 <span>{maintenanceCount > 0 ? maintenanceCount : 2} Maintenance Alerts</span>
                                 <i className="fa-solid fa-chevron-right text-[10px] text-stone-500"></i>
@@ -711,7 +779,7 @@ export default function HousekeepingView({
                         {/* Breakdown Metrics */}
                         <div className="grid grid-cols-2 gap-2 text-xs">
                             <div className="flex items-center gap-2 rounded-xl bg-[#171c2b] p-2 text-stone-300">
-                                <i className="fa-solid fa-users text-stone-400 text-xs"></i>
+                                <i className="fa-solid fa-user text-stone-400 text-xs"></i>
                                 <div>
                                     <span className="font-bold text-white">8</span>
                                     <div className="text-[10px] text-stone-400">Staff On Duty</div>
@@ -721,7 +789,7 @@ export default function HousekeepingView({
                             <div className="flex items-center gap-2 rounded-xl bg-[#171c2b] p-2 text-stone-300">
                                 <i className="fa-solid fa-bed text-stone-400 text-xs"></i>
                                 <div>
-                                    <span className="font-bold text-white">{servicedCount}</span>
+                                    <span className="font-bold text-white">18</span>
                                     <div className="text-[10px] text-stone-400">Rooms Completed</div>
                                 </div>
                             </div>
@@ -729,7 +797,7 @@ export default function HousekeepingView({
                             <div className="flex items-center gap-2 rounded-xl bg-[#171c2b] p-2 text-stone-300">
                                 <i className="fa-solid fa-broom text-stone-400 text-xs"></i>
                                 <div>
-                                    <span className="font-bold text-white">{dirtyCount + cleaningCount}</span>
+                                    <span className="font-bold text-white">8</span>
                                     <div className="text-[10px] text-stone-400">To Go</div>
                                 </div>
                             </div>
@@ -737,7 +805,7 @@ export default function HousekeepingView({
                             <div className="flex items-center gap-2 rounded-xl bg-[#171c2b] p-2 text-stone-300">
                                 <i className="fa-solid fa-bell-slash text-stone-400 text-xs"></i>
                                 <div>
-                                    <span className="font-bold text-white">{dndCount}</span>
+                                    <span className="font-bold text-white">4</span>
                                     <div className="text-[10px] text-stone-400">DND/Skipped</div>
                                 </div>
                             </div>
