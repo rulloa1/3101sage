@@ -8,9 +8,9 @@ function getCleaningMinutes(startedAt) {
 }
 
 const primaryAction =
-    'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-ink-900 px-2.5 py-2 text-[11px] font-semibold text-white transition hover:bg-ink-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60';
+    'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-[#1b2230] hover:bg-[#252f42] border border-white/10 px-2.5 py-2 text-[11px] font-semibold text-stone-200 transition hover:border-amber-400/40 hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-400';
 const subtleAction =
-    'flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-ink-900/[0.1] bg-white px-2.5 py-2 text-[11px] font-semibold text-stone-600 transition hover:border-ink-900/[0.18] hover:bg-bone-50 hover:text-ink-900 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60';
+    'flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-[#171c2b] px-2.5 py-2 text-[11px] font-semibold text-stone-400 transition hover:bg-white/10 hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-400';
 
 export default function DeskView({
     rooms,
@@ -48,11 +48,18 @@ export default function DeskView({
                 const isCleaning = room.status === 'cleaning';
                 const isConfirming = confirmingCheckoutId === room.id;
 
+                // Dark status badge styling
+                let badgeStyle = 'border border-blue-500/40 bg-blue-500/20 text-blue-300';
+                if (room.status === 'clean') badgeStyle = 'border border-emerald-500/40 bg-emerald-500/20 text-emerald-300';
+                if (room.status === 'dirty') badgeStyle = 'border border-red-500/40 bg-red-500/20 text-red-300';
+                if (room.status === 'cleaning') badgeStyle = 'border border-amber-500/40 bg-amber-500/20 text-amber-300';
+                if (room.status === 'dnd' || room.status === 'maintenance') badgeStyle = 'border border-purple-500/40 bg-purple-500/20 text-purple-300';
+
                 return (
                     <article
                         key={room.id}
                         style={{ animationDelay: `${Math.min(index, 12) * 25}ms` }}
-                        className="animate-cardIn group flex flex-col justify-between overflow-hidden rounded-xl border border-ink-900/[0.08] bg-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:border-ink-900/[0.14] hover:shadow-card-hover"
+                        className="animate-cardIn group flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-[#141924] shadow-xl transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-400/40 hover:shadow-2xl"
                     >
                         <span className={`block h-[2px] w-full ${cfg.accent}`} aria-hidden="true"></span>
 
@@ -64,46 +71,46 @@ export default function DeskView({
                                         <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
                                             Suite
                                         </span>
-                                        <span className="font-display text-[27px] leading-none tracking-tight text-ink-900">
+                                        <span className="font-display text-[27px] leading-none tracking-tight text-white">
                                             {room.id}
                                         </span>
                                         {isCleaning && (
-                                            <span className="inline-block h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-amber-500"></span>
+                                            <span className="inline-block h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-amber-400"></span>
                                         )}
                                     </h3>
-                                    <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10.5px] font-medium text-stone-500">
+                                    <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10.5px] font-medium text-stone-400">
                                         <span>{room.type}</span>
-                                        <span className="text-stone-300" aria-hidden="true">·</span>
+                                        <span className="text-stone-600" aria-hidden="true">&bull;</span>
                                         <span>Floor {room.floor}</span>
                                         {room.wing && (
                                             <>
-                                                <span className="text-stone-300" aria-hidden="true">·</span>
+                                                <span className="text-stone-600" aria-hidden="true">&bull;</span>
                                                 <span>{room.wing}</span>
                                             </>
                                         )}
                                     </p>
                                 </div>
-                                <span className={`inline-flex flex-shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${cfg.badge} ${isCleaning ? 'pulse-live' : ''}`}>
+                                <span className={`inline-flex flex-shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${badgeStyle} ${isCleaning ? 'pulse-live' : ''}`}>
                                     <span className={`h-1 w-1 rounded-full ${cfg.dot}`} aria-hidden="true"></span>
                                     {cfg.label}
                                 </span>
                             </div>
 
                             {/* Card Body */}
-                            <div className="space-y-2 border-t border-ink-900/[0.06] px-4 py-3">
+                            <div className="space-y-2 border-t border-white/5 px-4 py-3">
                                 {cleaningMins && (
                                     <div className="flex items-center justify-between text-[10.5px] font-medium">
-                                        <span className="flex items-center gap-1.5 text-stone-500">
-                                            <i className="fa-solid fa-stopwatch text-[10px] text-brass-500"></i>
+                                        <span className="flex items-center gap-1.5 text-stone-400">
+                                            <i className="fa-solid fa-stopwatch text-[10px] text-amber-400"></i>
                                             In progress
                                         </span>
-                                        <span className="tabular-nums font-semibold text-ink-800">{cleaningMins} min</span>
+                                        <span className="tabular-nums font-semibold text-amber-300">{cleaningMins} min</span>
                                     </div>
                                 )}
 
                                 {room.notes ? (
-                                    <div className="border-l-2 border-brass-300 py-0.5 pl-2.5">
-                                        <span className="text-[11px] font-medium leading-relaxed text-stone-600">{room.notes}</span>
+                                    <div className="rounded-lg border border-amber-400/20 bg-amber-400/5 py-1 px-2.5 text-amber-200">
+                                        <span className="text-[11px] font-medium leading-relaxed">{room.notes}</span>
                                     </div>
                                 ) : (
                                     <p className="py-0.5 text-[10.5px] italic text-stone-500">No special notes</p>
@@ -114,7 +121,7 @@ export default function DeskView({
                         {/* Card Footer Actions */}
                         <div className="px-3.5 pb-3.5">
                             {isConfirming ? (
-                                <div className="space-y-2 border-t border-ink-900/[0.06] pt-2.5">
+                                <div className="space-y-2 border-t border-white/5 pt-2.5">
                                     <input
                                         type="text"
                                         value={guestName}
@@ -126,7 +133,7 @@ export default function DeskView({
                                         placeholder="Guest name (optional)"
                                         autoFocus
                                         aria-label={`Guest name for room ${room.id} checkout`}
-                                        className="w-full rounded-md border border-ink-900/[0.1] bg-white px-2.5 py-1.5 text-[11px] font-medium text-ink-900 placeholder:text-stone-500 transition focus:border-brass-500/40 focus:outline-none focus:ring-2 focus:ring-brass-500/15"
+                                        className="w-full rounded-lg border border-white/10 bg-[#171c2b] px-2.5 py-1.5 text-[11px] font-medium text-white placeholder:text-stone-500 transition focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
                                     />
                                     <div className="flex gap-2">
                                         <button type="button" onClick={() => handleCheckoutConfirm(room.id)} className={primaryAction}>
@@ -136,17 +143,17 @@ export default function DeskView({
                                             type="button"
                                             onClick={handleCheckoutCancel}
                                             aria-label="Cancel checkout"
-                                            className="cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-3 py-2 text-[11px] font-semibold text-stone-500 transition hover:bg-bone-50 hover:text-ink-900 active:scale-[0.98]"
+                                            className="cursor-pointer rounded-lg border border-white/10 bg-[#171c2b] px-3 py-2 text-[11px] font-semibold text-stone-400 transition hover:bg-white/10 hover:text-white active:scale-[0.98]"
                                         >
                                             <i className="fa-solid fa-xmark text-[11px]"></i>
                                         </button>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex gap-2 border-t border-ink-900/[0.06] pt-2.5">
+                                <div className="flex gap-2 border-t border-white/5 pt-2.5">
                                     {isDirty && (
                                         <button type="button" onClick={() => onChangeStatus(room.id, 'cleaning')} className={primaryAction}>
-                                            <i className="fa-solid fa-play text-[10px]"></i> <span>Start clean</span>
+                                            <i className="fa-solid fa-play text-[10px] text-amber-400"></i> <span>Start clean</span>
                                         </button>
                                     )}
 
@@ -157,13 +164,13 @@ export default function DeskView({
                                             className={primaryAction}
                                             title="Perform the 3-point QC inspection and mark clean"
                                         >
-                                            <i className="fa-solid fa-clipboard-check text-[10px]"></i> <span>QC &amp; clean</span>
+                                            <i className="fa-solid fa-clipboard-check text-[10px] text-emerald-400"></i> <span>QC &amp; clean</span>
                                         </button>
                                     )}
 
                                     {room.status === 'occupied' && (
                                         <button type="button" onClick={() => setConfirmingCheckoutId(room.id)} className={primaryAction}>
-                                            <i className="fa-solid fa-right-from-bracket text-[10px]"></i> <span>Check out</span>
+                                            <i className="fa-solid fa-right-from-bracket text-[10px] text-blue-400"></i> <span>Check out</span>
                                         </button>
                                     )}
 
@@ -171,7 +178,7 @@ export default function DeskView({
                                         <button
                                             type="button"
                                             onClick={() => onChangeStatus(room.id, 'dirty')}
-                                            className={`${subtleAction} flex-1 hover:border-rose-200 hover:bg-rose-50/60 hover:text-rose-700`}
+                                            className={`${subtleAction} flex-1 hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-300`}
                                         >
                                             <i className="fa-solid fa-broom text-[10px]"></i> <span>Mark dirty</span>
                                         </button>
@@ -181,7 +188,7 @@ export default function DeskView({
                                         type="button"
                                         onClick={() => onOpenEdit(room.id)}
                                         aria-label={`Edit room ${room.id}`}
-                                        className="flex cursor-pointer items-center justify-center rounded-md border border-ink-900/[0.1] bg-white px-2.5 py-2 text-[11px] font-semibold text-stone-500 transition hover:border-ink-900/[0.18] hover:bg-bone-50 hover:text-ink-900 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60"
+                                        className="flex cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-[#171c2b] px-2.5 py-2 text-[11px] font-semibold text-stone-400 transition hover:border-amber-400/40 hover:bg-white/10 hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-400"
                                         title="Edit room details"
                                     >
                                         <i className="fa-solid fa-sliders text-[11px]"></i>

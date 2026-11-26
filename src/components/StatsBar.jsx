@@ -11,15 +11,15 @@ export default function StatsBar({ rooms, currentStatusFilter, onStatusFilter, c
     const dict = i18n[currentLang] || i18n.en;
 
     const stats = [
-        { key: 'clean', value: clean, label: dict.clean, dot: 'bg-emerald-500', line: 'bg-emerald-500', active: 'bg-emerald-50/40' },
-        { key: 'cleaning', value: cleaning, label: dict.cleaning, dot: 'bg-amber-500', line: 'bg-amber-500', active: 'bg-amber-50/40' },
-        { key: 'dirty', value: dirty, label: dict.dirty, dot: 'bg-rose-500', line: 'bg-rose-500', active: 'bg-rose-50/40' },
-        { key: 'occupied', value: occupied, label: dict.occupied, dot: 'bg-blue-600', line: 'bg-blue-600', active: 'bg-blue-50/40' },
-        { key: 'maintenance', value: maint, label: dict.maintenance, dot: 'bg-slate-500', line: 'bg-slate-500', active: 'bg-slate-50' }
+        { key: 'clean', value: clean, label: dict.clean, dot: 'bg-emerald-400', line: 'bg-emerald-400', active: 'bg-emerald-500/15' },
+        { key: 'cleaning', value: cleaning, label: dict.cleaning, dot: 'bg-amber-400', line: 'bg-amber-400', active: 'bg-amber-500/15' },
+        { key: 'dirty', value: dirty, label: dict.dirty, dot: 'bg-rose-400', line: 'bg-rose-400', active: 'bg-rose-500/15' },
+        { key: 'occupied', value: occupied, label: dict.occupied, dot: 'bg-blue-400', line: 'bg-blue-400', active: 'bg-blue-500/15' },
+        { key: 'maintenance', value: maint, label: dict.maintenance, dot: 'bg-stone-400', line: 'bg-stone-400', active: 'bg-white/10' }
     ];
 
     return (
-        <section className="border-b border-ink-900/[0.07] bg-white/85 backdrop-blur-sm">
+        <section className="border-b border-white/10 bg-[#0d1017]/90 backdrop-blur-sm">
             <div className="mx-auto grid max-w-7xl grid-cols-2 sm:grid-cols-5">
                 {stats.map((stat) => {
                     const isActive = currentStatusFilter === stat.key;
@@ -30,17 +30,17 @@ export default function StatsBar({ rooms, currentStatusFilter, onStatusFilter, c
                             aria-pressed={isActive}
                             aria-label={`Filter by ${stat.label} (${stat.value})`}
                             onClick={() => onStatusFilter(stat.key)}
-                            className={`group relative flex cursor-pointer flex-col gap-1.5 border-b border-ink-900/[0.06] px-4 py-3.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-brass-500/60 sm:border-b-0 sm:border-l sm:px-5 sm:first:border-l-0 ${
-                                isActive ? stat.active : 'hover:bg-bone-50'
+                            className={`group relative flex cursor-pointer flex-col gap-1 border-b border-white/5 px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-amber-400 sm:border-b-0 sm:border-l sm:px-5 sm:first:border-l-0 ${
+                                isActive ? stat.active : 'hover:bg-white/[0.04]'
                             } ${stat.key === 'maintenance' ? 'col-span-2 border-b-0 sm:col-span-1' : ''}`}
                         >
                             <span className="flex items-center gap-2">
                                 <span className={`h-1.5 w-1.5 rounded-full ${stat.dot}`} aria-hidden="true"></span>
-                                <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500 transition-colors group-hover:text-stone-700">
+                                <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-400 transition-colors group-hover:text-stone-200">
                                     {stat.label}
                                 </span>
                             </span>
-                            <span className="font-display text-[30px] leading-none tabular-nums text-ink-900">
+                            <span className="font-display text-[26px] leading-none tabular-nums text-white">
                                 {stat.value}
                             </span>
                             <span

@@ -625,6 +625,8 @@ export default function App() {
             {/* Main Area: TopNav + Content */}
             <div className="flex min-w-0 flex-1 flex-col">
                 <TopNav
+                    activeView={activeView}
+                    setActiveView={handleSetViewMode}
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                     onOpenEarlyCheckin={() => setIsEarlyCheckinOpen(true)}

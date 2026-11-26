@@ -1,4 +1,5 @@
 import React from 'react';
+
 export default function FilterControls({
     currentFloor,
     setFloor,
@@ -19,22 +20,22 @@ export default function FilterControls({
     }, [rooms]);
 
     return (
-        <section className="border-b border-ink-900/[0.07] bg-white/60 px-4 py-2.5 backdrop-blur-sm sm:px-6">
-            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-2.5 text-xs">
+        <section className="border-b border-white/10 bg-[#121622] px-4 py-2.5 backdrop-blur-sm sm:px-6">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-2.5 text-xs text-stone-200">
                 {/* Floor segmented control */}
                 <div className="flex min-w-0 items-center gap-2.5 overflow-x-auto pb-0.5 sm:pb-0">
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500">Floor</span>
-                    <div className="flex items-center gap-0.5 rounded-lg border border-ink-900/[0.07] bg-bone-100/70 p-0.5">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-400">Floor</span>
+                    <div className="flex items-center gap-1 rounded-xl border border-white/5 bg-[#171c2b] p-1">
                         {['ALL', ...floors].map((floor) => (
                             <button
                                 key={floor}
                                 type="button"
                                 aria-pressed={currentFloor === floor}
                                 onClick={() => setFloor(floor)}
-                                className={`cursor-pointer whitespace-nowrap rounded-[6px] px-2.5 py-1 text-[11px] font-semibold transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60 ${
+                                className={`cursor-pointer whitespace-nowrap rounded-lg px-2.5 py-1 text-[11px] font-semibold transition ${
                                     currentFloor === floor
-                                        ? 'bg-white text-ink-900 shadow-[0_1px_2px_rgba(16,20,26,0.10)]'
-                                        : 'text-stone-600 hover:text-ink-900'
+                                        ? 'bg-gradient-to-r from-[#d4af37] via-[#e5c05b] to-[#d4af37] text-slate-950 font-bold shadow-md'
+                                        : 'text-stone-300 hover:text-white'
                                 }`}
                             >
                                 {floor === 'ALL' ? 'All' : floor}
@@ -42,12 +43,12 @@ export default function FilterControls({
                         ))}
                     </div>
 
-                    <span className="h-5 w-px bg-ink-900/[0.08]" aria-hidden="true"></span>
+                    <span className="h-4 w-px bg-white/10" aria-hidden="true"></span>
 
                     <button
                         type="button"
                         onClick={onWalkInMatch}
-                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1.5 text-[11px] font-semibold text-brass-700 transition hover:bg-brass-500/[0.09] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60"
+                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg border border-amber-400/30 bg-amber-400/10 px-2.5 py-1.5 text-[11px] font-semibold text-amber-300 transition hover:bg-amber-400/20 active:scale-[0.98]"
                     >
                         <i className="fa-solid fa-key text-[10px]"></i>
                         <span>Ready for walk-in</span>
@@ -57,7 +58,7 @@ export default function FilterControls({
                         <button
                             type="button"
                             onClick={onOpenAddRoom}
-                            className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1.5 text-[11px] font-semibold text-stone-500 transition hover:bg-ink-900/[0.04] hover:text-ink-900 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60"
+                            className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg border border-white/10 bg-[#171c2b] px-2.5 py-1.5 text-[11px] font-semibold text-stone-300 transition hover:bg-white/10 hover:text-white active:scale-[0.98]"
                             title="Add a custom room to inventory"
                         >
                             <i className="fa-solid fa-plus text-[10px]"></i>
@@ -69,14 +70,14 @@ export default function FilterControls({
                 {/* Search & reset */}
                 <div className="flex w-full items-center gap-2 sm:w-auto">
                     {currentStatusFilter !== 'ALL' && (
-                        <div className="flex animate-fadeIn items-center gap-1.5 rounded-md border border-ink-900/[0.08] bg-bone-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-800">
-                            <span className="text-stone-500">Filter</span>
-                            <span className="normal-case tracking-normal">{currentStatusFilter}</span>
+                        <div className="flex animate-fadeIn items-center gap-1.5 rounded-lg border border-white/10 bg-[#171c2b] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-stone-200">
+                            <span className="text-stone-400">Filter:</span>
+                            <span className="font-bold text-amber-300">{currentStatusFilter}</span>
                             <button
                                 type="button"
                                 onClick={resetFilters}
                                 aria-label="Clear status filter"
-                                className="cursor-pointer text-stone-500 transition hover:text-ink-900"
+                                className="cursor-pointer text-stone-400 transition hover:text-white ml-0.5"
                             >
                                 <i className="fa-solid fa-xmark text-[10px]"></i>
                             </button>
@@ -91,14 +92,14 @@ export default function FilterControls({
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Room, bed type, note…"
                             aria-label="Search rooms by number, type or note"
-                            className="w-full rounded-lg border border-ink-900/[0.09] bg-white py-1.5 pl-7 pr-7 text-[11px] text-ink-900 placeholder:text-stone-500 focus:border-brass-500/40 focus:outline-none focus:ring-2 focus:ring-brass-500/15"
+                            className="w-full rounded-xl border border-white/10 bg-[#171c2b] py-1.5 pl-7 pr-7 text-[11px] text-white placeholder:text-stone-500 focus:border-amber-400/50 focus:outline-none focus:ring-1 focus:ring-amber-400/30"
                         />
                         {searchQuery && (
                             <button
                                 type="button"
                                 onClick={() => setSearchQuery('')}
                                 aria-label="Clear search"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-stone-500 transition hover:text-ink-900"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-stone-400 transition hover:text-white"
                             >
                                 <i className="fa-solid fa-xmark text-[10px]"></i>
                             </button>
@@ -109,7 +110,7 @@ export default function FilterControls({
                         type="button"
                         onClick={onResetDemo}
                         aria-label="Reset rooms to demo layout"
-                        className="cursor-pointer rounded-md p-1.5 text-stone-500 transition hover:bg-ink-900/[0.04] hover:text-ink-900"
+                        className="cursor-pointer rounded-lg border border-white/5 bg-[#171c2b] p-1.5 text-stone-400 transition hover:bg-white/10 hover:text-white"
                         title="Reset rooms to demo layout"
                     >
                         <i className="fa-solid fa-rotate-left text-[11px]"></i>
