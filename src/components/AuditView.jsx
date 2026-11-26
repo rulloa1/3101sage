@@ -5,6 +5,7 @@ import hotelSuite from '../assets/hotel-suite.jpg';
 import hotelPool from '../assets/hotel-pool.jpg';
 import hotelFrontDeskParc from '../assets/hotel-front-desk-parc.jpg';
 import hotelGarageEntrance from '../assets/hotel-garage-entrance.jpg';
+import hotelNightExterior from '../assets/hotel-night-exterior.jpg';
 
 export default function AuditView({ onOpenMemo }) {
     const [earlyPerDay, setEarlyPerDay] = useState(3);
@@ -236,7 +237,23 @@ export default function AuditView({ onOpenMemo }) {
                         <i className="fa-solid fa-hotel"></i>
                         <span>Property Facade & Guest Amenities</span>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {/* Night Exterior & Outdoor Lounge Photo */}
+                        <div className="group relative h-52 overflow-hidden rounded-lg border border-ink-900/[0.08] shadow-xs">
+                            <div 
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                                style={{ backgroundImage: `url(${hotelNightExterior})` }}
+                            ></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                            <div className="absolute bottom-3 left-3 right-3 text-white">
+                                <span className="rounded-sm bg-amber-600 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
+                                    Night Arrival & Lounge
+                                </span>
+                                <h4 className="mt-1 font-display text-[15px] leading-snug text-white">Sage Rd Night Arrival</h4>
+                                <p className="text-[10.5px] text-slate-300">Porte-cochère gate & illuminated patio lounge</p>
+                            </div>
+                        </div>
+
                         {/* Facade Photo */}
                         <div className="group relative h-52 overflow-hidden rounded-lg border border-ink-900/[0.08] shadow-xs">
                             <div 
@@ -246,10 +263,10 @@ export default function AuditView({ onOpenMemo }) {
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
                             <div className="absolute bottom-3 left-3 right-3 text-white">
                                 <span className="rounded-sm bg-brass-600 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
-                                    Property Facade
+                                    Day Exterior
                                 </span>
-                                <h4 className="mt-1 font-display text-[16px] leading-snug text-white">3101 Sage Rd Exterior</h4>
-                                <p className="text-[11px] text-slate-300">Porte-cochère entrance & guest parking</p>
+                                <h4 className="mt-1 font-display text-[15px] leading-snug text-white">3101 Sage Rd Facade</h4>
+                                <p className="text-[10.5px] text-slate-300">Front entrance driveway & guest parking</p>
                             </div>
                         </div>
 
@@ -264,8 +281,8 @@ export default function AuditView({ onOpenMemo }) {
                                 <span className="rounded-sm bg-ink-900 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
                                     Guest Suite
                                 </span>
-                                <h4 className="mt-1 font-display text-[16px] leading-snug text-white">Actual Room Suite Interior</h4>
-                                <p className="text-[11px] text-slate-300">2 Queen & 1 Queen bed layouts with kitchenette</p>
+                                <h4 className="mt-1 font-display text-[15px] leading-snug text-white">Actual Room Suite Interior</h4>
+                                <p className="text-[10.5px] text-slate-300">2 Queen & 1 Queen suites with kitchen</p>
                             </div>
                         </div>
 
@@ -280,8 +297,8 @@ export default function AuditView({ onOpenMemo }) {
                                 <span className="rounded-sm bg-emerald-700 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
                                     Courtyard Pool
                                 </span>
-                                <h4 className="mt-1 font-display text-[16px] leading-snug text-white">Outdoor Swimming Pool</h4>
-                                <p className="text-[11px] text-slate-300">On-site recreation courtyard for guests</p>
+                                <h4 className="mt-1 font-display text-[15px] leading-snug text-white">Outdoor Swimming Pool</h4>
+                                <p className="text-[10.5px] text-slate-300">Recreation courtyard for guests</p>
                             </div>
                         </div>
                     </div>

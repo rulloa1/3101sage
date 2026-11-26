@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { getStatusConfig, i18n } from '../constants/i18n';
 import hotelHeroBg from '../assets/hotel-hero-bg.jpg';
+import hotelNightExterior from '../assets/hotel-night-exterior.jpg';
 import hotelSuite from '../assets/hotel-suite.jpg';
 
 const DEFAULT_STAFF = {
@@ -359,10 +360,10 @@ export default function HousekeepingView({
 
             {/* 1. HERO BANNER: RoomSync Pro™ Housekeeping Operations */}
             <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
-                {/* Background Hotel Exterior at Night */}
+                {/* Background Hotel Exterior at Night (Real 3101 Sage Photography) */}
                 <div
-                    className="absolute inset-0 bg-cover bg-center filter brightness-[0.55] contrast-[1.15]"
-                    style={{ backgroundImage: `url(${hotelHeroBg})` }}
+                    className="absolute inset-0 bg-cover bg-center filter brightness-[0.75] contrast-[1.1]"
+                    style={{ backgroundImage: `url(${hotelNightExterior})` }}
                 ></div>
                 {/* Dark Luxury Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0d1117] via-[#0d1117]/85 to-transparent"></div>
