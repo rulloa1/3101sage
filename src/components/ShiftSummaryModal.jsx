@@ -105,41 +105,41 @@ ${inventory?.source === 'imported' ? 'Inventory: owner room list' : 'NOTE: demo 
             role="dialog" 
             aria-modal="true" 
             aria-labelledby="shift-summary-title"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="animate-scaleIn w-full max-w-lg space-y-4 rounded-xl border border-ink-900/[0.08] bg-white p-6 shadow-panel">
-                <div className="flex items-center justify-between border-b border-ink-900/[0.06] pb-3">
+            <div className="animate-scaleIn w-full max-w-lg space-y-4 rounded-2xl border border-white/10 bg-[#141924] p-6 text-white shadow-2xl">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
                     <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">End of shift</p>
-                        <h3 id="shift-summary-title" className="mt-1 font-display text-[21px] leading-none text-ink-900">Operational Shift Summary</h3>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-400">End of shift</p>
+                        <h3 id="shift-summary-title" className="mt-1 font-display text-[21px] leading-none text-white">Operational Shift Summary</h3>
                     </div>
                     <button 
                         type="button"
                         onClick={onClose} 
                         aria-label="Close shift report"
-                        className="cursor-pointer w-8 h-8 rounded-lg text-stone-500 hover:text-slate-600 flex items-center justify-center"
+                        className="cursor-pointer w-8 h-8 rounded-lg text-stone-400 hover:text-white flex items-center justify-center transition"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <div className="space-y-2 whitespace-pre-wrap break-words select-all overflow-y-auto max-h-72 rounded-lg border border-ink-900/[0.08] bg-bone-50 p-4 font-mono text-[11px] leading-relaxed text-ink-800">
+                <div className="space-y-2 whitespace-pre-wrap break-words select-all overflow-y-auto max-h-72 rounded-xl border border-white/10 bg-[#0d1017] p-4 font-mono text-[11px] leading-relaxed text-amber-100/90">
                     {report}
                 </div>
 
-                <div className="flex justify-end gap-2 border-t border-ink-900/[0.06] pt-3">
+                <div className="flex justify-end gap-2 border-t border-white/10 pt-3">
                     <button 
                         type="button" 
                         onClick={onClose} 
-                        className="cursor-pointer rounded-md px-3.5 py-2 text-[11px] font-semibold text-stone-500 transition hover:bg-bone-50 hover:text-ink-900"
+                        className="cursor-pointer rounded-xl border border-white/10 bg-[#1b2230] px-4 py-2 text-[11px] font-semibold text-stone-300 transition hover:bg-white/10 hover:text-white"
                     >
                         Close
                     </button>
                     <button 
                         type="button" 
                         onClick={handleCopy} 
-                        className="flex cursor-pointer items-center gap-1.5 rounded-md bg-ink-900 px-4 py-2 text-[11px] font-semibold text-white shadow-sm transition hover:bg-ink-950 active:scale-[0.98]"
+                        className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c05b] to-[#d4af37] px-4 py-2 text-[11px] font-bold text-slate-950 shadow-md transition hover:brightness-110 active:scale-[0.98]"
                     >
                         <i className="fa-regular fa-copy"></i> Copy
                     </button>

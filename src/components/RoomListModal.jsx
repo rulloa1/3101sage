@@ -22,9 +22,9 @@ function downloadFile(name, content, type = 'text/csv;charset=utf-8') {
     }
 }
 
-const eyebrow = 'text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500';
-const fieldLabel = 'block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500';
-const ghostButton = 'flex cursor-pointer items-center gap-1.5 rounded-md border border-ink-900/[0.12] bg-white px-3 py-2 text-[11px] font-semibold text-ink-800 transition hover:border-ink-900/25 hover:bg-bone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-500/25';
+const eyebrow = 'text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-400';
+const fieldLabel = 'block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-400';
+const ghostButton = 'flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/10 bg-[#171c2b] px-3 py-2 text-[11px] font-semibold text-stone-200 transition hover:bg-white/10 hover:text-white';
 
 export default function RoomListModal({
     isOpen,
@@ -81,21 +81,21 @@ export default function RoomListModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="room-list-title"
-            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="animate-scaleIn max-h-[92vh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-xl border border-ink-900/[0.08] bg-white p-6 shadow-panel">
-                <div className="flex items-start justify-between gap-3 border-b border-ink-900/[0.07] pb-3">
+            <div className="animate-scaleIn max-h-[92vh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-2xl border border-white/10 bg-[#141924] p-6 text-white shadow-2xl">
+                <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3">
                     <div className="flex items-start gap-3">
-                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-bone-100 text-lg text-brass-600">
+                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 text-lg text-amber-400">
                             <i className="fa-solid fa-file-arrow-up"></i>
                         </div>
                         <div>
                             <p className={eyebrow}>Inventory</p>
-                            <h3 id="room-list-title" className="mt-1 font-display text-[21px] leading-none text-ink-900">
+                            <h3 id="room-list-title" className="mt-1 font-display text-[21px] leading-none text-white">
                                 Load the property's real room list
                             </h3>
-                            <p className="mt-1.5 text-[11px] font-medium text-stone-500">
+                            <p className="mt-1.5 text-[11px] font-medium text-stone-400">
                                 Replaces the working model for every device synced to this property
                             </p>
                         </div>
@@ -104,14 +104,14 @@ export default function RoomListModal({
                         type="button"
                         onClick={onClose}
                         aria-label="Close room list importer"
-                        className="flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-md text-stone-500 transition hover:bg-bone-50 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-500/25"
+                        className="flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg text-stone-400 transition hover:bg-white/10 hover:text-white"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <div className="rounded-md border border-brass-400/40 border-l-2 border-l-brass-500 bg-brass-500/[0.07] p-3.5 text-[11px] leading-relaxed text-brass-700">
-                    <strong className="text-ink-900">The app currently shows a working model:</strong> suite numbers 101–115 / 201–215,
+                <div className="rounded-xl border border-amber-400/30 border-l-4 border-l-amber-400 bg-amber-400/10 p-3.5 text-[11px] leading-relaxed text-amber-200">
+                    <strong className="text-white">The app currently shows a working model:</strong> suite numbers 101–115 / 201–215,
                     an even three-wing split and a placeholder bed mix. Loading a list replaces all of that and
                     marks the inventory as <em>imported</em> everywhere (header, banner and shift report).
                 </div>
@@ -122,7 +122,7 @@ export default function RoomListModal({
                         onClick={() => downloadFile('3101-sage-room-list-template.csv', buildRoomListTemplate())}
                         className={ghostButton}
                     >
-                        <i className="fa-solid fa-download text-brass-600"></i>
+                        <i className="fa-solid fa-download text-amber-400"></i>
                         CSV template
                     </button>
                     <button
@@ -130,10 +130,10 @@ export default function RoomListModal({
                         onClick={() => downloadFile('3101-sage-current-inventory.csv', toRoomCsv(inventory.rooms))}
                         className={ghostButton}
                     >
-                        <i className="fa-regular fa-file-lines text-brass-600"></i>
+                        <i className="fa-regular fa-file-lines text-amber-400"></i>
                         Export current list
                     </button>
-                    <span className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-500">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-400">
                         CSV columns: suite, floor, wing, type, status, notes
                     </span>
                 </div>
@@ -141,13 +141,13 @@ export default function RoomListModal({
                 <div className="space-y-2">
                     <label
                         htmlFor="room-list-file"
-                        className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-ink-900/20 bg-bone-50/60 px-4 py-5 text-center transition hover:border-brass-400/70 hover:bg-bone-50"
+                        className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-white/20 bg-[#171c2b] px-4 py-5 text-center transition hover:border-amber-400/60 hover:bg-[#1b2234]"
                     >
-                        <i className="fa-solid fa-cloud-arrow-up text-lg text-brass-600"></i>
-                        <span className="text-xs font-semibold text-ink-800">
+                        <i className="fa-solid fa-cloud-arrow-up text-lg text-amber-400"></i>
+                        <span className="text-xs font-semibold text-white">
                             Choose a .csv or .json file
                         </span>
-                        <span className="text-[10px] uppercase tracking-[0.12em] text-stone-500">or paste the rows below</span>
+                        <span className="text-[10px] uppercase tracking-[0.12em] text-stone-400">or paste the rows below</span>
                         <input
                             id="room-list-file"
                             type="file"
@@ -158,7 +158,7 @@ export default function RoomListModal({
                     </label>
 
                     {fileName && (
-                        <p className="text-[11px] font-semibold text-brass-700">
+                        <p className="text-[11px] font-semibold text-amber-400">
                             <i className="fa-solid fa-paperclip mr-1"></i>{fileName}
                         </p>
                     )}
@@ -173,28 +173,28 @@ export default function RoomListModal({
                         rows={5}
                         spellCheck={false}
                         placeholder={'suite,floor,wing,type,status,notes\n101,1,North Wing,1BR Queen Suite,clean,\n102,1,North Wing,2-Queen Suite,dirty,Check-in 3 PM'}
-                        className="w-full rounded-md border border-ink-900/[0.12] bg-bone-50/60 p-3 font-mono text-[11px] leading-relaxed text-ink-800 outline-none transition focus:border-brass-500/40 focus:bg-white focus:ring-2 focus:ring-brass-500/20"
+                        className="w-full rounded-xl border border-white/10 bg-[#171c2b] p-3 font-mono text-[11px] leading-relaxed text-amber-100 placeholder-stone-500 outline-none transition focus:border-amber-400/50"
                     />
                 </div>
 
                 {fileError && (
-                    <p className="rounded-md border border-rose-200 bg-rose-50/70 p-2.5 text-[11px] font-semibold text-rose-800">
+                    <p className="rounded-xl border border-rose-500/30 bg-rose-500/15 p-2.5 text-[11px] font-semibold text-rose-300">
                         {fileError}
                     </p>
                 )}
 
                 {hasInput && parsed.errors.length > 0 && (
-                    <div aria-live="polite" className="space-y-1.5 rounded-md border border-rose-200 bg-rose-50/70 p-3">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-rose-700">
+                    <div aria-live="polite" className="space-y-1.5 rounded-xl border border-rose-500/30 bg-rose-500/15 p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-rose-300">
                             Fix {parsed.errors.length} issue{parsed.errors.length === 1 ? '' : 's'} before loading
                         </p>
-                        <ul className="max-h-28 space-y-1 overflow-y-auto text-[11px] font-medium text-rose-800">
+                        <ul className="max-h-28 space-y-1 overflow-y-auto text-[11px] font-medium text-rose-200">
                             {parsed.errors.slice(0, 12).map((error, index) => (
                                 <li key={index}>{error}</li>
                             ))}
                         </ul>
                         {parsed.errors.length > 12 && (
-                            <p className="text-[10px] font-semibold text-rose-600">
+                            <p className="text-[10px] font-semibold text-rose-400">
                                 …and {parsed.errors.length - 12} more.
                             </p>
                         )}
@@ -202,11 +202,11 @@ export default function RoomListModal({
                 )}
 
                 {hasInput && parsed.warnings.length > 0 && (
-                    <div aria-live="polite" className="space-y-1.5 rounded-md border border-brass-400/40 bg-brass-500/[0.07] p-3">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brass-700">
+                    <div aria-live="polite" className="space-y-1.5 rounded-xl border border-amber-400/30 bg-amber-400/10 p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-300">
                             Warnings
                         </p>
-                        <ul className="max-h-24 space-y-1 overflow-y-auto text-[11px] font-medium text-brass-700">
+                        <ul className="max-h-24 space-y-1 overflow-y-auto text-[11px] font-medium text-amber-200">
                             {parsed.warnings.slice(0, 8).map((warning, index) => (
                                 <li key={index}>{warning}</li>
                             ))}
@@ -216,18 +216,18 @@ export default function RoomListModal({
 
                 {canImport && (
                     <div className="space-y-2">
-                        <div aria-live="polite" className="flex flex-wrap items-center gap-2 rounded-md border border-ink-900/[0.08] bg-bone-50 p-3 text-[11px] font-semibold text-ink-800">
-                            <i className="fa-solid fa-circle-check text-emerald-600"></i>
+                        <div aria-live="polite" className="flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-[#171c2b] p-3 text-[11px] font-semibold text-white">
+                            <i className="fa-solid fa-circle-check text-emerald-400"></i>
                             <span>
                                 <span className="font-display text-sm">{parsed.rooms.length}</span> suites
-                                <span className="mx-1.5 text-stone-300">/</span>
+                                <span className="mx-1.5 text-stone-500">/</span>
                                 <span className="font-display text-sm">{floorCount}</span> floor{floorCount === 1 ? '' : 's'} ready to load
                             </span>
                         </div>
 
-                        <div className="overflow-x-auto rounded-md border border-ink-900/[0.08]">
+                        <div className="overflow-x-auto rounded-xl border border-white/10">
                             <table className="w-full text-left text-[11px]">
-                                <thead className="border-b border-ink-900/[0.08] bg-bone-50 text-[10px] uppercase tracking-[0.12em] text-stone-500">
+                                <thead className="border-b border-white/10 bg-[#171c2b] text-[10px] uppercase tracking-[0.12em] text-stone-400">
                                     <tr>
                                         <th className="px-2.5 py-2 font-semibold">Suite</th>
                                         <th className="px-2.5 py-2 font-semibold">Floor</th>
@@ -236,12 +236,12 @@ export default function RoomListModal({
                                         <th className="px-2.5 py-2 font-semibold">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-ink-900/[0.05]">
+                                <tbody className="divide-y divide-white/5 bg-[#141924]">
                                     {parsed.rooms.slice(0, 6).map((room) => {
                                         const cfg = getStatusConfig(room.status, 'en');
                                         return (
-                                            <tr key={room.id} className="text-ink-800">
-                                                <td className="px-2.5 py-1.5 font-semibold tabular-nums">{room.id}</td>
+                                            <tr key={room.id} className="text-stone-200">
+                                                <td className="px-2.5 py-1.5 font-semibold tabular-nums text-white">{room.id}</td>
                                                 <td className="px-2.5 py-1.5 tabular-nums">{room.floor}</td>
                                                 <td className="px-2.5 py-1.5">{room.wing || '—'}</td>
                                                 <td className="px-2.5 py-1.5">{room.type}</td>
@@ -258,20 +258,20 @@ export default function RoomListModal({
                             </table>
                         </div>
                         {parsed.rooms.length > 6 && (
-                            <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-500">
+                            <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-400">
                                 Showing the first 6 of {parsed.rooms.length} suites.
                             </p>
                         )}
                     </div>
                 )}
 
-                <div className="sticky bottom-0 z-10 -mx-6 -mb-6 mt-2 flex flex-wrap items-center justify-between gap-2 rounded-b-xl border-t border-ink-900/[0.07] bg-white/95 px-6 pb-4 pt-3 backdrop-blur">
+                <div className="sticky bottom-0 z-10 -mx-6 -mb-6 mt-2 flex flex-wrap items-center justify-between gap-2 rounded-b-2xl border-t border-white/10 bg-[#141924]/95 px-6 pb-4 pt-3 backdrop-blur">
                     <div>
                         {isImported && (
                             <button
                                 type="button"
                                 onClick={onResetModel}
-                                className="cursor-pointer rounded-md px-1 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-stone-500 underline-offset-4 transition hover:text-rose-700 hover:underline"
+                                className="cursor-pointer rounded-lg px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-stone-400 underline-offset-4 transition hover:text-rose-400 hover:underline"
                             >
                                 Reset to working model
                             </button>
@@ -281,7 +281,7 @@ export default function RoomListModal({
                         <button
                             type="button"
                             onClick={onClose}
-                            className="cursor-pointer rounded-md px-3.5 py-2 text-[11px] font-semibold text-stone-500 transition hover:bg-bone-50 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-500/25"
+                            className="cursor-pointer rounded-xl border border-white/10 bg-[#1b2230] px-4 py-2 text-[11px] font-semibold text-stone-300 transition hover:bg-white/10 hover:text-white"
                         >
                             Cancel
                         </button>
@@ -289,7 +289,7 @@ export default function RoomListModal({
                             type="button"
                             onClick={() => onImport(parsed.rooms, fileName || 'pasted list')}
                             disabled={!canImport}
-                            className="flex cursor-pointer items-center gap-1.5 rounded-md bg-ink-900 px-4 py-2 text-[11px] font-semibold text-white shadow-sm transition hover:bg-ink-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-500/40 disabled:cursor-not-allowed disabled:opacity-40"
+                            className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c05b] to-[#d4af37] px-4.5 py-2 text-[11px] font-bold text-slate-950 shadow-md transition hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             <i className="fa-solid fa-file-import"></i>
                             <span>Load {parsed.rooms.length > 0 ? `${parsed.rooms.length} suites` : 'room list'}</span>

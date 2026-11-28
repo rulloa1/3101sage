@@ -58,24 +58,24 @@ export default function EditRoomModal({
             role="dialog" 
             aria-modal="true" 
             aria-labelledby="edit-room-title"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md animate-fadeIn"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="max-h-[90vh] w-full max-w-md animate-scaleIn space-y-4 overflow-y-auto rounded-xl border border-ink-900/[0.08] bg-white p-6 shadow-panel">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+            <div className="max-h-[90vh] w-full max-w-md animate-scaleIn space-y-4 overflow-y-auto rounded-2xl border border-white/10 bg-[#141924] p-6 text-white shadow-2xl">
+                <div className="flex justify-between items-center border-b border-white/10 pb-3">
                     <div>
-                        <h3 id="edit-room-title" className="font-display text-[21px] leading-tight text-ink-900">
-                            Room {room.id} <span className="text-stone-500">·</span> {room.type}
+                        <h3 id="edit-room-title" className="font-display text-[21px] leading-tight text-white">
+                            Room {room.id} <span className="text-stone-500">&middot;</span> {room.type}
                         </h3>
-                        <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-stone-500">
-                            Floor {room.floor} • Current: {room.status.toUpperCase()}
+                        <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-400">
+                            Floor {room.floor} &bull; Current: {room.status.toUpperCase()}
                         </p>
                     </div>
                     <button 
                         type="button"
                         onClick={onClose} 
                         aria-label="Close room editor"
-                        className="cursor-pointer w-8 h-8 rounded-lg text-stone-500 hover:text-slate-600 flex items-center justify-center"
+                        className="cursor-pointer w-8 h-8 rounded-lg text-stone-400 hover:text-white flex items-center justify-center transition"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
@@ -83,7 +83,7 @@ export default function EditRoomModal({
 
                 {/* Status Selection Buttons */}
                 <div>
-                    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500">
+                    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-400">
                         Change Status
                     </label>
                     <div className="grid grid-cols-2 gap-2">
@@ -97,8 +97,8 @@ export default function EditRoomModal({
                                     onClick={() => setPendingStatus(s)}
                                     className={`cursor-pointer p-2.5 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition ${
                                         isActive 
-                                            ? `${cfg.bg} text-white border-transparent shadow` 
-                                            : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'
+                                            ? `${cfg.bg} text-white border-transparent shadow-lg` 
+                                            : 'bg-[#171c2b] text-stone-300 hover:bg-[#1f2638] border-white/10'
                                     }`}
                                 >
                                     <i className={`fa-solid ${cfg.icon}`}></i>
@@ -111,7 +111,7 @@ export default function EditRoomModal({
 
                 {/* Room Notes Input & Chips */}
                 <div>
-                    <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500">
+                    <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-400">
                         Room Notes / Issue
                     </label>
                     <input
@@ -119,56 +119,56 @@ export default function EditRoomModal({
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="e.g. Extra towels, AC check..."
-                        className="w-full text-xs font-medium border border-ink-900/[0.12] rounded-md p-2.5 focus:border-brass-500/40 focus:ring-2 focus:ring-brass-500/20 outline-none bg-bone-50/60"
+                        className="w-full text-xs font-medium border border-white/10 rounded-xl p-2.5 focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 outline-none bg-[#171c2b] text-white placeholder-stone-500"
                     />
                     <div className="mt-2 flex flex-wrap gap-1.5">
-                        <button type="button" onClick={() => appendNoteChip('Late Checkout 1PM')} className="cursor-pointer text-[11px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg border hover:bg-slate-200 transition">+ Late Checkout</button>
-                        <button type="button" onClick={() => appendNoteChip('Extra Towels Needed')} className="cursor-pointer text-[11px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg border hover:bg-slate-200 transition">+ Towels</button>
-                        <button type="button" onClick={() => appendNoteChip('Check AC Unit')} className="cursor-pointer text-[11px] font-semibold bg-rose-50 text-rose-800 px-2 py-0.5 rounded-lg border border-rose-200 hover:bg-rose-100 transition">+ AC Issue</button>
-                        <button type="button" onClick={() => appendNoteChip('VIP Arrival')} className="cursor-pointer text-[11px] font-semibold bg-amber-50 text-amber-800 px-2 py-0.5 rounded-lg border border-amber-200 hover:bg-amber-100 transition">+ VIP</button>
-                        <button type="button" onClick={() => appendNoteChip('DND on Door')} className="cursor-pointer text-[11px] font-semibold bg-purple-50 text-purple-800 px-2 py-0.5 rounded-lg border border-purple-200 hover:bg-purple-100 transition">+ DND</button>
+                        <button type="button" onClick={() => appendNoteChip('Late Checkout 1PM')} className="cursor-pointer text-[11px] font-semibold bg-[#171c2b] text-stone-300 px-2 py-0.5 rounded-lg border border-white/10 hover:bg-white/10 transition">+ Late Checkout</button>
+                        <button type="button" onClick={() => appendNoteChip('Extra Towels Needed')} className="cursor-pointer text-[11px] font-semibold bg-[#171c2b] text-stone-300 px-2 py-0.5 rounded-lg border border-white/10 hover:bg-white/10 transition">+ Towels</button>
+                        <button type="button" onClick={() => appendNoteChip('Check AC Unit')} className="cursor-pointer text-[11px] font-semibold bg-rose-500/15 text-rose-300 px-2 py-0.5 rounded-lg border border-rose-500/30 hover:bg-rose-500/25 transition">+ AC Issue</button>
+                        <button type="button" onClick={() => appendNoteChip('VIP Arrival')} className="cursor-pointer text-[11px] font-semibold bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded-lg border border-amber-500/30 hover:bg-amber-500/25 transition">+ VIP</button>
+                        <button type="button" onClick={() => appendNoteChip('DND on Door')} className="cursor-pointer text-[11px] font-semibold bg-purple-500/15 text-purple-300 px-2 py-0.5 rounded-lg border border-purple-500/30 hover:bg-purple-500/25 transition">+ DND</button>
                     </div>
                 </div>
 
                 {/* 1-Tap Handyman Maintenance Dispatch */}
-                <div className="bg-amber-50/80 p-3 rounded-2xl border border-amber-200/90 space-y-2">
+                <div className="bg-[#171c2b] p-3.5 rounded-2xl border border-amber-400/20 space-y-2.5">
                     <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-amber-900 flex items-center gap-1.5">
-                            <i className="fa-solid fa-screwdriver-wrench text-amber-600"></i>
+                        <span className="font-bold text-amber-400 flex items-center gap-1.5">
+                            <i className="fa-solid fa-screwdriver-wrench text-amber-400"></i>
                             <span>Dispatch Handyman</span>
                         </span>
-                        <span className="text-[10px] text-amber-700 font-semibold bg-amber-100/80 px-2 py-0.5 rounded-md">Instant Alert</span>
+                        <span className="text-[10px] text-amber-300 font-semibold bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded-md">Instant Alert</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         <button 
                             type="button" 
                             onClick={() => dispatchHandyman('whatsapp')} 
-                            className="cursor-pointer text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95"
+                            className="cursor-pointer text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md active:scale-95"
                         >
                             <i className="fa-brands fa-whatsapp text-sm"></i> <span>WhatsApp Handyman</span>
                         </button>
                         <button 
                             type="button" 
                             onClick={() => dispatchHandyman('sms')} 
-                            className="cursor-pointer text-xs font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95"
+                            className="cursor-pointer text-xs font-bold text-stone-200 bg-[#1b2230] hover:bg-white/10 border border-white/10 py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
                         >
-                            <i className="fa-solid fa-comment-sms text-indigo-600 text-xs"></i> <span>SMS Dispatch</span>
+                            <i className="fa-solid fa-comment-sms text-amber-400 text-xs"></i> <span>SMS Dispatch</span>
                         </button>
                     </div>
                 </div>
 
-                <div className="flex justify-end space-x-2 pt-3 border-t border-slate-100">
+                <div className="flex justify-end space-x-2 pt-3 border-t border-white/10">
                     <button 
                         type="button" 
                         onClick={onClose} 
-                        className="cursor-pointer px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                        className="cursor-pointer px-4 py-2 text-xs font-bold text-stone-300 hover:bg-white/10 rounded-xl transition border border-white/10"
                     >
                         Cancel
                     </button>
                     <button 
                         type="button" 
                         onClick={handleSave} 
-                        className="cursor-pointer px-4.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm transition active:scale-95"
+                        className="cursor-pointer px-4.5 py-2 text-xs font-bold bg-gradient-to-r from-[#d4af37] via-[#e5c05b] to-[#d4af37] text-slate-950 rounded-xl shadow-md transition hover:brightness-110 active:scale-95"
                     >
                         Save Changes
                     </button>

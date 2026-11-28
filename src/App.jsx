@@ -805,20 +805,20 @@ export default function App() {
                     aria-modal="true"
                     aria-labelledby="reset-confirm-title"
                     aria-describedby="reset-confirm-description"
-                    className="animate-fadeIn fixed inset-0 z-[60] flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm"
+                    className="animate-fadeIn fixed inset-0 z-[60] flex items-center justify-center bg-black/75 p-4 backdrop-blur-md"
                     onClick={(e) => { if (e.target === e.currentTarget) setIsResetConfirmOpen(false); }}
                 >
-                    <div className="animate-scaleIn w-full max-w-md overflow-hidden rounded-xl border border-ink-900/[0.08] bg-white shadow-panel">
-                        <div className="flex items-start justify-between gap-3 border-b border-ink-900/[0.07] px-6 pb-4 pt-5">
+                    <div className="animate-scaleIn w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-[#141924] text-white shadow-2xl">
+                        <div className="flex items-start justify-between gap-3 border-b border-white/10 px-6 pb-4 pt-5">
                             <div className="flex items-start gap-3">
-                                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-bone-100 text-lg text-brass-600">
+                                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 text-lg text-amber-400">
                                     <i className="fa-solid fa-rotate-left"></i>
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+                                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-400">
                                         {dict.resetDialogEyebrow}
                                     </p>
-                                    <h3 id="reset-confirm-title" className="mt-1 font-display text-[21px] leading-none text-ink-900">
+                                    <h3 id="reset-confirm-title" className="mt-1 font-display text-[21px] leading-none text-white">
                                         {dict.resetDialogTitle}
                                     </h3>
                                 </div>
@@ -827,33 +827,33 @@ export default function App() {
                                 type="button"
                                 onClick={() => setIsResetConfirmOpen(false)}
                                 aria-label={dict.resetDialogClose}
-                                className="flex-shrink-0 cursor-pointer rounded-md p-1.5 text-stone-500 transition hover:bg-ink-900/[0.04] hover:text-ink-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass-500/60"
+                                className="flex-shrink-0 cursor-pointer rounded-lg p-1.5 text-stone-400 transition hover:bg-white/10 hover:text-white"
                             >
                                 <i className="fa-solid fa-xmark text-[13px]"></i>
                             </button>
                         </div>
 
                         <div className="px-6 py-4">
-                            <p id="reset-confirm-description" className="text-[12px] leading-relaxed text-stone-600">
+                            <p id="reset-confirm-description" className="text-[12px] leading-relaxed text-stone-300">
                                 {inventory.source === 'imported'
                                     ? dict.resetDialogDescImported
                                     : dict.resetDialogDescModel}
                             </p>
                         </div>
 
-                        <div className="flex items-center justify-end gap-2 border-t border-ink-900/[0.07] bg-bone-50 px-6 py-3">
+                        <div className="flex items-center justify-end gap-2 border-t border-white/10 bg-[#171c2b] px-6 py-3">
                             <button
                                 type="button"
                                 autoFocus
                                 onClick={() => setIsResetConfirmOpen(false)}
-                                className="cursor-pointer rounded-md border border-ink-900/[0.1] bg-white px-4 py-2 text-[11px] font-semibold text-stone-600 transition hover:border-ink-900/[0.18] hover:bg-bone-100 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60"
+                                className="cursor-pointer rounded-xl border border-white/10 bg-[#1b2230] px-4 py-2 text-[11px] font-semibold text-stone-300 transition hover:bg-white/10 hover:text-white"
                             >
                                 {dict.resetDialogCancel}
                             </button>
                             <button
                                 type="button"
                                 onClick={handleConfirmResetModel}
-                                className="cursor-pointer rounded-md bg-ink-900 px-4 py-2 text-[11px] font-semibold text-white transition hover:bg-ink-950 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60"
+                                className="cursor-pointer rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c05b] to-[#d4af37] px-4 py-2 text-[11px] font-bold text-slate-950 shadow-md transition hover:brightness-110 active:scale-[0.99]"
                             >
                                 {dict.resetDialogConfirm}
                             </button>

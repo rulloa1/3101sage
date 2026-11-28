@@ -24,28 +24,28 @@ export default function KeycardSleeveModal({
         window.print();
     };
 
-    const fieldLabel = 'mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500';
-    const fieldClass = 'w-full rounded-md border border-ink-900/[0.12] bg-bone-50/60 p-2.5 text-xs font-medium text-ink-900 outline-none transition focus:border-brass-500/40 focus:bg-white focus:ring-2 focus:ring-brass-500/20';
+    const fieldLabel = 'mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-400';
+    const fieldClass = 'w-full rounded-xl border border-white/10 bg-[#171c2b] p-2.5 text-xs font-medium text-white placeholder-stone-500 outline-none transition focus:border-amber-400/50';
 
     return (
         <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="keycard-sleeve-title"
-            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm"
+            className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-            <div className="animate-scaleIn max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-xl border border-ink-900/[0.08] bg-white p-6 shadow-panel">
-                <div className="screen-only flex items-start justify-between gap-3 border-b border-ink-900/[0.07] pb-3">
+            <div className="animate-scaleIn max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-2xl border border-white/10 bg-[#141924] p-6 text-white shadow-2xl">
+                <div className="screen-only flex items-start justify-between gap-3 border-b border-white/10 pb-3">
                     <div className="flex items-start gap-3">
-                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-bone-100 text-lg text-brass-600">
+                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 text-lg text-amber-400">
                             <i className="fa-solid fa-qrcode"></i>
                         </div>
                         <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-400">
                                 Direct booking &middot; chargeback defense
                             </p>
-                            <h3 id="keycard-sleeve-title" className="mt-1 font-display text-[21px] leading-none text-ink-900">
+                            <h3 id="keycard-sleeve-title" className="mt-1 font-display text-[21px] leading-none text-white">
                                 Keycard Sleeve &amp; Wi-Fi Slip
                             </h3>
                         </div>
@@ -54,7 +54,7 @@ export default function KeycardSleeveModal({
                         type="button"
                         onClick={onClose}
                         aria-label="Close keycard sleeve"
-                        className="flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-md text-stone-500 transition hover:bg-bone-50 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-500/25"
+                        className="flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg text-stone-400 transition hover:bg-white/10 hover:text-white"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
@@ -72,7 +72,7 @@ export default function KeycardSleeveModal({
                             className={`${fieldClass} font-semibold`}
                         >
                             {rooms.map(r => (
-                                <option key={r.id} value={r.id}>
+                                <option key={r.id} value={r.id} className="bg-[#171c2b] text-white">
                                     Room {r.id} ({r.type} • Floor {r.floor})
                                 </option>
                             ))}
@@ -170,18 +170,18 @@ export default function KeycardSleeveModal({
                     </div>
                 </div>
 
-                <div className="screen-only sticky bottom-0 z-10 -mx-6 -mb-6 flex justify-end gap-2 rounded-b-xl border-t border-ink-900/[0.07] bg-white/95 px-6 pb-4 pt-3 backdrop-blur">
+                <div className="screen-only sticky bottom-0 z-10 -mx-6 -mb-6 flex justify-end gap-2 rounded-b-2xl border-t border-white/10 bg-[#141924]/95 px-6 pb-4 pt-3 backdrop-blur">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="cursor-pointer rounded-md px-3.5 py-2 text-[11px] font-semibold text-stone-500 transition hover:bg-bone-50 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-500/25"
+                        className="cursor-pointer rounded-xl border border-white/10 bg-[#1b2230] px-4 py-2 text-[11px] font-semibold text-stone-300 transition hover:bg-white/10 hover:text-white"
                     >
                         Close
                     </button>
                     <button
                         type="button"
                         onClick={handlePrint}
-                        className="flex cursor-pointer items-center gap-1.5 rounded-md bg-ink-900 px-4 py-2 text-[11px] font-semibold text-white shadow-sm transition hover:bg-ink-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass-500/40"
+                        className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c05b] to-[#d4af37] px-4 py-2 text-[11px] font-bold text-slate-950 shadow-md transition hover:brightness-110 active:scale-[0.98]"
                     >
                         <i className="fa-solid fa-print"></i> <span>Print keycard sleeve</span>
                     </button>
